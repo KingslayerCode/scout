@@ -3,6 +3,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Scout</title>
 <meta name="apple-mobile-web-app-title" content="Scout">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#2a1458">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="apple-touch-icon.png">
@@ -13,31 +15,21 @@ img{width:96px;height:96px;border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,.
 h1{margin:0;font-size:28px}
 a.go{display:inline-block;padding:14px 32px;border-radius:14px;background:#fff;color:#2a1458;font-weight:700;text-decoration:none}
 p{margin:0;max-width:300px;color:#cdbfee;font-size:14px}
-p a{color:#fff}
 </style></head><body>
 <img src="apple-touch-icon.png" alt="">
 <h1>Scout</h1>
 <a class="go" id="go" href="#">Open Scout</a>
-<p id="tip" hidden>To keep Scout on your home screen: tap Share, then Add to Home Screen. After that it opens in Chrome straight away.</p>
-<p id="alt" hidden>Chrome did not open? <a id="here" href="#">Open Scout here</a></p>
+<p id="tip" hidden>To put Scout on your home screen: in Safari tap Share, then Add to Home Screen, and leave "Open as Web App" on. It then opens full screen.</p>
 <p id="bad" hidden>The app link in this page has not been set yet.</p>
 <script>
 var APP = 'https://script.google.com/macros/s/AKfycbz1rShnVhgxILs6UK4uq8OJwgZlbKdw9ZWrSMa7PD1V8Zyg99AdfOxsKNN8Xms5UXIfpA/exec';
 var $ = function (id) { return document.getElementById(id); };
 if (APP.indexOf('https://script.google.com/') !== 0) $('bad').hidden = false;
 else {
-  var inChrome = /CriOS/.test(navigator.userAgent);
-  var CHROME = APP.replace('https://', 'googlechromes://'); // the link that makes iPhone open Chrome
-  var target = inChrome ? APP : CHROME;
-  $('go').href = target; $('here').href = APP;
-  if (location.search.indexOf('go') < 0) {
-    $('tip').hidden = false;
-    // the home-screen shortcut remembers the address shown when it is added, so from now on that address says "forward me"
-    history.replaceState(null, '', '?go');
-  } else {
-    location.replace(target);
-    setTimeout(function () { $('alt').hidden = false; }, 1500);
-  }
+  $('go').href = APP;
+  // launched from the home screen: carry straight on to the app inside this full-screen window
+  if (navigator.standalone === true || matchMedia('(display-mode: standalone)').matches) location.replace(APP);
+  else $('tip').hidden = false;
 }
 </script>
 </body></html>
