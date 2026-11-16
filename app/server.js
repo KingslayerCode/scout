@@ -32,19 +32,32 @@ const ls_ = {
 };
 
 // ---------- signing in ----------
-// Google gives a browser app a key that lasts about an hour and cannot be renewed in the background (there are no refresh tokens),
-// so about once an hour the person sees "Reconnect" and taps it. A tap is needed because phones block pop-ups that don't come from one.
+// Google's browser sign-in gives a key that lasts about an hour and cannot be renewed on its own. KEYS_URL is the small "Scout keys"
+// helper (a web app in Apps Script that holds the Client Secret). With it, signing in once leaves a renewal key on this phone, and the
+// hourly key is renewed quietly in the background. Without it (KEYS_URL empty) the person taps Reconnect about once an hour instead.
+const KEYS_URL = window.SCOUT_KEYS_URL || '';
 const AUTH = (() => {
-  const AK = 'scout-auth', A = { token: '', exp: 0, email: '', name: '', picture: '' };
-  try { const s = JSON.parse(ls_.get(AK) || 'null'); if (s && s.email) { A.email = s.email; A.name = s.name || ''; A.picture = s.picture || ''; if (s.exp > Date.now() + 60000) { A.token = s.token; A.exp = s.exp; } } } catch (e) {}
+  const AK = 'scout-auth', A = { token: '', exp: 0, refresh: '', noRT: false, email: '', name: '', picture: '' };
+  try { const s = JSON.parse(ls_.get(AK) || 'null'); if (s && s.email) { A.email = s.email; A.name = s.name || ''; A.picture = s.picture || ''; A.refresh = s.refresh || ''; A.noRT = !!s.noRT; if (s.exp > Date.now() + 60000) { A.token = s.token; A.exp = s.exp; } } } catch (e) {}
   const save = () => ls_.set(AK, JSON.stringify(A));
   const fresh = () => !!A.token && A.exp > Date.now() + 60000;
-  let tc = null, gsiP = null, pending = null, gate = null, wait = null;
+  let tc = null, gsiP = null, pending = null, gate = null;
   const loadGsi = () => (window.google && google.accounts && google.accounts.oauth2) ? Promise.resolve() : gsiP || (gsiP = new Promise((ok, no) => {
     const s = document.createElement('script'); s.src = 'https://accounts.google.com/gsi/client'; s.async = true;
     s.onload = ok; s.onerror = () => { gsiP = null; no(new Error('Could not load Google sign-in. Check your connection.')); };
     document.head.appendChild(s);
   }));
+  async function keeper(body) { // the helper swaps a sign-in code or renewal key for a fresh hourly key, because only it knows the Client Secret
+    let r; try { r = await fetch(KEYS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }); }
+    catch (e) { throw new Error('Could not reach the Scout sign-in helper. Check your connection and try again.'); }
+    try { return await r.json(); } catch (e) { throw new Error('The Scout sign-in helper gave an unexpected answer.'); }
+  }
+  async function renew() { // quietly turn the renewal key into a new hourly key; false when Google no longer honours it
+    const j = await keeper({ refresh_token: A.refresh });
+    if (j.access_token) { A.token = j.access_token; A.exp = Date.now() + (+j.expires_in || 3600) * 1000; save(); return true; }
+    if (j.error === 'invalid_grant') { A.refresh = ''; A.exp = 0; save(); return false; } // taken back by the person, or Google's one-week limit while the app is in Testing
+    throw new Error('Google would not renew the sign-in (' + (j.error_description || j.error || 'unknown') + ').');
+  }
   function build() {
     if (gate) return gate;
     const st = document.createElement('style');
@@ -60,45 +73,77 @@ const AUTH = (() => {
     gate.querySelector('#gb').onclick = click;
     return gate;
   }
-  const say = (m, e) => { build(); gate.querySelector('#gm').textContent = m; gate.querySelector('#ge').textContent = e || ''; };
-  function show(first, err) {
+  function show(first, err, label) {
     build(); const b = gate.querySelector('#gb');
-    say(first ? 'Sign in with your Google account to open the household.' : 'Scout needs to reconnect to Google. This happens about once an hour.', err);
-    b.textContent = first ? 'Sign in with Google' : 'Reconnect'; b.disabled = !tc;
+    gate.querySelector('#gm').textContent = first ? 'Sign in with your Google account to open the household.'
+      : !KEYS_URL ? 'Scout needs to reconnect to Google. This happens about once an hour.'
+      : A.noRT ? 'Scout needs to sign in to Google again. To stop this, open myaccount.google.com/permissions, remove Scout, then sign in here once more.'
+      : 'Scout needs you to sign in to Google again.';
+    gate.querySelector('#ge').textContent = err || '';
+    b.textContent = label || (first ? 'Sign in with Google' : 'Reconnect'); b.disabled = !tc;
     if (!gate.open) gate.showModal();
-    if (!tc) loadGsi().then(init, e => say(first ? 'Sign in with your Google account to open the household.' : 'Scout needs to reconnect to Google.', e.message));
+    if (!tc) loadGsi().then(init, e => { gate.querySelector('#ge').textContent = e.message; });
   }
   function init() {
-    if (!tc) tc = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: got,
-      error_callback: e => show(!A.email, e && e.type === 'popup_closed' ? 'The Google window was closed. Tap the button to try again.' : 'Google could not open its sign-in window. Tap the button to try again.') });
+    if (!tc) {
+      const common = { client_id: CLIENT_ID, scope: SCOPES, error_callback: e => show(!A.email, e && e.type === 'popup_closed' ? 'The Google window was closed. Tap the button to try again.' : 'Google could not open its sign-in window. Tap the button to try again.') };
+      tc = KEYS_URL ? google.accounts.oauth2.initCodeClient(Object.assign({ ux_mode: 'popup', login_hint: A.email || undefined, callback: gotCode }, common))
+                    : google.accounts.oauth2.initTokenClient(Object.assign({ callback: got }, common));
+    }
     if (gate) gate.querySelector('#gb').disabled = false;
   }
   function click() { // must call Google straight from the tap, or iPhone blocks the pop-up
     if (!tc) return;
     gate.querySelector('#gb').disabled = true;
-    try { tc.requestAccessToken({ prompt: '', login_hint: A.email || undefined }); } catch (e) { show(!A.email, e.message); }
+    try { KEYS_URL ? tc.requestCode() : tc.requestAccessToken({ prompt: '', login_hint: A.email || undefined }); } catch (e) { show(!A.email, e.message); }
   }
-  async function got(r) {
-    if (r.error) { show(!A.email, r.error === 'access_denied' ? 'Google said no. Scout needs access to your calendar, sheet and Drive to work.' : 'Sign-in did not finish (' + r.error + '). Tap the button to try again.'); return; }
+  const denied = e => e === 'access_denied' ? 'Google said no. Scout needs access to your calendar, sheet and Drive to work.' : 'Sign-in did not finish (' + e + '). Tap the button to try again.';
+  const got = r => r.error ? show(!A.email, denied(r.error)) : finish({ access_token: r.access_token, expires_in: r.expires_in });
+  async function gotCode(r) {
+    if (r.error || !r.code) { show(!A.email, denied(r.error || 'no code')); return; }
     try {
-      const u = await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + r.access_token } })).json();
+      const j = await keeper({ code: r.code });
+      if (!j.access_token) throw new Error(j.error_description || j.error || 'Google would not finish signing in');
+      await finish(j);
+    } catch (e) { show(!A.email, 'Could not finish signing in: ' + (e.message || e)); }
+  }
+  async function finish(j) {
+    try {
+      const u = await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + j.access_token } })).json();
       if (!u.email) throw new Error('Google did not tell Scout which account this is.');
       if (A.email && u.email.toLowerCase() !== A.email.toLowerCase()) { // a different account signed in: never show the last person's data
         ls_.del('fw-cache-1'); ls_.del(AK); location.reload(); return;
       }
-      Object.assign(A, { token: r.access_token, exp: Date.now() + (+r.expires_in || 3600) * 1000, email: u.email, name: u.name || '', picture: u.picture || '' });
+      Object.assign(A, { token: j.access_token, exp: Date.now() + (+j.expires_in || 3600) * 1000, refresh: j.refresh_token || A.refresh, email: u.email, name: u.name || '', picture: u.picture || '' });
+      A.noRT = !!KEYS_URL && !A.refresh; // shortcut: Google only gives a renewal key the first time an account approves Scout; someone who approved before must remove Scout at myaccount.google.com/permissions once
       save();
+      if (A.noRT && typeof toast === 'function') toast('Signed in for an hour. Staying signed in is not on for this account yet.');
       if (gate && gate.open) gate.close();
       const p = pending; pending = null; if (p) p.ok(A.token);
     } catch (e) { show(!A.email, 'Could not finish signing in: ' + (e.message || e)); }
   }
-  return {
+  const self = {
     get email() { return A.email; }, get name() { return A.name; }, get picture() { return A.picture; },
-    token() { if (fresh()) return Promise.resolve(A.token); if (!pending) { let ok, no; const p = new Promise((a, b) => { ok = a; no = b; }); p.ok = ok; p.no = no; pending = p; show(!A.email); } return pending; },
+    token() {
+      if (fresh()) return Promise.resolve(A.token);
+      if (!pending) {
+        let ok, no; const p = new Promise((a, b) => { ok = a; no = b; }); p.ok = ok; p.no = no; pending = p;
+        (async () => {
+          try {
+            if (KEYS_URL && A.refresh && await renew()) { pending = null; ok(A.token); } // no screen at all
+            else show(!A.email);
+          } catch (e) { pending = null; no(e); }
+        })();
+      }
+      return pending;
+    },
     expire() { A.exp = 0; save(); },
     // the page waits for this before it starts: with no known person yet it shows the sign-in screen, otherwise it opens at once from its saved view
-    start() { loadGsi().then(init, () => {}); return A.email ? Promise.resolve() : this.token().then(() => {}); }
+    start() { loadGsi().then(init, () => {}); if (A.email && !fresh() && KEYS_URL && A.refresh) self.token().catch(() => {}); return A.email ? Promise.resolve() : self.token().then(() => {}); }
   };
+  // coming back to the app after a while: renew the hourly key now, so it is ready before anything is tapped
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && KEYS_URL && A.refresh && !fresh() && !pending) self.token().catch(() => {}); });
+  return self;
 })();
 
 // ---------- talking to Google ----------
