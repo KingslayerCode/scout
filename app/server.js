@@ -11,13 +11,13 @@ const HEAD = {
   Sources: ['key', 'owner', 'kind', 'sourceId', 'name', 'color', 'selected'],
   Profiles: ['email', 'name', 'color', 'photo'],
   Recipes: ['id', 'title', 'image', 'source', 'servings', 'time', 'tags', 'ingredients', 'steps', 'notes', 'fav', 'addedBy', 'created'],
-  Lists: ['id', 'name', 'kind', 'owner', 'created'],
+  Lists: ['id', 'name', 'kind', 'owner', 'created', 'date'],
+  Board: ['id', 'kind', 'text', 'done', 'color', 'assignee', 'due', 'by', 'created', 'updated'],
   ListItems: ['id', 'list', 'text', 'done', 'assignee', 'addedBy', 'created'],
   Meals: ['id', 'container', 'name', 'created', 'frozen', 'moved', 'loc', 'addedBy', 'movedAt'],
   Config: ['key', 'value'],
   Events: ['sourceKey', 'owner', 'id', 'title', 'start', 'end', 'allDay', 'location'],
   SharedEvents: ['id', 'title', 'start', 'end', 'allDay', 'location', 'notes', 'createdBy', 'updatedBy', 'updated'],
-  Receipts: ['id', 'merchant', 'date', 'amount', 'tax', 'currency', 'category', 'uploader', 'kind', 'fileId', 'fileName', 'mime', 'notes', 'data', 'created']
 };
 // Text the person typed is cut by whole characters, never in the middle of an emoji.
 const cut_ = (v, n) => { const a = Array.from(String(v == null ? '' : v)); return a.length > n ? a.slice(0, n).join('') : a.join(''); };
@@ -386,7 +386,7 @@ async function getFamily() {
     events: evs.filter(e => sel.has(e.sourceKey)).map(e => Object.assign(e, { cal: names[e.sourceKey] || '' })).concat(shr.map(sharedOut_)) };
 }
 // Lists + meals in one round trip, loaded quietly after the calendar appears so those tabs open instantly.
-async function getHousehold() { const [l, i, m, c] = (await manyR_(['Lists', 'ListItems', 'Meals', 'Config'])).map(a => a.map(x => x.o)); return { lists: l, items: i, meals: m, config: cfg_(c) }; }
+async function getHousehold() { const [l, i, m, c, b] = (await manyR_(['Lists', 'ListItems', 'Meals', 'Config', 'Board'])).map(a => a.map(x => x.o)); return { lists: l, items: i, meals: m, config: cfg_(c), board: b }; }
 async function savePrefs(p) {
   if (THEMES.indexOf(p && p.theme) < 0) throw new Error('Unknown theme.');
   ls_.set('fw-theme', p.theme); await cfgSet_('theme:' + me_(), p.theme); return true;
@@ -602,23 +602,23 @@ async function inviteMember(email) {
   const share = id => g(DRV + '/files/' + id + '/permissions?supportsAllDrives=true&sendNotificationEmail=' + (id === SHEET_ID), { method: 'POST', json: { role: 'writer', type: 'user', emailAddress: email } });
   try { await share(SHEET_ID); }
   catch (e) { throw new Error('Could not share the Scout sheet with ' + email + '. Only people who can share the sheet can add others. Otherwise open the sheet in Google Sheets and use Share. (' + String(e.message || e).slice(0, 120) + ')'); }
-  try { const f = await cfgGet_('vaultFolder'); if (f) await share(f); } catch (e) {} // so they can open receipt photos too
   await cfgSet_('invite:' + email, new Date().toISOString()); // shown in the Household list until they open the app
   return { url: appUrl_() };
 }
 
-// ---------- lists (shopping and to-do, shared by the household) ----------
-async function getLists() { const [l, i] = (await manyR_(['Lists', 'ListItems'])).map(a => a.map(x => x.o)); return { lists: l, items: i }; }
+// ---------- shopping lists: one per trip, named for the store, with an optional planned date ----------
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+async function getLists() { const [l, i] = (await manyR_(['Lists', 'ListItems'])).map(a => a.map(x => x.o)); return { lists: l.filter(x => x.kind !== 'todo'), items: i }; } // old to-do lists stay in the sheet but are not shown
 function listOp(op, a) {
   const me = me_(), now = new Date().toISOString(), nid = () => uuid_().slice(0, 8), t = (v, n) => clip_(v, n);
   return locked_(async () => {
     if (op === 'addList') {
-      const l = { id: nid(), name: t(a.name, 60) || 'List', kind: a.kind === 'todo' ? 'todo' : 'shopping', owner: me, created: now };
+      const l = { id: nid(), name: t(a.name, 60) || 'Costco', kind: 'shopping', owner: me, created: now, date: ISO_DAY.test(a.date) ? a.date : '' };
       await addRows_('Lists', [l]); return l;
     }
     if (op === 'editList') {
       const x = await byKey_('Lists', a.id);
-      if (x) { const o = x.o; o.name = t(a.name, 60) || o.name; await putRow_('Lists', x.r, o); }
+      if (x) { const o = x.o; o.name = t(a.name, 60) || o.name; if (a.date != null) o.date = ISO_DAY.test(a.date) ? a.date : ''; await putRow_('Lists', x.r, o); }
       return true;
     }
     if (op === 'delList') {
@@ -644,6 +644,37 @@ function listOp(op, a) {
       return true;
     }
     throw new Error('Unknown list action.');
+  });
+}
+
+// ---------- whiteboard: to-dos written on the board and sticky-note notices, shared by the household ----------
+const NOTE_COLORS = ['yellow', 'pink', 'blue', 'green', 'orange', 'purple'];
+async function getBoard() { me_(); return (await rows_('Board')); }
+function boardOp(op, a) {
+  const me = me_(), now = new Date().toISOString(), t = (v, n) => clip_(v, n);
+  return locked_(async () => {
+    if (op === 'add') {
+      const note = a.kind === 'note', text = t(a.text, note ? 400 : 140);
+      if (!text) throw new Error('Write something first.');
+      const o = { id: uuid_().slice(0, 8), kind: note ? 'note' : 'todo', text, done: 'N', color: NOTE_COLORS.includes(a.color) ? a.color : note ? 'yellow' : '', assignee: note ? '' : t(a.assignee, 120), due: !note && ISO_DAY.test(a.due) ? a.due : '', by: me, created: now, updated: now };
+      await addRows_('Board', [o]); return o;
+    }
+    if (op === 'set') {
+      const x = await byKey_('Board', a.id); if (!x) return null;
+      const o = x.o, note = o.kind === 'note';
+      if (a.text != null) o.text = t(a.text, note ? 400 : 140) || o.text;
+      if (a.done != null) o.done = a.done ? 'Y' : 'N';
+      if (a.color != null && NOTE_COLORS.includes(a.color)) o.color = a.color;
+      if (a.assignee != null && !note) o.assignee = t(a.assignee, 120);
+      if (a.due != null && !note) o.due = ISO_DAY.test(a.due) ? a.due : '';
+      o.updated = now; await putRow_('Board', x.r, o); return o;
+    }
+    if (op === 'del') { const x = await byKey_('Board', a.id); if (x) await delRow_('Board', x.r); return true; }
+    if (op === 'clearDone') {
+      const B = await rows_('Board'); if (B.some(i => i.kind === 'todo' && i.done === 'Y')) await write_('Board', B.filter(i => !(i.kind === 'todo' && i.done === 'Y')));
+      return true;
+    }
+    throw new Error('Unknown whiteboard action.');
   });
 }
 
@@ -709,289 +740,10 @@ function importMeals(p) { // p.items = [{container, loc}] so every container can
   });
 }
 
-// ======================================================================
-// VAULT — receipts. Photos live in a "Household Vault" folder in Google Drive, filed by year and month;
-// the details live in the "Receipts" tab. Reading a photo uses Drive's built-in text recognition.
-// ======================================================================
-const CATS = ['Groceries', 'Dining', 'Fuel', 'Auto', 'Home', 'Health', 'Shopping', 'Entertainment', 'Travel', 'Utilities', 'Work', 'Gifts', 'Other'];
-const MONTHS_ = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const SCAN_MARK = 'household-vault-scan', FILED_MARK = 'household-vault-receipt', FOLDER = 'application/vnd.google-apps.folder';
-const q_ = s => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-const fileGet_ = (id, fields) => g(DRV + '/files/' + enc(id) + '?supportsAllDrives=true&fields=' + enc(fields));
-const mkFolder_ = async (name, parent) => (await g(DRV + '/files?supportsAllDrives=true&fields=id', { method: 'POST', json: { name, mimeType: FOLDER, parents: parent ? [parent] : undefined } })).id;
-const trash_ = id => g(DRV + '/files/' + enc(id) + '?supportsAllDrives=true', { method: 'PATCH', json: { trashed: true } });
-let VR = '', VF = {}; // the vault folder and its sub-folders, remembered for this visit
-
-async function getVault() {
-  me_();
-  const [r, c] = (await manyR_(['Receipts', 'Config'])).map(a => a.map(x => x.o));
-  return { receipts: r.sort((a, b) => b.date.localeCompare(a.date) || b.created.localeCompare(a.created)), ocr: true, folder: (c.find(x => x.key === 'vaultFolder') || { value: '' }).value, cats: CATS };
-}
-// The household folder is made by whoever scans first, next to the Scout sheet when possible, and shared with everyone who can edit that sheet.
-async function vaultRoot_() {
-  if (VR) return VR;
-  const id = await cfgGet_('vaultFolder');
-  if (id) { try { const f = await fileGet_(id, 'id,trashed'); if (!f.trashed) return (VR = id); } catch (e) {} }
-  let parent = ''; try { parent = ((await fileGet_(SHEET_ID, 'parents')).parents || [])[0] || ''; } catch (e) {}
-  let root; try { root = await mkFolder_('Household Vault', parent); } catch (e) { root = await mkFolder_('Household Vault', ''); }
-  try {
-    const ps = (await g(DRV + '/files/' + SHEET_ID + '/permissions?supportsAllDrives=true&fields=' + enc('permissions(emailAddress,role,type)'))).permissions || [];
-    for (const p of ps) if (p.type === 'user' && p.role === 'writer' && p.emailAddress && p.emailAddress.toLowerCase() !== AUTH.email.toLowerCase())
-      await g(DRV + '/files/' + root + '/permissions?supportsAllDrives=true&sendNotificationEmail=false', { method: 'POST', json: { role: 'writer', type: 'user', emailAddress: p.emailAddress } }).catch(() => {});
-  } catch (e) {}
-  await cfgSet_('vaultFolder', root);
-  return (VR = root);
-}
-async function subfolder_(parent, name) {
-  const k = parent + ':' + name; if (VF[k]) return VF[k];
-  const r = await g(DRV + '/files?supportsAllDrives=true&includeItemsFromAllDrives=true&pageSize=1&fields=' + enc('files(id)') + '&q=' + enc("'" + parent + "' in parents and name='" + q_(name) + "' and mimeType='" + FOLDER + "' and trashed=false"));
-  return (VF[k] = (r.files && r.files[0] && r.files[0].id) || await mkFolder_(name, parent));
-}
-async function monthFolder_(date) { // Household Vault / Receipts / 2026 / 10 October
-  const y = date.slice(0, 4), m = +date.slice(5, 7);
-  return subfolder_(await subfolder_(await subfolder_(await vaultRoot_(), 'Receipts'), y), (m < 10 ? '0' : '') + m + ' ' + MONTHS_[m - 1]);
-}
-async function upload_(meta, bytes, mime) { // one multipart upload: details first, then the file
-  const b = 'scout' + Math.random().toString(36).slice(2);
-  const body = new Blob(['--' + b + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify(meta) + '\r\n--' + b + '\r\nContent-Type: ' + mime + '\r\n\r\n', bytes, '\r\n--' + b + '--']);
-  return g('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=id,name,mimeType', { method: 'POST', body, headers: { 'Content-Type': 'multipart/related; boundary=' + b } });
-}
-async function ocrText_(bytes, mime) { // Drive turns the photo into a Google Doc and reads the text; the Doc is deleted straight after
-  const doc = await upload_({ name: 'ocr-' + Date.now(), mimeType: 'application/vnd.google-apps.document' }, bytes, mime);
-  try { return await g(DRV + '/files/' + doc.id + '/export?mimeType=' + enc('text/plain'), { as: 'text' }); }
-  finally { g(DRV + '/files/' + doc.id + '?supportsAllDrives=true', { method: 'DELETE' }).catch(() => {}); }
-}
-
-// ---- step 1: store the photo and read it ----
-async function scanReceipt(p) {
-  me_();
-  const mime = String(p.mime || '').toLowerCase(), b64 = String(p.data || '');
-  if (!/^(image\/(jpeg|png|webp|heic|heif)|application\/pdf)$/.test(mime)) throw new Error('Use a photo (JPG, PNG, HEIC) or a PDF.');
-  if (!b64 || b64.length > 9000000) throw new Error('That file is too large. Try a smaller photo.');
-  const d = new Date(), z = n => String(n).padStart(2, '0'), ext = mime === 'application/pdf' ? 'pdf' : mime.split('/')[1].replace('jpeg', 'jpg'),
-        name = 'scan-' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '-' + z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds()) + '-' + uuid_().slice(0, 4) + '.' + ext,
-        bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-  const reading = ocrText_(bytes, mime).then(t => ({ t }), e => ({ e })); // reading and filing happen at the same time
-  const inbox = await subfolder_(await vaultRoot_(), '_Inbox');
-  const file = await upload_({ name, parents: [inbox], description: SCAN_MARK }, bytes, mime);
-  const res = { fileId: file.id, fileName: cut_(String(p.name || name), 120), mime, ocr: false, why: '', parsed: null }, o = await reading;
-  if (o.t != null) { try { res.parsed = parseReceipt_(o.t); res.ocr = true; } catch (e) { res.why = 'The text could not be read from this photo.'; res.detail = String(e.message || e).slice(0, 200); } }
-  else { res.why = 'The text could not be read from this photo.'; res.detail = String(o.e && o.e.message || o.e).slice(0, 200); }
-  return res;
-}
-async function discardScan(fileId) { // the person closed the form without saving
-  try { const f = await fileGet_(String(fileId), 'description'); if (f.description === SCAN_MARK) await trash_(String(fileId)); } catch (e) {}
-  return true;
-}
-
-// ---- step 2: save what the person confirmed ----
-function receiptFields_(p) {
-  const t = (v, n) => clip_(v, n);
-  const merchant = t(p.merchant, 80);
-  if (!merchant) throw new Error('Enter the business the receipt is from.');
-  const date = t(p.date, 10), dt = D_.test(date) ? new Date(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10)) : null;
-  if (!dt || dt.getMonth() !== +date.slice(5, 7) - 1 || +date.slice(0, 4) < 1990) throw new Error('Pick the date of the purchase.');
-  const num = (v, req) => { if (v === '' || v == null) { if (!req) return ''; throw new Error('Enter the amount on the receipt.'); } const n = Number(v); if (!(n >= 0 && n < 1e8)) throw new Error(req ? 'Enter the amount on the receipt.' : 'Check the tax amount.'); return n.toFixed(2); };
-  const d = p.data && typeof p.data === 'object' ? p.data : {}, items = (Array.isArray(d.items) ? d.items : []).slice(0, 60)
-    .map(i => ({ d: t(i.d, 60), q: i.q > 0 ? +i.q : '', p: i.p === '' || i.p == null || isNaN(i.p) ? '' : +(+i.p).toFixed(2) })).filter(i => i.d);
-  const data = { items, subtotal: d.subtotal === '' || d.subtotal == null || isNaN(d.subtotal) ? '' : +(+d.subtotal).toFixed(2),
-    time: /^\d{2}:\d{2}$/.test(d.time) ? d.time : '', address: t(d.address, 140), phone: t(d.phone, 30), payment: t(d.payment, 40) };
-  return { merchant, date, amount: num(p.amount, true), tax: num(p.tax, false), currency: /^[A-Z]{3}$/.test(p.currency) ? p.currency : 'CAD',
-    category: CATS.indexOf(p.category) >= 0 ? p.category : 'Other', kind: p.kind === 'digital' ? 'digital' : 'physical', notes: t(p.notes, 500), data: JSON.stringify(data) };
-}
-
-async function saveReceipt(p) {
-  const me = me_(), f = receiptFields_(p);
-  let rec;
-  await locked_(async () => {
-    const x = p.id ? await byKey_('Receipts', String(p.id)) : null;
-    if (p.id && !x) throw new Error('That receipt was already removed.');
-    if (x) { rec = Object.assign(x.o, f); await putRow_('Receipts', x.r, rec); return; }
-    const fileId = String(p.fileId || ''); let file;
-    try { file = await fileGet_(fileId, 'id,name,mimeType,description'); } catch (e) { throw new Error('The scanned file is missing. Scan the receipt again.'); }
-    if (file.description !== SCAN_MARK) throw new Error('That file is not a new scan.');
-    rec = Object.assign({ id: uuid_().slice(0, 8), uploader: me, fileId, fileName: cut_(String(p.fileName || file.name), 120), mime: file.mimeType, created: new Date().toISOString() }, f);
-    await addRows_('Receipts', [rec]);
-  });
-  await fileReceipt_(rec); // put the photo in Receipts / year / month and give it a readable name
-  return rec;
-}
-async function fileReceipt_(rec) {
-  try {
-    const f = await fileGet_(rec.fileId, 'id,name,parents'), ext = (/\.([A-Za-z0-9]+)$/.exec(f.name) || [0, 'jpg'])[1].toLowerCase(),
-          safe = rec.merchant.replace(/[\\\/:*?"<>|]+/g, ' ').trim().slice(0, 40), dest = await monthFolder_(rec.date), rm = (f.parents || []).filter(x => x !== dest).join(',');
-    await g(DRV + '/files/' + enc(rec.fileId) + '?supportsAllDrives=true&fields=id&addParents=' + enc(dest) + (rm ? '&removeParents=' + enc(rm) : ''),
-      { method: 'PATCH', json: { name: rec.date + ' ' + safe + ' ' + rec.amount + '.' + ext, description: FILED_MARK } });
-  } catch (e) { /* the receipt is saved either way; filing in Drive is best effort */ }
-}
-async function deleteReceipt(id) {
-  let fid = '';
-  await locked_(async () => { const x = await byKey_('Receipts', String(id)); if (x) { fid = x.o.fileId; await delRow_('Receipts', x.r); } });
-  if (fid) { try { await trash_(fid); } catch (e) {} }
-  return true;
-}
-async function getReceiptFile(id) { // the original photo or PDF of one receipt, as base64
-  me_();
-  const x = await byKey_('Receipts', String(id));
-  if (!x) throw new Error('That receipt no longer exists.');
-  let blob; try { blob = await g(DRV + '/files/' + enc(x.o.fileId) + '?alt=media&supportsAllDrives=true', { as: 'blob' }); }
-  catch (e) { throw new Error('The original file could not be opened. Ask the person who scanned it to share the Household Vault folder with you in Google Drive.'); }
-  const data = await new Promise((ok, no) => { const fr = new FileReader(); fr.onload = () => ok(String(fr.result).split(',')[1] || ''); fr.onerror = () => no(fr.error); fr.readAsDataURL(blob); });
-  return { name: x.o.fileName, mime: x.o.mime || blob.type, data };
-}
-
-// ---- reading the text of a receipt ----
-const BRANDS_ = [
-  [/safeway/i, 'Safeway', 'Groceries'], [/save[- ]?on[- ]?foods/i, 'Save-On-Foods', 'Groceries'], [/sobeys/i, 'Sobeys', 'Groceries'], [/superstore/i, 'Real Canadian Superstore', 'Groceries'],
-  [/no frills/i, 'No Frills', 'Groceries'], [/loblaw/i, 'Loblaws', 'Groceries'], [/fresh\s?co/i, 'FreshCo', 'Groceries'], [/costco/i, 'Costco', 'Groceries'], [/whole foods/i, 'Whole Foods', 'Groceries'],
-  [/co-?op (food|grocery|wine)/i, 'Co-op Food Store', 'Groceries'], [/t&t supermarket/i, 'T&T Supermarket', 'Groceries'], [/trader joe/i, "Trader Joe's", 'Groceries'], [/kroger/i, 'Kroger', 'Groceries'],
-  [/wal-?mart/i, 'Walmart', 'Shopping'], [/dollarama/i, 'Dollarama', 'Shopping'], [/dollar tree/i, 'Dollar Tree', 'Shopping'], [/best ?buy/i, 'Best Buy', 'Shopping'], [/amazon/i, 'Amazon', 'Shopping'],
-  [/\btarget\b/i, 'Target', 'Shopping'], [/winners|homesense|marshalls/i, 'Winners', 'Shopping'], [/staples/i, 'Staples', 'Work'], [/canadian tire/i, 'Canadian Tire', 'Auto'], [/princess auto/i, 'Princess Auto', 'Auto'],
-  [/home depot/i, 'The Home Depot', 'Home'], [/\brona\b/i, 'Rona', 'Home'], [/lowe'?s/i, "Lowe's", 'Home'], [/ikea/i, 'IKEA', 'Home'], [/home hardware/i, 'Home Hardware', 'Home'],
-  [/shoppers drug/i, 'Shoppers Drug Mart', 'Health'], [/london drugs/i, 'London Drugs', 'Health'], [/rexall/i, 'Rexall', 'Health'], [/walgreens/i, 'Walgreens', 'Health'], [/\bcvs\b/i, 'CVS', 'Health'], [/pharmasave/i, 'Pharmasave', 'Health'],
-  [/tim hortons|tim horton/i, 'Tim Hortons', 'Dining'], [/starbucks/i, 'Starbucks', 'Dining'], [/mcdonald/i, "McDonald's", 'Dining'], [/\ba ?& ?w\b/i, 'A&W', 'Dining'], [/subway/i, 'Subway', 'Dining'],
-  [/wendy'?s/i, "Wendy's", 'Dining'], [/burger king/i, 'Burger King', 'Dining'], [/dairy queen/i, 'Dairy Queen', 'Dining'], [/pizza hut/i, 'Pizza Hut', 'Dining'], [/domino'?s/i, "Domino's", 'Dining'],
-  [/boston pizza/i, 'Boston Pizza', 'Dining'], [/chipotle/i, 'Chipotle', 'Dining'], [/\bkfc\b/i, 'KFC', 'Dining'], [/popeyes/i, 'Popeyes', 'Dining'],
-  [/\bshell\b/i, 'Shell', 'Fuel'], [/\besso\b/i, 'Esso', 'Fuel'], [/petro-?canada/i, 'Petro-Canada', 'Fuel'], [/husky/i, 'Husky', 'Fuel'], [/chevron/i, 'Chevron', 'Fuel'], [/mobil\b/i, 'Mobil', 'Fuel'],
-  [/\bco-?op\b.*\b(gas|fuel|cardlock)\b/i, 'Co-op Gas', 'Fuel'], [/fas gas/i, 'Fas Gas', 'Fuel'], [/circle k/i, 'Circle K', 'Fuel'], [/7-?eleven/i, '7-Eleven', 'Fuel'],
-  [/\buber\b/i, 'Uber', 'Travel'], [/air canada/i, 'Air Canada', 'Travel'], [/westjet/i, 'WestJet', 'Travel'], [/\bhotel\b|\binn\b|\bresort\b/i, '', 'Travel'],
-  [/\btelus\b/i, 'Telus', 'Utilities'], [/\brogers\b/i, 'Rogers', 'Utilities'], [/\bbell\b.*(mobility|canada)/i, 'Bell', 'Utilities'], [/\bshaw\b/i, 'Shaw', 'Utilities'], [/\batco\b/i, 'ATCO', 'Utilities'], [/epcor/i, 'EPCOR', 'Utilities'],
-  [/cineplex|landmark cinemas/i, 'Cineplex', 'Entertainment']
-];
-const CAT_WORDS_ = [[/unleaded|diesel|\bregular\b.*\bl\b|litres?|liters?|\bpump\b|fuel/i, 'Fuel'], [/\btip\b|gratuity|\bserver\b|\btable\b|\bguests?\b|restaurant|\bcafe\b|coffee|latte|burger|pizza|sandwich|\bdine\b/i, 'Dining'],
-  [/pharmacy|prescription|\brx\b|medicine|vitamin/i, 'Health'], [/produce|dairy|bread|\bmilk\b|\beggs?\b|bananas?|chicken|\bbeef\b|\bcheese\b|grocery/i, 'Groceries'], [/lumber|hardware|paint|\bscrews?\b/i, 'Home'],
-  [/oil change|tires?\b|wiper|battery|brake/i, 'Auto'], [/movie|ticket|admission/i, 'Entertainment']];
-const SKIP_NAME_ = /^(welcome|thank|receipt|invoice|customer|copy|store\b|tel\b|phone|www|http|order|server|table|date|time|gst|tax|cashier|terminal|card|visa|master|debit|credit|merchant|sale\b|duplicate|reprint|survey|please|tax invoice|eat in|take out|dine in)/i;
-const MONEY_G_ = /(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\.(\d{2})(?!\d|\s*%)/g;
-const moneyIn_ = s => { const r = []; let m; MONEY_G_.lastIndex = 0; while ((m = MONEY_G_.exec(s))) r.push(parseFloat(m[1].replace(/,/g, '') + '.' + m[2])); return r; };
-const AMT_ONLY_ = /^[\s$€£-]*\d[\d,]*\.\d{2}\s*-?\s*[A-Za-z]?$/;
-
-function titleCase_(s) {
-  const letters = s.replace(/[^A-Za-z]/g, '');
-  if (!letters || letters !== letters.toUpperCase()) return s;
-  return s.toLowerCase().replace(/(^|[\s\-'(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/(\d)(l|g|kg|ml|oz|lb|pk|ct)\b/g, (m, a, b) => a + b.toUpperCase());
-}
-function datesIn_(lines, dayFirst) {
-  const now = Date.now(), lo = now - 3660 * 864e5, hi = now + 2 * 864e5, out = [];
-  const MN = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
-  const ok = (y, m, d) => { if (y < 100) y += 2000; const t = new Date(y, m - 1, d); return t.getFullYear() === y && t.getMonth() === m - 1 && t.getDate() === d && +t >= lo && +t <= hi; };
-  const add = (y, m, d, idx, hasTime, amb) => { if (y < 100) y += 2000; out.push({ date: y + '-' + (m < 10 ? '0' : '') + m + '-' + (d < 10 ? '0' : '') + d, idx, hasTime, amb }); };
-  lines.forEach((line, idx) => {
-    const hasTime = /\b\d{1,2}:\d{2}\b/.test(line); let m;
-    const iso = /(?:^|\D)(20\d{2})[-\/.](\d{1,2})[-\/.](\d{1,2})(?!\d)/g;
-    while ((m = iso.exec(line))) if (ok(+m[1], +m[2], +m[3])) add(+m[1], +m[2], +m[3], idx, hasTime, false);
-    const dmy = /(?:^|\D)(\d{1,2})[-\/.](\d{1,2})[-\/.](20\d{2}|\d{2})(?!\d)/g;
-    while ((m = dmy.exec(line))) {
-      const a = +m[1], b = +m[2], y = +m[3]; let d, mo, amb = false;
-      if (a > 12 && b <= 12) { d = a; mo = b; } else if (b > 12 && a <= 12) { mo = a; d = b; }
-      else if (a <= 12 && b <= 12) { amb = a !== b; if (dayFirst) { d = a; mo = b; } else { mo = a; d = b; } } else continue;
-      if (ok(y, mo, d)) add(y, mo, d, idx, hasTime, amb);
-    }
-    const mon1 = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(20\d{2}|\d{2})\b/gi;
-    while ((m = mon1.exec(line))) if (ok(+m[3], MN[m[1].toLowerCase()], +m[2])) add(+m[3], MN[m[1].toLowerCase()], +m[2], idx, hasTime, false);
-    const mon2 = /\b(\d{1,2})(?:st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+(20\d{2}|\d{2})\b/gi;
-    while ((m = mon2.exec(line))) if (ok(+m[3], MN[m[2].toLowerCase()], +m[1])) add(+m[3], MN[m[2].toLowerCase()], +m[1], idx, hasTime, false);
-  });
-  return out;
-}
-function totalsIn_(lines) {
-  const NOT = /sub\s*-?\s*total|before\s*tax|total\s*(savings|discount|points|items?|qty|quantity|number|tax|gst|hst|pst|tendered|saved|rewards?|bonus)|items?\s*total|points|saved|savings|tendered/i;
-  let total = null, sub = null, tax = 0, taxSeen = false, totalTax = null;
-  lines.forEach((l, i) => {
-    let v = moneyIn_(l);
-    if (!v.length && lines[i + 1] && AMT_ONLY_.test(lines[i + 1])) v = moneyIn_(lines[i + 1]);
-    if (/sub\s*-?\s*total/i.test(l) && v.length && sub == null) sub = v[v.length - 1];
-    if (/\b(gst|hst|pst|qst|tps|tvq|vat|iva|tax)\b/i.test(l) && !/tax\s*(invoice|id|no\b|number|#|reg)|(gst|hst)\s*(reg|no\b|number|#)|business\s*(no|number)|included|exempt|taxable|before\s*tax|total\s*due/i.test(l) && v.length) {
-      if (/total\s*tax|tax\s*total/i.test(l)) totalTax = v[v.length - 1]; else { tax += v[v.length - 1]; taxSeen = true; }
-    }
-    if (NOT.test(l)) return;
-    const m = /\b(grand\s*total|total\s*due|amount\s*due|order\s*total|totale|total\s*amount|amount\s*charged|total\s*charged|balance\s*due|amount\s*paid|to\s*pay|total)\b/i.exec(l);
-    if (!m || !v.length) return;
-    const amt = v[v.length - 1]; if (!(amt > 0)) return;
-    const rank = /grand|due|order|totale|amount\s*(due|charged)|charged/i.test(m[1]) ? 3 : /^total/i.test(m[1]) ? 2 : 1;
-    if (!total || rank > total.rank || (rank === total.rank && amt >= total.amt)) total = { amt, rank };
-  });
-  return { total: total ? total.amt : null, sub, tax: totalTax != null ? totalTax : (taxSeen ? +tax.toFixed(2) : null) };
-}
-function pairColumns_(lines) { // some scans list all the labels first and all the amounts after
-  const isLab = l => !/\d/.test(l) && l.length < 40 && /(sub\s*-?\s*total|total|gst|hst|pst|qst|tax|visa|mastercard|master card|debit|credit|interac|cash|change|tender|balance|amex|amount)/i.test(l);
-  const out = []; let i = 0;
-  while (i < lines.length) {
-    if (!isLab(lines[i])) { i++; continue; }
-    let j = i; while (j < lines.length && isLab(lines[j])) j++;
-    let k = j; while (k < lines.length && AMT_ONLY_.test(lines[k])) k++;
-    const nl = j - i, na = k - j;
-    if (nl >= 2 && na >= nl) for (let t = 0; t < nl; t++) out.push(lines[i + t] + ' ' + lines[k - nl + t]);
-    i = Math.max(j, i + 1);
-  }
-  return out;
-}
-function parseReceipt_(text) {
-  let lines = String(text || '').replace(/[﻿​]/g, '').replace(/\r/g, '').split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean).slice(0, 400);
-  const all = lines.join('\n');
-  const euro = (all.match(/\d,\d{2}(?!\d)/g) || []).length >= 2 && !/\d\.\d{2}(?!\d)/.test(all);
-  if (euro) lines = lines.map(l => l.replace(/(\d{1,3}(?:\.\d{3})*),(\d{2})(?!\d)/g, (m, a, b) => a.replace(/\./g, '') + '.' + b));
-  const out = { merchant: '', date: '', amount: null, tax: null, currency: 'CAD', category: 'Other',
-    data: { items: [], subtotal: '', time: '', address: '', phone: '', payment: '' }, flags: {} };
-  // currency
-  if (/€|\bEUR\b/.test(all)) out.currency = 'EUR'; else if (/£|\bGBP\b/.test(all)) out.currency = 'GBP'; else if (/\bUSD\b|US\s?\$/.test(all)) out.currency = 'USD';
-  // business and category
-  const head = lines.slice(0, 14).join('\n');
-  let br = BRANDS_.find(b => b[0].test(head)) || BRANDS_.find(b => b[0].test(all));
-  if (br && br[1]) { out.merchant = br[1]; out.flags.merchant = true; }
-  if (!out.merchant) {
-    const cand = lines.slice(0, 8).find(l => /[A-Za-z]{3}/.test(l) && !SKIP_NAME_.test(l) && (l.replace(/[^\d]/g, '').length / l.length) < 0.3 && l.length <= 50 && !/\b(st|street|ave|avenue|rd|road|blvd|hwy|dr)\b\.?/i.test(l) && !/@|\.com\b/i.test(l));
-    if (cand) { out.merchant = titleCase_(cand.replace(/\s*[#*-]\s*\d+.*$/, '').replace(/\s+(store|unit|location)\s*#?\s*\d+.*$/i, '').trim()).slice(0, 60); out.flags.merchant = !!out.merchant; }
-  }
-  if (br) out.category = br[2];
-  else { const cw = CAT_WORDS_.find(c => c[0].test(all)); if (cw) out.category = cw[1]; }
-  // date and time
-  const ds = datesIn_(lines, euro || /\b(totale|iva|scontrino)\b/i.test(all)).sort((a, b) => (b.hasTime - a.hasTime) || (a.idx - b.idx));
-  if (ds.length) {
-    out.date = ds[0].date; out.flags.date = true; out.flags.dateAmbiguous = ds[0].amb;
-    const tl = lines[ds[0].idx], tm = /\b(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?/.exec(tl) || /\b(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?/.exec(lines[ds[0].idx + 1] || '');
-    if (tm) { let h = +tm[1]; if (tm[3]) { h = h % 12 + (/p/i.test(tm[3]) ? 12 : 0); } if (h < 24) out.data.time = (h < 10 ? '0' : '') + h + ':' + tm[2]; }
-  }
-  // amounts
-  let t = totalsIn_(lines);
-  if (t.total == null) { const t2 = totalsIn_(lines.concat(pairColumns_(lines))); t = { total: t2.total, sub: t.sub != null ? t.sub : t2.sub, tax: t.tax != null ? t.tax : t2.tax }; }
-  let amt = t.total;
-  if (amt == null) {
-    const pool = []; lines.forEach(l => { if (!/cash|change|tender|received|points|saved/i.test(l)) moneyIn_(l).forEach(v => pool.push(v)); });
-    if (pool.length) { amt = Math.max.apply(null, pool); out.flags.amountGuess = true; }
-  }
-  if (amt == null && t.sub != null) { amt = +(t.sub + (t.tax || 0)).toFixed(2); out.flags.amountGuess = true; }
-  if (amt != null) { out.amount = amt; out.flags.amount = true; }
-  out.tax = t.tax; out.data.subtotal = t.sub != null ? t.sub : '';
-  // payment, phone, address
-  const pm = /\b(visa|mastercard|master\s?card|amex|american express|interac|debit|credit|cash|apple pay|google pay|discover|gift card)\b/i.exec(all);
-  if (pm) { const pl = lines.find(l => /\b(visa|mastercard|master\s?card|amex|american express|interac|debit|credit|discover)\b/i.test(l)) || '', l4 = /(?:\*{2,}|x{2,}|ending in|\.{3})\s*(\d{4})\b/i.exec(pl); out.data.payment = (pm[1][0].toUpperCase() + pm[1].slice(1).toLowerCase()).replace(/^Master\s?card$/i, 'Mastercard') + (l4 ? ' ••••' + l4[1] : ''); }
-  const ph = /\(?\b(\d{3})\)?[-. ](\d{3})[-. ](\d{4})\b/.exec(head); if (ph) out.data.phone = '(' + ph[1] + ') ' + ph[2] + '-' + ph[3];
-  const ai = lines.slice(0, 12).findIndex(l => /\d{1,6}\s+[A-Za-z0-9 .'-]*\b(st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|hwy|highway|way|ln|lane|cres|crescent|pl|place|ct|court|trail|tr|sq)\b/i.test(l));
-  if (ai >= 0) { const nx = lines[ai + 1] || ''; out.data.address = (lines[ai] + (/[A-Z]\d[A-Z] ?\d[A-Z]\d|\b[A-Z]{2}\b.*\d{5}|,\s*[A-Z]{2}\b/.test(nx) ? ', ' + nx : '')).slice(0, 140); }
-  // line items
-  const NOT_ITEM = /total|tax|gst|hst|pst|qst|vat|visa|master|debit|credit|interac|cash|change|tender|balance|amount|payment|approved|auth\b|ref\b|card|saving|discount|points|rounding|\btip\b|gratuity|you saved|due\b|paid|invoice|phone|tel\b|receipt|date|time|thank|iva\b|^shipping|^items?:?\b|handling/i;
-  const items = [];
-  lines.forEach(l => {
-    const q = /^(\d+)\s*(?:@|x)\s*\$?\s*(\d+\.\d{2})/i.exec(l);
-    if (q && items.length) { items[items.length - 1].q = +q[1]; return; }
-    if (NOT_ITEM.test(l) || datesIn_([l], false).length) return;
-    const m = /^(.*?)\s*[$€£]?\s*(-?\d{1,3}(?:,\d{3})*\.\d{2})\s*(-?)\s*[A-Za-z]{0,2}$/.exec(l);
-    if (!m) return;
-    let d = m[1].replace(/^\d{4,}\s+/, '').replace(/\s+\d{4,}$/, '').replace(/[$€£]\s*$/, '').trim();
-    if ((d.match(/[A-Za-z]/g) || []).length < 2 || d.length > 70) return;
-    const mq = /^(\d{1,2})\s*[xX]\s+(.*)$/.exec(d) || /^(\d{1,2})\s+([A-Za-z].*)$/.exec(d), price = (m[3] ? -1 : 1) * parseFloat(m[2].replace(/,/g, ''));
-    items.push({ d: titleCase_(mq ? mq[2] : d).slice(0, 60), q: mq && +mq[1] > 1 ? +mq[1] : '', p: price });
-  });
-  if (items.length <= 60) out.data.items = items.filter(i => !(out.amount != null && Math.abs(i.p - out.amount) < 0.005 && items.length === 1)).slice(0, 60);
-  return out;
-}
-
-
 // ---------- the list of everything the page may ask for ----------
 const API = { getSources, saveSources, getFamily, getHousehold, savePrefs, saveProfile, googleProfile, syncMe, getRecipes, saveRecipe, deleteRecipe,
   saveEvent, deleteEvent, setSharedColor, saveSharedEvent, deleteSharedEvent, syncShared, searchPlaces, setWeatherPlace, getForecast, getInvite, inviteMember,
-  getLists, listOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, getVault, scanReceipt, discardScan, saveReceipt, deleteReceipt, getReceiptFile };
+  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals };
 window.AUTH = AUTH;
 window.SRV = { call(fn, args) {
   const f = API[fn];
