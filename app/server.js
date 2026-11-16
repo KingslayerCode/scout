@@ -35,7 +35,7 @@ const ls_ = {
 // Google's browser sign-in gives a key that lasts about an hour and cannot be renewed on its own. KEYS_URL is the small "Scout keys"
 // helper (a web app in Apps Script that holds the Client Secret). With it, signing in once leaves a renewal key on this phone, and the
 // hourly key is renewed quietly in the background. Without it (KEYS_URL empty) the person taps Reconnect about once an hour instead.
-const KEYS_URL = window.SCOUT_KEYS_URL || '';
+const KEYS_URL = 'SCOUT_KEYS_URL' in window ? window.SCOUT_KEYS_URL : 'https://script.google.com/macros/s/AKfycbzuzbFoloAkEWgyeh163QAYWqlmjW7iVWHOj8-qDITyIU1taltCLWJrKrzXmNm6YgNi/exec'; // tests set window.SCOUT_KEYS_URL first; set it to '' to go back to the hourly Reconnect
 const AUTH = (() => {
   const AK = 'scout-auth', A = { token: '', exp: 0, refresh: '', noRT: false, email: '', name: '', picture: '' };
   try { const s = JSON.parse(ls_.get(AK) || 'null'); if (s && s.email) { A.email = s.email; A.name = s.name || ''; A.picture = s.picture || ''; A.refresh = s.refresh || ''; A.noRT = !!s.noRT; if (s.exp > Date.now() + 60000) { A.token = s.token; A.exp = s.exp; } } } catch (e) {}
