@@ -1564,10 +1564,10 @@ $('wb').onclick=e=>{
 $('wb').onsubmit=e=>{e.preventDefault();const inp=$('wbin'),t=inp.value.trim();if(!t)return;inp.value='';const x=splitWho(t);addBoard({kind:'todo',text:x.text,assignee:x.who});$('wbin').focus()};
 /* "Take out the bins -dane" (any case, any spacing) gives the to-do to Dane and drops the "-dane". A name is a profile name, one of its words, or its e-mail name. */
 const NN=x=>String(x).toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
-const NICK={john:['jack','johnny'],jack:['john','johnny']}; // shortcut: a few built-in nicknames, no nickname setting; add more here
+const NICK={john:['jack','johnny','jr'],jack:['john','johnny','jr']}; // shortcut: a few built-in nicknames, no nickname setting; add more here
 function whoIs(word){
   const k=NN(word);if(!k)return null;
-  const hit=F.profiles.filter(p=>{const w=String(p.name).replace(/[^\p{L}\p{N}\s-]/gu,' ').split(/[\s-]+/).map(NN).filter(Boolean),runs=[];
+  const hit=F.profiles.filter(p=>{const w=String(p.name).replace(/(\p{Ll})(\p{Lu})/gu,'$1 $2').replace(/[^\p{L}\p{N}\s-]/gu,' ').split(/[\s-]+/).map(NN).filter(Boolean),runs=[]; // "JackTheRedFox" counts as Jack, The, Red, Fox
     for(let i=0;i<w.length;i++)for(let j=i+1;j<=w.length;j++)runs.push(w.slice(i,j).join('')); // "john-randy wells" -> john, johnrandy, johnrandywells, randy, randywells, wells
     return [NN(String(p.email).split('@')[0]),...runs,...w.flatMap(x=>NICK[x]||[])].includes(k)});
   return hit.length===1?hit[0].email:null; // two people with that name: do nothing
