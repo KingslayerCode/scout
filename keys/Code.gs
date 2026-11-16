@@ -1,6 +1,6 @@
 // Scout keys: swaps a Google sign-in code or a renewal key for a fresh hourly key.
 // It exists because only this script knows the Client Secret (kept in Script Properties as CLIENT_SECRET), so the web page never has to.
-const CLIENT_ID = '205279511864-mflcs2kjrptbe6gcuc2qmrhf17d1bj84.apps.googleusercontent.com';
+const CLIENT_ID = '205279511864-5t1kng7vpjsk98oor9nuev8jksvckuk7.apps.googleusercontent.com';
 
 function doGet() { return ContentService.createTextOutput('Scout keys is running.'); }
 

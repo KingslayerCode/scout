@@ -2,7 +2,7 @@
    using the signed-in person's Google account. Every function the page used to ask Apps Script for is in API at the bottom. */
 (function () {
 'use strict';
-const CLIENT_ID = '205279511864-mflcs2kjrptbe6gcuc2qmrhf17d1bj84.apps.googleusercontent.com';
+const CLIENT_ID = '205279511864-5t1kng7vpjsk98oor9nuev8jksvckuk7.apps.googleusercontent.com';
 const SHEET_ID = '1YcY3HbP-yWpypR83tpE8s5fIwUdtmrsYO49zFUtZ4qI'; // the Scout sheet; point this at another sheet to switch data
 const SCOPES = 'openid email profile https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks.readonly https://www.googleapis.com/auth/drive';
 const APP_NAME = 'Scout';
