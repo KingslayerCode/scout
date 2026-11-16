@@ -17,6 +17,10 @@
 :root[data-theme=light]{--bg:#f1f5f9;--card:#fff;--ink:#1c2733;--mut:#62758a;--line:#e1e7ed;--soft:#eef2f6;--acc:#0e9aa9;--onacc:#fff;--rail:#16324a;--bad:#d63636;--warn:#b7791f;--sh:0 12px 40px rgba(20,40,60,.2);color-scheme:light}
 @media(prefers-color-scheme:light){:root[data-theme=system]{--bg:#f1f5f9;--card:#fff;--ink:#1c2733;--mut:#62758a;--line:#e1e7ed;--soft:#eef2f6;--acc:#0e9aa9;--onacc:#fff;--rail:#16324a;--bad:#d63636;--warn:#b7791f;--sh:0 12px 40px rgba(20,40,60,.2);color-scheme:light}}
 :root{--hol:#3dbd7d}:root[data-theme=light]{--hol:#1f9a58}@media(prefers-color-scheme:light){:root[data-theme=system]{--hol:#1f9a58}}
+/* whiteboard: a dark board in the dark theme, a white board in the light theme (system follows the phone) */
+:root{--wb-frame:linear-gradient(150deg,#636d78,#2d343c 38%,#4c545e 62%,#262c33);--wb-hi:rgba(255,255,255,.22);--wb-face:#1f2830;--wb-glow:rgba(255,255,255,.07);--wb-smudge:rgba(255,255,255,.035);--wb-edge:rgba(255,255,255,.08);--blk:#f2f5f8;--wb-text:#e6ebf0;--wb-mut:#8b98a5;--wb-blue:#86b4ff;--wb-red:#ff8080;--wb-tray:linear-gradient(#444d57,#272d34);--wb-btn:#2e373f;--wb-btn-ink:#e9eef2;--wb-badge:#434d57;--wb-dash:rgba(255,255,255,.24);--wb-mixc:#fff;--wb-pc:68%}
+:root[data-theme=light]{--wb-frame:linear-gradient(150deg,#eceff2,#a6aeb8 38%,#d6dbe1 62%,#9ea7b1);--wb-hi:rgba(255,255,255,.75);--wb-face:#f6f7f5;--wb-glow:rgba(255,255,255,.95);--wb-smudge:rgba(120,130,140,.09);--wb-edge:rgba(0,0,0,.10);--blk:#15191e;--wb-text:#222b33;--wb-mut:#7b8794;--wb-blue:#1b4fd8;--wb-red:#c62828;--wb-tray:linear-gradient(#d9dde2,#a5acb5);--wb-btn:#fff;--wb-btn-ink:#222b33;--wb-badge:#e9edf1;--wb-dash:rgba(0,0,0,.22);--wb-mixc:#000;--wb-pc:80%}
+@media(prefers-color-scheme:light){:root[data-theme=system]{--wb-frame:linear-gradient(150deg,#eceff2,#a6aeb8 38%,#d6dbe1 62%,#9ea7b1);--wb-hi:rgba(255,255,255,.75);--wb-face:#f6f7f5;--wb-glow:rgba(255,255,255,.95);--wb-smudge:rgba(120,130,140,.09);--wb-edge:rgba(0,0,0,.10);--blk:#15191e;--wb-text:#222b33;--wb-mut:#7b8794;--wb-blue:#1b4fd8;--wb-red:#c62828;--wb-tray:linear-gradient(#d9dde2,#a5acb5);--wb-btn:#fff;--wb-btn-ink:#222b33;--wb-badge:#e9edf1;--wb-dash:rgba(0,0,0,.22);--wb-mixc:#000;--wb-pc:80%}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);-webkit-tap-highlight-color:transparent}
@@ -222,6 +226,7 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .lempty{text-align:center;padding:36px 20px}.lempty .lbig{margin:0 auto 12px;width:64px;height:64px;border-radius:20px}.lempty .lbig svg{width:34px;height:34px}.lempty h2{margin:0 0 6px;font-size:22px}
 .lempty .acts{flex-wrap:wrap;margin-top:16px}
 #ld{margin-top:0}
+#lst{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}#lst .chip{justify-content:center;padding:0 4px;min-width:0}
 
 /* meals */
 .mwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
@@ -494,16 +499,20 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 @font-face{font-family:Caveat;font-weight:700;font-display:swap;src:url(fonts/caveat-700.woff2) format("woff2")}
 #sec-board{--hand:Caveat,"Bradley Hand","Marker Felt","Segoe Print",cursive}
 .nb{position:relative}.bdg{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center;pointer-events:none}.bdg[hidden]{display:none}
-.wbd{max-width:760px;margin:0 auto;padding:9px;border-radius:20px;background:linear-gradient(150deg,#eceff2,#a6aeb8 38%,#d6dbe1 62%,#9ea7b1);box-shadow:0 14px 34px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.75),inset 0 -1px 0 rgba(0,0,0,.25)}
-.wbs{position:relative;border-radius:12px;padding:16px 14px 20px;min-height:56dvh;color:#222b33;font-family:var(--hand);font-weight:700;
-  background:radial-gradient(130% 46% at 14% 0%,rgba(255,255,255,.95),rgba(255,255,255,0) 62%),radial-gradient(55% 22% at 84% 34%,rgba(120,130,140,.10),transparent 70%),radial-gradient(40% 14% at 10% 72%,rgba(120,130,140,.08),transparent 70%),#f6f7f5;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.10),inset 0 3px 10px rgba(0,0,0,.10)}
+.nb.flash svg{animation:wbflash 2.6s ease-in-out infinite}
+@keyframes wbflash{0%,100%{color:#a9bccd;filter:none}50%{color:#ff4d4d;filter:drop-shadow(0 0 5px rgba(255,77,77,.75))}}
+@media(prefers-reduced-motion:reduce){.nb.flash svg{animation:none;color:#ff4d4d}}
+.wbd{max-width:760px;margin:0 auto;padding:9px;border-radius:20px;background:var(--wb-frame);box-shadow:0 14px 34px rgba(0,0,0,.35),inset 0 1px 0 var(--wb-hi),inset 0 -1px 0 rgba(0,0,0,.25)}
+.wbs{position:relative;border-radius:12px;padding:16px 14px 20px;min-height:56dvh;color:var(--wb-text);font-family:var(--hand);font-weight:700;
+  background:radial-gradient(130% 46% at 14% 0%,var(--wb-glow),transparent 62%),radial-gradient(55% 22% at 84% 34%,var(--wb-smudge),transparent 70%),radial-gradient(40% 14% at 10% 72%,var(--wb-smudge),transparent 70%),var(--wb-face);
+  box-shadow:inset 0 0 0 1px var(--wb-edge),inset 0 3px 10px rgba(0,0,0,.10)}
 .wbs button,.wbs input,.wbs textarea{font-family:inherit;font-weight:inherit}
-.wbh{display:flex;align-items:baseline;gap:10px;position:relative;margin:0 0 4px;font-size:36px;line-height:1.05;color:#1b4fd8;letter-spacing:.2px}
-.wbh.n{color:#c62828;margin-top:26px}
+.wbh{display:flex;align-items:baseline;gap:10px;position:relative;margin:0 0 4px;font-size:36px;line-height:1.05;color:var(--wb-blue);letter-spacing:.2px}
+.wbh.n{color:var(--wb-red);margin-top:26px}
 .wbh .wbu{position:absolute;left:0;bottom:-7px;width:min(46%,170px);height:9px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;opacity:.8}
-.wbh .wbc{margin-left:auto;font-size:21px;color:#7b8794;font-weight:700}
-.wbt{display:flex;align-items:center;gap:6px;min-height:54px;transform:rotate(var(--r,0deg));transform-origin:left center;animation:wbin .25s ease-out}
+.wbh .wbc{margin-left:auto;font-size:21px;color:var(--wb-mut);font-weight:700}
+.wbt{--ink:var(--blk);display:flex;align-items:center;gap:6px;min-height:54px;transform:rotate(var(--r,0deg));transform-origin:left center;animation:wbin .25s ease-out}
+.wbt.pc{--ink:color-mix(in srgb,var(--pc) var(--wb-pc),var(--wb-mixc))}
 .wbck{flex:none;width:46px;height:46px;border:0;background:none;padding:0;display:grid;place-items:center;cursor:pointer;color:var(--ink)}
 .wbck svg{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}
 .wbck .cm{stroke-dasharray:34;stroke-dashoffset:34;transition:stroke-dashoffset .28s ease-out}
@@ -511,13 +520,13 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 .wbtx{flex:1;min-width:0;border:0;background:none;padding:6px 2px;text-align:left;cursor:pointer;color:var(--ink);font-size:29px;line-height:1.02}
 .wbw{overflow-wrap:anywhere;background:linear-gradient(var(--ink),var(--ink)) no-repeat 0 58%/0 3px;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .3s ease-out,opacity .3s}
 .wbt.done .wbw{background-size:100% 3px;opacity:.5}
-.wbm{display:block;font-size:20px;color:#6b7785;margin-top:1px}
-.wbm .od{color:#c62828}.wbm .wbp{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.wbm{display:block;font-size:20px;color:var(--wb-mut);margin-top:1px}
+.wbm .od{color:var(--wb-red)}.wbm .wbp{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .wbadd{display:flex;align-items:center;gap:6px;margin:2px 0 0}
-.wbadd input{flex:1;min-width:0;border:0;border-bottom:2px dashed rgba(27,79,216,.28);border-radius:0;background:none;padding:8px 2px 4px 6px;font-size:27px;color:#1b4fd8;outline:0;min-height:50px}
-.wbadd input::placeholder{color:#a3adb8;opacity:1}
-.wbadd input:focus{border-bottom-color:#1b4fd8}
-.wbadd button{flex:none;width:46px;height:46px;border:0;border-radius:50%;background:#1b4fd8;color:#fff;font-size:30px;line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 5px rgba(0,0,0,.25)}
+.wbadd input{flex:1;min-width:0;border:0;border-bottom:2px dashed color-mix(in srgb,var(--blk) 32%,transparent);border-radius:0;background:none;padding:8px 2px 4px 6px;font-size:27px;color:var(--blk);outline:0;min-height:50px}
+.wbadd input::placeholder{color:var(--wb-mut);opacity:.8}
+.wbadd input:focus{border-bottom-color:var(--blk)}
+.wbadd button{flex:none;width:46px;height:46px;border:0;border-radius:50%;background:var(--blk);color:var(--wb-face);font-size:30px;line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 5px rgba(0,0,0,.25)}
 .wbn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px;padding:14px 4px 6px}
 .note{position:relative;display:flex;flex-direction:column;gap:8px;min-height:136px;padding:20px 13px 11px;border:0;text-align:left;cursor:pointer;color:#2b2b2b;transform:rotate(var(--r,0deg));animation:wbpop .3s ease-out;
   background:linear-gradient(165deg,color-mix(in srgb,var(--nc) 88%,#fff),var(--nc) 55%,color-mix(in srgb,var(--nc) 90%,#000 10%));
@@ -525,14 +534,13 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 .note::before{content:"";position:absolute;top:-9px;left:50%;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.85),rgba(255,255,255,0) 42%),var(--pin,#d94141);box-shadow:0 3px 4px rgba(0,0,0,.35)}
 .note .nt{font-size:27px;line-height:1.02;overflow-wrap:anywhere;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
 .note .nby{margin-top:auto;font-size:19px;color:rgba(0,0,0,.5)}
-.note.new{background:none;box-shadow:none;border:2.5px dashed rgba(0,0,0,.22);border-radius:6px;align-items:center;justify-content:center;color:#8a96a3;font-size:25px;white-space:nowrap;text-align:center;transform:none;animation:none;min-height:110px;padding:12px}
+.note.new{background:none;box-shadow:none;border:2.5px dashed var(--wb-dash);border-radius:6px;align-items:center;justify-content:center;color:var(--wb-mut);font-size:25px;white-space:nowrap;text-align:center;transform:none;animation:none;min-height:110px;padding:12px}
 .note.new::before{display:none}
-.wbem{margin:6px 2px 0;font-size:25px;color:#98a3af}
-.wbtray{position:sticky;bottom:12px;z-index:4;display:flex;gap:8px;max-width:640px;margin:14px auto 0;padding:9px 10px;border-radius:16px;background:linear-gradient(#d9dde2,#a5acb5);box-shadow:0 10px 22px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.8)}
-.wbtray .tb{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:7px;min-height:48px;border:0;border-radius:12px;background:#fff;color:#222b33;font-size:15px;font-weight:650;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,.2)}
-.wbtray .tb svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.wbtray .tb b{background:#e9edf1;border-radius:9px;padding:0 7px;font-size:12px;line-height:18px}
-.wbtray .tb[hidden]{display:none}
+.wbem{margin:6px 2px 0;font-size:25px;color:var(--wb-mut)}
+.wbwipe{flex:none;align-self:center;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 13px 0 10px;border:2px solid var(--blk);border-radius:20px;background:none;color:var(--blk);font-size:21px;line-height:1;cursor:pointer;transform:rotate(-1.2deg)}
+.wbwipe svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.wbwipe b{background:var(--blk);color:var(--wb-face);border-radius:10px;padding:2px 8px;font-size:17px;line-height:1}
+.wbwipe.off{border-color:var(--wb-dash);color:var(--wb-mut)}
 #wbdlg textarea{font-family:Caveat,"Bradley Hand","Marker Felt",cursive;font-weight:700;font-size:26px;line-height:1.1;min-height:92px;resize:none}
 #wbx .chips{padding-bottom:2px;flex-wrap:wrap;overflow:visible}
 #wbx .sw{width:38px;height:38px}
@@ -540,7 +548,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 @keyframes wbin{from{opacity:0;transform:translateY(5px) rotate(var(--r,0deg))}}
 @keyframes wbpop{from{opacity:0;transform:scale(.82) rotate(calc(var(--r,0deg) - 4deg))}}
 @media(min-width:560px){.wbn{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:720px){.wbtray{bottom:calc(84px + env(safe-area-inset-bottom))}.wbs{padding:14px 12px 18px}}
+@media(max-width:720px){.wbs{padding:14px 12px 18px}}
 @media(prefers-reduced-motion:reduce){.wbt,.note{animation:none}}
 </style></head>
 <body>
@@ -661,7 +669,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 <dialog id="ldlg">
   <h2 id="lh">New shopping list</h2>
   <h3>Store</h3><div class="chips" id="lst" style="flex-wrap:wrap;overflow:visible"></div>
-  <label class="f ew">Or type a name<input type="text" id="ln" maxlength="60" placeholder="Costco"><button type="button" class="emo" data-for="ln" aria-label="Add an emoji" title="Add an emoji"></button></label>
+  <label class="f ew" id="lnw" hidden>Store name<input type="text" id="ln" maxlength="60" placeholder="Costco"><button type="button" class="emo" data-for="ln" aria-label="Add an emoji" title="Add an emoji"></button></label>
   <h3>Trip date <small class="hint">(optional)</small></h3>
   <input type="date" id="ld" aria-label="Planned trip date">
   <div class="chips" id="ldq" style="flex-wrap:wrap;overflow:visible;padding-top:8px"><button type="button" class="chip" data-ld="0">Today</button><button type="button" class="chip" data-ld="1">Tomorrow</button><button type="button" class="chip" data-ld="sat">Saturday</button><button type="button" class="chip" data-ld="x">No date</button></div>
@@ -1369,8 +1377,8 @@ let L={lists:[],items:[],loaded:false,cur:'',t:0},LE=null,tmpN=0;
 const hsh=s=>[...String(s).replace(/^tmp/,'')].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
 const byC=(a,b)=>String(a.created).localeCompare(String(b.created));
 const curList=()=>L.lists.find(l=>l.id===L.cur);
-const STORES=['Costco','Superstore','Walmart','Safeway','Sobeys','Co-op','Save-On'],LCOL=['#e5484d','#3e63dd','#30a46c','#f76b15','#8e4ec6','#12a594','#d6409f'];
-const lcol=l=>LCOL[hsh(String(l.name).toLowerCase())%LCOL.length];
+const STORES=['Costco','Walmart','Co-op'],SCOL={costco:'#e5484d',walmart:'#3e63dd','co-op':'#30a46c'},OCOL=['#f76b15','#8e4ec6','#12a594','#d6409f'];
+const lcol=l=>SCOL[String(l.name).trim().toLowerCase()]||OCOL[hsh(String(l.name).toLowerCase())%OCOL.length];
 const setLists=r=>{const ls=r.lists.filter(l=>l.kind!=='todo');L.lists=ls.sort(tripOrder);L.items=r.items.filter(i=>ls.some(l=>l.id===i.list));L.loaded=true;L.t=Date.now();if(!curList())L.cur=L.lists[0]?L.lists[0].id:''};
 function tripDays(l){return l.date?Math.round((pd8(l.date)-today0())/864e5):null}
 const tripRank=l=>{const n=tripDays(l);return n==null?1:n<0?2:0};
@@ -1395,7 +1403,7 @@ function drawLists(){
   const had=document.activeElement&&document.activeElement.id==='lin',draft=$('lin')?$('lin').value:'';
   $('ltabs').innerHTML=L.lists.map(x=>{const w=tripWhen(x);return `<button class="ln${x.id===L.cur?' on':''}" data-l="${esc(x.id)}" style="--lc:${lcol(x)}"><i class=ldot></i><span class=nm>${esc(x.name)}</span>${w?`<small class="${w.n<0?'past':''}">${esc(w.short)}</small>`:''}<b>${nOpen(x)||''}</b></button>`}).join('');
   const l=curList();
-  if(!l){$('lbody').innerHTML=`<div class="card lcard lempty"><div class=lbig>${CART}</div><h2>Plan your first shopping trip</h2><p class=hint>Pick a store. Add a date if you know when you're going.</p><p class=acts style="justify-content:center"><button class="btn p" data-q="Costco">Costco</button>${STORES.slice(1,4).map(s=>`<button class=btn data-q="${s}">${s}</button>`).join('')}</p></div>`;return}
+  if(!l){$('lbody').innerHTML=`<div class="card lcard lempty"><div class=lbig>${CART}</div><h2>Plan your first shopping trip</h2><p class=hint>Pick a store. Add a date if you know when you're going.</p><p class=acts style="justify-content:center"><button class="btn p" data-q="Costco">Costco</button>${STORES.slice(1).map(s=>`<button class=btn data-q="${s}">${s}</button>`).join('')}<button class=btn data-other>Other</button></p></div>`;return}
   const its=L.items.filter(i=>i.list===l.id),op=its.filter(i=>i.done!=='Y').sort(byC),dn=its.filter(i=>i.done==='Y').sort(byC),pct=its.length?Math.round(dn.length/its.length*100):0,w=tripWhen(l),em=lead({title:l.name});
   const sub=!its.length?'Nothing on the list yet':op.length?`${op.length} to get${dn.length?` · ${dn.length} in the cart`:''}`:'Everything is in the cart 🎉';
   const row=i=>{const d=i.done==='Y';
@@ -1430,6 +1438,7 @@ $('ltabs').onclick=e=>{const b=e.target.closest('[data-l]');if(b){L.cur=b.datase
 $('lbody').onclick=async e=>{
   const b=e.target.closest('button');if(!b)return;const it=id=>L.items.find(i=>i.id===id);
   if(b.dataset.q)newList(b.dataset.q);
+  else if(b.dataset.other!==undefined)editList(null,true);
   else if(b.dataset.s){addItems(L.cur,[b.dataset.s])}
   else if(b.dataset.t){const i=it(b.dataset.t);if(i)setItem(i,{done:i.done!=='Y'})}
   else if(b.dataset.x){const i=it(b.dataset.x);if(!i)return;L.items=L.items.filter(x=>x!==i);drawLists();cacheSave();if(!String(i.id).startsWith('tmp'))lop('delItem',{id:i.id}).catch(()=>{toast('Could not delete that');L.t=0;loadLists()})}
@@ -1437,17 +1446,18 @@ $('lbody').onclick=async e=>{
   else if(b.dataset.clr!==undefined){const l=curList();L.items=L.items.filter(i=>!(i.list===l.id&&i.done==='Y'));drawLists();cacheSave();lop('clearDone',{list:l.id}).catch(()=>{toast('Could not clear those');L.t=0;loadLists()})}};
 $('lbody').onsubmit=e=>{e.preventDefault();const inp=$('lin'),t=inp.value.trim();if(!t||!curList())return;inp.value='';addItems(L.cur,[t]);$('lin').focus()};
 $('lnew').onclick=()=>editList(null);
-/* the store and trip date window: store buttons fill the name, the name can be anything */
-function editList(l){
-  LE={id:l?l.id:''};$('lh').textContent=l?'Edit shopping list':'New shopping list';$('ln').value=l?l.name:'Costco';$('ld').value=l?l.date:'';$('lm').textContent='';
+/* the store and trip date window: Costco, Walmart, Co-op, or Other (which asks for a name) */
+const isStore=n=>STORES.some(x=>x.toLowerCase()===String(n).trim().toLowerCase());
+function editList(l,other){
+  const st=l?(isStore(l.name)?STORES.find(x=>x.toLowerCase()===l.name.trim().toLowerCase()):'Other'):other?'Other':'Costco';
+  LE={id:l?l.id:'',store:st};$('lh').textContent=l?'Edit shopping list':'New shopping list';$('ln').value=st==='Other'&&l?l.name:'';$('ld').value=l?l.date:'';$('lm').textContent='';
   $('ldel').hidden=!l;$('ldel').textContent='Delete list';delete $('ldel').dataset.sure;drawStores();openD($('ldlg'));
 }
-function drawStores(){const v=$('ln').value.trim().toLowerCase();$('lst').innerHTML=STORES.map(s=>`<button type=button class="chip${v===s.toLowerCase()?' on':''}" data-st="${s}">${s}</button>`).join('')}
-$('lst').onclick=e=>{const b=e.target.closest('[data-st]');if(b){$('ln').value=b.dataset.st;drawStores()}};
-$('ln').addEventListener('input',drawStores);
+function drawStores(){$('lst').innerHTML=STORES.concat('Other').map(s=>`<button type=button class="chip${LE.store===s?' on':''}" data-st="${s}">${s}</button>`).join('');$('lnw').hidden=LE.store!=='Other'}
+$('lst').onclick=e=>{const b=e.target.closest('[data-st]');if(!b)return;LE.store=b.dataset.st;drawStores();if(LE.store==='Other')$('ln').focus()};
 $('ldq').onclick=e=>{const b=e.target.closest('[data-ld]');if(!b)return;const k=b.dataset.ld,d=today0();
   $('ld').value=k==='x'?'':key(k==='sat'?new Date(d.getFullYear(),d.getMonth(),d.getDate()+((6-d.getDay()+7)%7||7),12):new Date(d.getFullYear(),d.getMonth(),d.getDate()+(+k),12))};
-$('lsv').onclick=async()=>{const n=$('ln').value.trim(),dt=$('ld').value;if(!n){$('lm').textContent='Pick a store or type a name.';return}
+$('lsv').onclick=async()=>{const n=LE.store==='Other'?$('ln').value.trim():LE.store,dt=$('ld').value;if(!n){$('lm').textContent='Type the store name.';return}
   try{if(LE.id){const l=curList();l.name=n;l.date=dt;L.lists.sort(tripOrder);drawLists();cacheSave();$('ldlg').close();await lop('editList',{id:LE.id,name:n,date:dt})}else{$('ldlg').close();await newList(n,dt)}}catch(e){$('lm').textContent=e.message||String(e)}};
 $('ldel').onclick=async()=>{const b=$('ldel');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again to delete the list and its items';return}
   const id=LE.id;L.lists=L.lists.filter(l=>l.id!==id);L.items=L.items.filter(i=>i.list!==id);L.cur=L.lists[0]?L.lists[0].id:'';drawLists();cacheSave();$('ldlg').close();
@@ -1472,9 +1482,23 @@ $('pickx').onclick=()=>$('pickdlg').close();
 
 /* ---------- whiteboard ---------- */
 let B={items:[],loaded:false,t:0},BE=null,btmp=0;
-const INKS=['#1b4fd8','#222b33','#12805c','#6a35c9'],PINS=['#d94141','#2f6fe0','#2e9b57','#333a42'],NOTEC={yellow:'#fff27a',pink:'#ffb3cf',blue:'#a8d8ff',green:'#b8f0b0',orange:'#ffc98a',purple:'#d7c2ff'};
+const PINS=['#d94141','#2f6fe0','#2e9b57','#333a42'],NOTEC={yellow:'#fff27a',pink:'#ffb3cf',blue:'#a8d8ff',green:'#b8f0b0',orange:'#ffc98a',purple:'#d7c2ff'};
 const byDue=(a,b)=>(a.due?0:1)-(b.due?0:1)||String(a.due).localeCompare(b.due)||byC(a,b);
-const wbBadge=()=>{const n=B.items.filter(i=>i.kind==='todo'&&i.done!=='Y').length,e=$('wbbg');e.hidden=!n;e.textContent=n>99?'99+':n};
+/* the red circle on the Board icon: things other people put on the board since this person last had it open (remembered on this phone).
+   A to-do given to this person also makes the icon flash. */
+const SEEN={};
+const seenAt=()=>{if(SEEN[F.me]==null){try{SEEN[F.me]=localStorage.getItem('fw-bseen:'+F.me)||''}catch(e){SEEN[F.me]=''}}return SEEN[F.me]};
+function wbNew(){
+  const me=F.me,t=seenAt(),live=B.items.filter(i=>!i._tmp),
+    mine=live.filter(i=>i.kind==='todo'&&i.assignee===me&&i.done!=='Y'&&String(i.updated)>t),
+    fresh=live.filter(i=>i.by!==me&&String(i.created)>t&&!(i.kind==='todo'&&i.done==='Y'));
+  return{n:new Set(fresh.concat(mine)).size,mine:mine.length>0};
+}
+function wbBadge(){
+  const e=$('wbbg'),w=F.me&&!$('sec-board').classList.contains('on')?wbNew():{n:0,mine:false};
+  e.hidden=!w.n;e.textContent=w.n>9?'9+':w.n;document.querySelector('.nb[data-s=board]').classList.toggle('flash',w.mine);
+}
+const markSeen=pad=>{if(!F.me)return;const late=B.items.reduce((m,i)=>Math.max(m,Date.parse(i.updated)||0,Date.parse(i.created)||0),0),t=new Date(Math.max(Date.now()+(pad||0),late)).toISOString();SEEN[F.me]=t;try{localStorage.setItem('fw-bseen:'+F.me,t)}catch(e){}wbBadge()}; // shortcut: a few seconds of slack so a save still in flight when you leave is not shown back to you, and the newest thing on the board counts even if another phone's clock runs ahead; kept per phone, not synced
 function dueOf(i){if(!i.due)return null;const d=pd8(i.due),n=Math.round((d-today0())/864e5);
   return{n,t:n===0?'today':n===1?'tomorrow':n===-1?'yesterday':n<0?`${-n} days late`:n<7?d.toLocaleDateString(undefined,{weekday:'long'}):d.toLocaleDateString(undefined,{month:'short',day:'numeric'})}}
 const UL='<svg class=wbu viewBox="0 0 120 9" preserveAspectRatio="none" aria-hidden="true"><path d="M2 5.5C22 1.5 40 8 62 4.5S100 2.5 118 6"/></svg>';
@@ -1484,15 +1508,14 @@ function drawBoard(){
     notes=B.items.filter(i=>i.kind==='note').sort((a,b)=>String(b.created).localeCompare(String(a.created)));
   const row=i=>{const h=hsh(i.id),a=i.assignee?prof(i.assignee):null,d=i.done==='Y'?null:dueOf(i),m=[];
     if(a)m.push(`<i class=wbp style="background:${esc(a.color)}"></i>${esc(a.name.split(' ')[0])}`);if(d)m.push(`<span class="${d.n<0?'od':''}">${d.n<0?'':'due '}${esc(d.t)}</span>`);
-    return `<div class="wbt${i.done==='Y'?' done':''}" style="--ink:${INKS[h%INKS.length]};--r:${((h>>3)%5-2)*.35}deg"><button class=wbck data-wc="${esc(i.id)}" aria-label="${i.done==='Y'?'Mark as not done':'Mark as done'}"><svg viewBox="0 0 32 32"><path d="M16 3.5c7.2-.4 12.7 5.1 12.3 12.2-.4 7.3-6 12.6-12.8 12.3C8.300 27.700 3.200 22.600 3.600 15.800 4 9.200 9.200 3.800 16 3.500z"/><path class=cm d="M8.500 16.500l5.500 6L27 6"/></svg></button>`+
+    return `<div class="wbt${i.done==='Y'?' done':''}${a?' pc':''}" style="${a?`--pc:${esc(a.color)};`:''}--r:${((h>>3)%5-2)*.35}deg"><button class=wbck data-wc="${esc(i.id)}" aria-label="${i.done==='Y'?'Mark as not done':'Mark as done'}"><svg viewBox="0 0 32 32"><path d="M16 3.5c7.2-.4 12.7 5.1 12.3 12.2-.4 7.3-6 12.6-12.8 12.3C8.300 27.700 3.200 22.600 3.600 15.800 4 9.200 9.200 3.800 16 3.500z"/><path class=cm d="M8.500 16.500l5.500 6L27 6"/></svg></button>`+
       `<button class=wbtx data-we="${esc(i.id)}"><span class=wbw>${esc(i.text)}</span>${m.length?`<span class=wbm>${m.join(' · ')}</span>`:''}</button></div>`};
   const note=i=>{const h=hsh(i.id),by=prof(i.by),dt=i.created?new Date(i.created):null;
     return `<button class=note data-nn="${esc(i.id)}" style="--nc:${NOTEC[i.color]||NOTEC.yellow};--pin:${PINS[h%PINS.length]};--r:${((h>>4)%7-3)*.9}deg"><span class=nt>${esc(i.text)}</span><span class=nby>— ${esc(by.name.split(' ')[0])}${dt&&!isNaN(dt)?' · '+dt.toLocaleDateString(undefined,{month:'short',day:'numeric'}):''}</span></button>`};
-  $('wb').innerHTML=`<div class=wbd><div class=wbs><h2 class=wbh>To do${UL}<span class=wbc>${open.length?open.length+' left':td.length?'all done ✌️':''}</span></h2>`+
+  $('wb').innerHTML=`<div class=wbd><div class=wbs><h2 class=wbh>To do${UL}<span class=wbc>${open.length?open.length+' left':td.length?'all done ✌️':''}</span><button type=button class="wbwipe${dn.length?'':' off'}" data-wclr aria-label="Wipe the ticked to-dos off the board"><svg viewBox="0 0 24 24"><path d="M4 16l8-9 7 6-5 6H8z"/><path d="M8 19h12"/></svg>Wipe${dn.length?`<b>${dn.length}</b>`:''}</button></h2>`+
     open.concat(dn).map(row).join('')+(td.length?'':`<p class=wbem>Nothing to do yet. Write the first one ↓</p>`)+
     `<form class=wbadd id=wbadd><input type=text id=wbin placeholder="Write a to-do…" maxlength=140 autocomplete=off autocapitalize=sentences enterkeyhint=done aria-label="New to-do"><button aria-label="Add to-do">+</button></form>`+
-    `<h2 class="wbh n">Notices${UL}</h2><div class=wbn>${notes.map(note).join('')}<button class="note new" data-wadd=note>＋ New note</button></div></div></div>`+
-    `<div class=wbtray><button class=tb data-wadd=todo><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.500 4.500a2 2 0 0 1 3 3L8 19z"/><path d="M14.500 6.500l3 3"/></svg>To-do</button><button class=tb data-wadd=note><svg viewBox="0 0 24 24"><path d="M5 4h14v11l-5 5H5z"/><path d="M19 15h-5v5"/></svg>Note</button><button class=tb data-wclr aria-label="Wipe the finished to-dos off the board"${dn.length?'':' hidden'}><svg viewBox="0 0 24 24"><path d="M4 16l8-9 7 6-5 6H8z"/><path d="M8 19h12"/></svg>Wipe<b>${dn.length}</b></button></div>`;
+    `<h2 class="wbh n">Notices${UL}</h2><div class=wbn>${notes.map(note).join('')}<button class="note new" data-wadd=note>＋ New note</button></div></div></div>`;
   if(draft)$('wbin').value=draft;if(had)$('wbin').focus();wbBadge();
 }
 async function loadBoard(force){
@@ -1524,7 +1547,7 @@ $('wb').onclick=e=>{
   else if(b.dataset.we){const i=it(b.dataset.we);if(i)editBoard(i)}
   else if(b.dataset.nn){const i=it(b.dataset.nn);if(i)editBoard(i)}
   else if(b.dataset.wadd)editBoard(null,b.dataset.wadd);
-  else if(b.dataset.wclr!==undefined){B.items=B.items.filter(i=>!(i.kind==='todo'&&i.done==='Y'));drawBoard();cacheSave();bop('clearDone',{}).catch(()=>{toast('Could not wipe those');B.t=0;loadBoard(true)})}};
+  else if(b.dataset.wclr!==undefined){if(!B.items.some(i=>i.kind==='todo'&&i.done==='Y'))return toast('Nothing ticked yet. Tick a to-do, then Wipe clears it.');B.items=B.items.filter(i=>!(i.kind==='todo'&&i.done==='Y'));drawBoard();cacheSave();bop('clearDone',{}).catch(()=>{toast('Could not wipe those');B.t=0;loadBoard(true)})}};
 $('wb').onsubmit=e=>{e.preventDefault();const inp=$('wbin'),t=inp.value.trim();if(!t)return;inp.value='';addBoard({kind:'todo',text:t});$('wbin').focus()};
 /* the add / edit window: a to-do takes who and when, a note takes a colour */
 function editBoard(i,kind){
@@ -1549,7 +1572,8 @@ $('wbsv').onclick=()=>{let t=$('wbt').value.replace(/\r/g,'');if(BE.kind==='todo
 $('wbdel').onclick=()=>{const b=$('wbdel');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again to delete';return}const i=B.items.find(x=>x.id===BE.id);$('wbdlg').close();if(i)delBoard(i)};
 $('wbcx').onclick=()=>$('wbdlg').close();
 setInterval(()=>{if(sec('board')&&!document.hidden&&!pend&&!$('wbdlg').open&&!(document.activeElement&&document.activeElement.id==='wbin'&&$('wbin').value))loadBoard(true)},30000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&sec('board')&&!pend)loadBoard(true)});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&F.me&&!pend)loadBoard(sec('board'))});
+setInterval(()=>{if(F.me&&!sec('board')&&!document.hidden&&!pend)loadBoard()},6e4); // off the board: quiet check, so the red circle shows up
 
 /* ---------- meals ---------- */
 let M={meals:[],cfg:{containers:30,fridgeDays:4,freezerDays:90,fridgeTemp:4,freezerTemp:-18},loaded:false,cur:null,flash:null,t:0,imp:{loc:'fridge',sel:{}}};
@@ -1847,8 +1871,10 @@ setInterval(()=>{if(M.loaded&&sec('meals')&&!DD.on&&!document.hidden&&!$('vdlg')
 /* ---------- navigation ---------- */
 const LOAD={cal:()=>{},lists:()=>loadLists(),board:()=>loadBoard(),meals:()=>loadMeals(),rec:()=>loadRecipes()};
 function go(s){
+  const was=sec('board');
   document.querySelectorAll('.nb[data-s]').forEach(x=>x.classList.toggle('on',x.dataset.s===s));
   document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('on',x.id==='sec-'+s));
+  if(s==='board')markSeen();else if(was)markSeen(6e3);
   scrollTo(0,0);LOAD[s]();
 }
 $('nav').onclick=e=>{const b=e.target.closest('[data-s]');if(b)go(b.dataset.s)};
