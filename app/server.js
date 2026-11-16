@@ -87,7 +87,7 @@ const AUTH = (() => {
   function init() {
     if (!tc) {
       const common = { client_id: CLIENT_ID, scope: SCOPES, error_callback: e => show(!A.email, e && e.type === 'popup_closed' ? 'The Google window was closed. Tap the button to try again.' : 'Google could not open its sign-in window. Tap the button to try again.') };
-      tc = KEYS_URL ? google.accounts.oauth2.initCodeClient(Object.assign({ ux_mode: 'popup', login_hint: A.email || undefined, callback: gotCode }, common))
+      tc = KEYS_URL ? google.accounts.oauth2.initCodeClient(Object.assign({ ux_mode: 'popup', login_hint: A.email || undefined, select_account: !A.email, callback: gotCode }, common))
                     : google.accounts.oauth2.initTokenClient(Object.assign({ callback: got }, common));
     }
     if (gate) gate.querySelector('#gb').disabled = false;
@@ -95,7 +95,7 @@ const AUTH = (() => {
   function click() { // must call Google straight from the tap, or iPhone blocks the pop-up
     if (!tc) return;
     gate.querySelector('#gb').disabled = true;
-    try { KEYS_URL ? tc.requestCode() : tc.requestAccessToken({ prompt: '', login_hint: A.email || undefined }); } catch (e) { show(!A.email, e.message); }
+    try { KEYS_URL ? tc.requestCode() : tc.requestAccessToken({ prompt: A.email ? '' : 'select_account', login_hint: A.email || undefined }); } catch (e) { show(!A.email, e.message); }
   }
   const denied = e => e === 'access_denied' ? 'Google said no. Scout needs access to your calendar, sheet and Drive to work.' : 'Sign-in did not finish (' + e + '). Tap the button to try again.';
   const got = r => r.error ? show(!A.email, denied(r.error)) : finish({ access_token: r.access_token, expires_in: r.expires_in });
@@ -138,6 +138,7 @@ const AUTH = (() => {
       return pending;
     },
     expire() { A.exp = 0; save(); },
+    signOut() { ls_.del('fw-cache-1'); ls_.del(AK); location.reload(); }, // this device only; revoking everywhere is done at myaccount.google.com/permissions
     // the page waits for this before it starts: with no known person yet it shows the sign-in screen, otherwise it opens at once from its saved view
     start() { loadGsi().then(init, () => {}); if (A.email && !fresh() && KEYS_URL && A.refresh) self.token().catch(() => {}); return A.email ? Promise.resolve() : self.token().then(() => {}); }
   };
