@@ -196,34 +196,39 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .ln b{font-weight:600;font-size:12px;color:var(--mut);background:var(--soft);border-radius:10px;padding:1px 8px;min-width:24px;text-align:center}.ln b:empty{display:none}
 .ln:hover{background:var(--soft)}
 .ln.on{border-color:var(--lc);background:color-mix(in srgb,var(--lc) 13%,var(--card));font-weight:600}.ln.on b{background:var(--lc);color:#fff}
-.lcard{--lc:var(--acc);position:relative;padding:20px 22px;max-width:780px;overflow:hidden}.lcard::before{content:'';position:absolute;left:0;right:0;top:0;height:5px;background:var(--lc)}
-.lhd{display:flex;align-items:center;gap:12px;padding-top:4px}.lti{flex:1;min-width:0}
-.lbig{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:28px;line-height:1;background:color-mix(in srgb,var(--lc) 16%,var(--card));color:var(--lc)}
-.lbig svg,.ltrip svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.lbig svg{width:28px;height:28px}
-.lhd h2{margin:0;font-size:24px;letter-spacing:-.2px;overflow-wrap:anywhere}.lsub{margin:2px 0 0;color:var(--mut);font-size:14px}
-.ltrip{display:inline-flex;align-items:center;gap:8px;margin-top:14px;min-height:40px;padding:0 15px 0 12px;border-radius:20px;border:1px solid var(--line);background:var(--soft);color:var(--ink);font-size:14px;cursor:pointer;max-width:100%}
-.ltrip svg{width:18px;height:18px;flex:none;color:var(--lc)}.ltrip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ltrip.soon{background:color-mix(in srgb,var(--lc) 15%,var(--card));border-color:var(--lc);font-weight:600}
-.ltrip.none{border-style:dashed;color:var(--mut);background:none}.ltrip.past{color:var(--mut)}
-.prog{height:6px;border-radius:3px;background:var(--soft);margin:14px 0 4px;overflow:hidden}.prog i{display:block;height:100%;background:var(--lc);border-radius:3px;transition:width .25s}
-#ladd{display:flex;gap:8px;margin:16px 0 8px}#ladd input{margin:0;flex:1;min-height:48px;border-radius:14px;font-size:16px}#ladd .btn{min-height:48px;border-radius:14px;padding:0 22px}
-.lsg{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.lsg::-webkit-scrollbar{display:none}.lsg .chip{min-height:34px;font-size:14px}
-.lsec{margin-top:10px}.lsec h3{display:flex;align-items:center;gap:8px;margin:16px 2px 4px;font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:var(--mut);font-weight:700}
+.lcard{--lc:var(--acc);padding:0;max-width:780px;overflow:hidden}
+.lhero{padding:20px 22px 16px;background:linear-gradient(135deg,color-mix(in srgb,var(--lc) 30%,var(--card)),color-mix(in srgb,var(--lc) 9%,var(--card)) 78%);border-bottom:1px solid color-mix(in srgb,var(--lc) 22%,var(--line))}
+.lin{padding:6px 22px 22px}
+.lhd{display:flex;align-items:center;gap:14px}.lti{flex:1;min-width:0}
+.lbig{flex:none;width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:30px;line-height:1;background:var(--lc);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--lc) 45%,transparent)}
+.lbig svg,.ltrip svg,.lpen svg,.lfold svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.lbig svg{width:30px;height:30px}
+.lhd h2{margin:0;font-size:28px;line-height:1.1;letter-spacing:-.3px;overflow-wrap:anywhere}.lsub{margin:3px 0 0;color:var(--ink);opacity:.72;font-size:15px}
+.lpen{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:color-mix(in srgb,var(--card) 70%,transparent);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}.lpen svg{width:22px;height:22px}
+.ltrip{display:inline-flex;align-items:center;gap:8px;margin-top:16px;min-height:44px;padding:0 16px 0 13px;border-radius:22px;border:0;background:color-mix(in srgb,var(--card) 72%,transparent);color:var(--ink);font-size:15px;font-weight:600;cursor:pointer;max-width:100%}
+.ltrip svg{width:19px;height:19px;flex:none;color:var(--lc)}.ltrip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ltrip.soon{background:var(--lc);color:#fff}.ltrip.soon svg{color:#fff}
+.ltrip.none{font-weight:500;color:var(--mut);background:none;border:1.5px dashed color-mix(in srgb,var(--lc) 45%,var(--line))}.ltrip.past{color:var(--mut);font-weight:500}
+.lprog{display:flex;align-items:center;gap:12px;margin-top:14px}.lprog small{flex:none;font-size:13px;font-weight:700;opacity:.75;min-width:34px;text-align:right}
+.prog{flex:1;height:10px;border-radius:5px;background:color-mix(in srgb,var(--card) 65%,transparent);overflow:hidden}.prog i{display:block;height:100%;background:var(--lc);border-radius:5px;transition:width .3s ease}
+#ladd{display:flex;gap:8px;margin:16px 0 8px}#ladd input{margin:0;flex:1;min-height:52px;border-radius:16px;font-size:17px}#ladd .btn{min-height:52px;border-radius:16px;padding:0 22px;background:var(--lc);border-color:var(--lc);color:#fff;font-weight:700}
+.lsg{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.lsg::-webkit-scrollbar{display:none}.lsg span{flex:none;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mut)}.lsg .chip{min-height:36px;font-size:14px}
+.lsec{margin-top:8px}.lsec h3{display:flex;align-items:center;gap:8px;margin:16px 2px 6px;font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:var(--mut);font-weight:700}
 .lsec h3 b{font-weight:700;background:var(--soft);border-radius:9px;padding:0 7px;font-size:11px;line-height:18px}
-.lk{margin-left:auto;border:0;background:none;color:var(--acc);font-weight:600;font-size:13px;cursor:pointer;text-transform:none;letter-spacing:0;padding:4px 8px;border-radius:8px}.lk:hover{background:var(--soft)}
-.li{display:flex;align-items:center;gap:14px;min-height:56px;padding:0 4px;border-bottom:1px solid var(--line)}
-.lsec .li:last-child{border-bottom:0}
-.ck{width:30px;height:30px;border-radius:50%;border:2px solid color-mix(in srgb,var(--mut) 80%,transparent);background:none;flex:none;cursor:pointer;display:grid;place-items:center;padding:0;color:transparent;transition:background .12s,border-color .12s}
-.ck svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.ck:hover{border-color:var(--lc)}.ck.on{background:var(--lc);border-color:var(--lc);color:#fff}
-.li .tx{flex:1;min-width:0;overflow-wrap:anywhere;font-size:17px;line-height:1.3;background:none;border:0;text-align:left;color:inherit;font-family:inherit;padding:16px 0;cursor:pointer}
-.li.done .tx{text-decoration:line-through;color:var(--mut)}
-.li .ib{border:0;background:none;width:40px;height:40px;border-radius:50%;cursor:pointer;color:var(--mut);display:grid;place-items:center;padding:0;flex:none;opacity:.6}
+.lfold{display:inline-flex;align-items:center;gap:8px;border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;padding:8px 2px;margin:-8px 0;cursor:pointer}.lfold svg{width:16px;height:16px;transition:transform .2s}.lsec.fold .lfold svg{transform:rotate(-90deg)}
+.lk{margin-left:auto;border:0;background:color-mix(in srgb,var(--lc) 14%,transparent);color:var(--lc);font-weight:700;font-size:14px;cursor:pointer;text-transform:none;letter-spacing:0;min-height:40px;padding:0 16px;border-radius:20px}
+.li{display:flex;align-items:center;gap:12px;min-height:62px;padding:0 6px 0 14px;margin-top:8px;background:var(--soft);border-radius:16px}
+.ck{width:32px;height:32px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--lc) 70%,var(--mut));background:none;flex:none;cursor:pointer;display:grid;place-items:center;padding:0;color:transparent;transition:background .15s,border-color .15s,transform .15s}
+.ck svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ck:active{transform:scale(.88)}.ck.on{background:var(--lc);border-color:var(--lc);color:#fff}
+.li .tx{flex:1;min-width:0;overflow-wrap:anywhere;font-size:18px;line-height:1.25;background:none;border:0;text-align:left;color:inherit;font-family:inherit;padding:18px 0;cursor:pointer}
+.li.done{background:none;border:1.5px dashed var(--line)}.li.done .tx{text-decoration:line-through;color:var(--mut)}
+.li .ib{border:0;background:none;width:44px;height:44px;border-radius:50%;cursor:pointer;color:var(--mut);display:grid;place-items:center;padding:0;flex:none;opacity:.55}
 .li .ib svg,.xb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .li .ib:hover,.li .ib:focus-visible{background:var(--soft);opacity:1;color:var(--bad)}
 @media(hover:hover){.li .ib{opacity:0}.li:hover .ib,.li:focus-within .ib{opacity:.85}}
+.lall{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 4px;padding:18px;border-radius:16px;background:color-mix(in srgb,var(--lc) 14%,var(--card));color:var(--lc);font-weight:700;font-size:17px}.lall span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--lc);color:#fff;font-size:16px}
 .lem{padding:28px 12px}
-.lempty{text-align:center;padding:36px 20px}.lempty .lbig{margin:0 auto 12px;width:64px;height:64px;border-radius:20px}.lempty .lbig svg{width:34px;height:34px}.lempty h2{margin:0 0 6px;font-size:22px}
+.lempty{text-align:center;padding:36px 20px!important}.lempty .lbig{margin:0 auto 12px;width:64px;height:64px;border-radius:20px}.lempty .lbig svg{width:34px;height:34px}.lempty h2{margin:0 0 6px;font-size:22px}
 .lempty .acts{flex-wrap:wrap;margin-top:16px}
 #ld{margin-top:0}
 #lst{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}#lst .chip{justify-content:center;padding:0 4px;min-width:0}
@@ -356,8 +361,8 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   .lwrap{grid-template-columns:minmax(0,1fr);gap:10px}
   .lnav{flex-direction:row;overflow-x:auto;position:static;gap:8px;padding:2px 2px 8px;scrollbar-width:none}.lnav::-webkit-scrollbar{display:none}
   .ln{width:auto;flex:none;border-radius:21px;padding:8px 14px;min-height:44px}
-  .lcard{padding:16px}.lhd h2{font-size:22px}.lbig{width:48px;height:48px}
-  .li{min-height:60px;gap:12px}.li .tx{font-size:17px}
+  .lhero{padding:16px 16px 14px}.lin{padding:4px 14px 18px}.lhd h2{font-size:25px}.lbig{width:52px;height:52px}
+  .li{min-height:62px}
   .dg{grid-template-columns:minmax(0,1fr)}.dg .f{min-width:0}
   .hero .h1{font-size:24px}
   .rbar{position:sticky;top:0;z-index:6;background:var(--bg);margin:0 -14px 10px;padding:4px 14px 0}
@@ -537,10 +542,12 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 .note.new{background:none;box-shadow:none;border:2.5px dashed var(--wb-dash);border-radius:6px;align-items:center;justify-content:center;color:var(--wb-mut);font-size:25px;white-space:nowrap;text-align:center;transform:none;animation:none;min-height:110px;padding:12px}
 .note.new::before{display:none}
 .wbem{margin:6px 2px 0;font-size:25px;color:var(--wb-mut)}
-.wbwipe{flex:none;align-self:center;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 13px 0 10px;border:2px solid var(--blk);border-radius:20px;background:none;color:var(--blk);font-size:21px;line-height:1;cursor:pointer;transform:rotate(-1.2deg)}
-.wbwipe svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.wbwipe b{background:var(--blk);color:var(--wb-face);border-radius:10px;padding:2px 8px;font-size:17px;line-height:1}
-.wbwipe.off{border-color:var(--wb-dash);color:var(--wb-mut)}
+.wbwipe{flex:none;align-self:center;display:inline-flex;align-items:center;gap:8px;min-height:50px;padding:0 18px 0 14px;border:0;border-radius:25px;background:var(--blk);color:var(--wb-face);font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.28);-webkit-tap-highlight-color:transparent}
+.wbwipe:active{transform:scale(.95)}
+.wbwipe svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.wbwipe b{background:var(--wb-face);color:var(--blk);border-radius:12px;padding:3px 9px;font-size:19px;line-height:1}
+.wbwipe.off{background:none;box-shadow:none;border:2px dashed var(--wb-dash);color:var(--wb-mut)}
+.wbt.wiping{opacity:0;transform:translateX(26px) rotate(var(--r,0deg));transition:opacity .26s ease-in,transform .26s ease-in}
 #wbdlg textarea{font-family:Caveat,"Bradley Hand","Marker Felt",cursive;font-weight:700;font-size:26px;line-height:1.1;min-height:92px;resize:none}
 #wbx .chips{padding-bottom:2px;flex-wrap:wrap;overflow:visible}
 #wbx .sw{width:38px;height:38px}
@@ -1373,7 +1380,7 @@ $('rgrid').onclick=e=>{const g=e.target.closest('[data-g]');if(g){if(!R.q&&!R.ta
 $('rgrid').onkeydown=e=>{const h=e.target.closest&&e.target.closest('[data-fav]');if(h&&(e.key==='Enter'||e.key===' ')){e.preventDefault();favCard(h.dataset.fav)}};
 
 /* ---------- shopping lists: one per trip, named for the store, with an optional trip date ---------- */
-let L={lists:[],items:[],loaded:false,cur:'',t:0},LE=null,tmpN=0;
+let L={lists:[],items:[],loaded:false,cur:'',t:0,fold:false},LE=null,tmpN=0;
 const hsh=s=>[...String(s).replace(/^tmp/,'')].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
 const byC=(a,b)=>String(a.created).localeCompare(String(b.created));
 const curList=()=>L.lists.find(l=>l.id===L.cur);
@@ -1393,6 +1400,7 @@ async function loadLists(){
 }
 const nOpen=l=>L.items.filter(i=>i.list===l.id&&i.done!=='Y').length;
 const CART='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.5h9.8l2-7.6H6.4"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="16.5" cy="19" r="1.4"/></svg>';
+const PEN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16.500 4.500a2 2 0 0 1 3 3L8 19z"/><path d="M14.500 6.500l3 3"/></svg>',CHEV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 const TICK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4.3 4.3L18.5 8"/></svg>',CROSS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',CAL='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="5" width="17" height="15" rx="2.500"/><path d="M8 3v4M16 3v4M3.500 10h17"/></svg>';
 function suggest(l){ // the things this household buys most, that are not already on this list
   const on=new Set(L.items.filter(i=>i.list===l.id).map(i=>i.text.toLowerCase())),c={},lab={};
@@ -1405,17 +1413,17 @@ function drawLists(){
   const l=curList();
   if(!l){$('lbody').innerHTML=`<div class="card lcard lempty"><div class=lbig>${CART}</div><h2>Plan your first shopping trip</h2><p class=hint>Pick a store. Add a date if you know when you're going.</p><p class=acts style="justify-content:center"><button class="btn p" data-q="Costco">Costco</button>${STORES.slice(1).map(s=>`<button class=btn data-q="${s}">${s}</button>`).join('')}<button class=btn data-other>Other</button></p></div>`;return}
   const its=L.items.filter(i=>i.list===l.id),op=its.filter(i=>i.done!=='Y').sort(byC),dn=its.filter(i=>i.done==='Y').sort(byC),pct=its.length?Math.round(dn.length/its.length*100):0,w=tripWhen(l),em=lead({title:l.name});
-  const sub=!its.length?'Nothing on the list yet':op.length?`${op.length} to get${dn.length?` · ${dn.length} in the cart`:''}`:'Everything is in the cart 🎉';
+  const sub=!its.length?'Nothing on the list yet':op.length?`${op.length} to get${dn.length?` · ${dn.length} in the cart`:''}`:'Everything is in the cart';
   const row=i=>{const d=i.done==='Y';
     return `<div class="li${d?' done':''}"><button class="ck${d?' on':''}" data-t="${esc(i.id)}" aria-label="${d?'Put back on the list':'Got it'}">${TICK}</button><button class=tx data-t="${esc(i.id)}">${esc(i.text)}</button><button class=ib data-x="${esc(i.id)}" aria-label="Delete item">${CROSS}</button></div>`};
   const sg=suggest(l);
-  $('lbody').innerHTML=`<div class="card lcard" style="--lc:${lcol(l)}"><div class=lhd><span class=lbig>${em?em[1]:CART}</span><div class=lti><h2>${esc(em?l.name.slice(em[0].length)||l.name:l.name)}</h2><p class=lsub>${sub}</p></div><button class="btn sq" data-le aria-label="Change the store or date, or delete this list">⋯</button></div>`+
+  $('lbody').innerHTML=`<div class="card lcard" style="--lc:${lcol(l)}"><div class=lhero><div class=lhd><span class=lbig>${em?em[1]:CART}</span><div class=lti><h2>${esc(em?l.name.slice(em[0].length)||l.name:l.name)}</h2><p class=lsub>${sub}</p></div><button class=lpen data-le aria-label="Change the store or date, or delete this list">${PEN}</button></div>`+
     `<button class="ltrip${w?w.n<0?' past':w.n<2?' soon':'':' none'}" data-le>${CAL}<span>${w?esc(w.long):'Plan the trip date'}</span></button>`+
-    (its.length?`<div class=prog aria-hidden="true"><i style="width:${pct}%"></i></div>`:'')+
+    (its.length?`<div class=lprog><div class=prog aria-hidden="true"><i style="width:${pct}%"></i></div><small>${dn.length} of ${its.length}</small></div>`:'')+`</div><div class=lin>`+
     `<form id=ladd><input type=text id=lin placeholder="Add an item" autocomplete=off enterkeyhint=done aria-label="New item">${emoBtn('lin')}<button class="btn p">Add</button></form>`+
-    (sg.length?`<div class=lsg aria-label="Often bought">${sg.map(t=>`<button class=chip data-s="${esc(t)}">+ ${esc(t)}</button>`).join('')}</div>`:'')+
-    (op.length?`<div class=lsec><h3>To get<b>${op.length}</b></h3>${op.map(row).join('')}</div>`:`<p class="empty lem">${its.length?'':'Nothing here yet. Add your first item above.'}</p>`)+
-    (dn.length?`<div class="lsec cart"><h3>In the cart<b>${dn.length}</b><button class=lk data-clr>Clear</button></h3>${dn.map(row).join('')}</div>`:'')+`</div>`;
+    (sg.length?`<div class=lsg aria-label="Often bought"><span>Often</span>${sg.map(t=>`<button class=chip data-s="${esc(t)}">+ ${esc(t)}</button>`).join('')}</div>`:'')+
+    (op.length?`<div class=lsec><h3>To get<b>${op.length}</b></h3>${op.map(row).join('')}</div>`:its.length?`<div class=lall><span>✓</span>Everything is in the cart</div>`:`<p class="empty lem">Nothing here yet. Add your first item above.</p>`)+
+    (dn.length?`<div class="lsec cart${L.fold?' fold':''}"><h3><button class=lfold data-fold aria-expanded="${!L.fold}">In the cart<b>${dn.length}</b>${CHEV}</button><button class=lk data-clr>Clear</button></h3>${L.fold?'':dn.map(row).join('')}</div>`:'')+`</div></div>`;
   if(draft)$('lin').value=draft;if(had)$('lin').focus();
 }
 const lop=(op,a)=>mut('listOp',op,a);
@@ -1442,6 +1450,7 @@ $('lbody').onclick=async e=>{
   else if(b.dataset.s){addItems(L.cur,[b.dataset.s])}
   else if(b.dataset.t){const i=it(b.dataset.t);if(i)setItem(i,{done:i.done!=='Y'})}
   else if(b.dataset.x){const i=it(b.dataset.x);if(!i)return;L.items=L.items.filter(x=>x!==i);drawLists();cacheSave();if(!String(i.id).startsWith('tmp'))lop('delItem',{id:i.id}).catch(()=>{toast('Could not delete that');L.t=0;loadLists()})}
+  else if(b.dataset.fold!==undefined){L.fold=!L.fold;drawLists()}
   else if(b.dataset.le!==undefined)editList(curList());
   else if(b.dataset.clr!==undefined){const l=curList();L.items=L.items.filter(i=>!(i.list===l.id&&i.done==='Y'));drawLists();cacheSave();lop('clearDone',{list:l.id}).catch(()=>{toast('Could not clear those');L.t=0;loadLists()})}};
 $('lbody').onsubmit=e=>{e.preventDefault();const inp=$('lin'),t=inp.value.trim();if(!t||!curList())return;inp.value='';addItems(L.cur,[t]);$('lin').focus()};
@@ -1481,16 +1490,17 @@ async function addIngredients(){
 $('pickx').onclick=()=>$('pickdlg').close();
 
 /* ---------- whiteboard ---------- */
-let B={items:[],loaded:false,t:0},BE=null,btmp=0;
+let B={items:[],loaded:false,t:0},BE=null,btmp=0,wiping=0;
 const PINS=['#d94141','#2f6fe0','#2e9b57','#333a42'],NOTEC={yellow:'#fff27a',pink:'#ffb3cf',blue:'#a8d8ff',green:'#b8f0b0',orange:'#ffc98a',purple:'#d7c2ff'};
 const byDue=(a,b)=>(a.due?0:1)-(b.due?0:1)||String(a.due).localeCompare(b.due)||byC(a,b);
 /* the red circle on the Board icon: things other people put on the board since this person last had it open (remembered on this phone).
    A to-do given to this person also makes the icon flash. */
 const SEEN={};
-const seenAt=()=>{if(SEEN[F.me]==null){try{SEEN[F.me]=localStorage.getItem('fw-bseen:'+F.me)||''}catch(e){SEEN[F.me]=''}}return SEEN[F.me]};
+const stored=k=>{if(SEEN[k]==null){try{SEEN[k]=localStorage.getItem(k)||''}catch(e){SEEN[k]=''}}return SEEN[k]};
+const seenAt=()=>stored('fw-bseen:'+F.me),openAt=()=>stored('fw-bopen:'+F.me);
 function wbNew(){
   const me=F.me,t=seenAt(),live=B.items.filter(i=>!i._tmp),
-    mine=live.filter(i=>i.kind==='todo'&&i.assignee===me&&i.done!=='Y'&&String(i.updated)>t),
+    mine=live.filter(i=>i.kind==='todo'&&i.assignee===me&&i.done!=='Y'&&String(i.updated)>(i.by===me?openAt():t)), // one you gave yourself waits for the next time you open the board
     fresh=live.filter(i=>i.by!==me&&String(i.created)>t&&!(i.kind==='todo'&&i.done==='Y'));
   return{n:new Set(fresh.concat(mine)).size,mine:mine.length>0};
 }
@@ -1498,7 +1508,8 @@ function wbBadge(){
   const e=$('wbbg'),w=F.me&&!$('sec-board').classList.contains('on')?wbNew():{n:0,mine:false};
   e.hidden=!w.n;e.textContent=w.n>9?'9+':w.n;document.querySelector('.nb[data-s=board]').classList.toggle('flash',w.mine);
 }
-const markSeen=pad=>{if(!F.me)return;const late=B.items.reduce((m,i)=>Math.max(m,Date.parse(i.updated)||0,Date.parse(i.created)||0),0),t=new Date(Math.max(Date.now()+(pad||0),late)).toISOString();SEEN[F.me]=t;try{localStorage.setItem('fw-bseen:'+F.me,t)}catch(e){}wbBadge()}; // shortcut: a few seconds of slack so a save still in flight when you leave is not shown back to you, and the newest thing on the board counts even if another phone's clock runs ahead; kept per phone, not synced
+const markSeen=(pad,opened)=>{if(!F.me)return;const late=B.items.reduce((m,i)=>Math.max(m,Date.parse(i.updated)||0,Date.parse(i.created)||0),0),t=new Date(Math.max(Date.now()+(pad||0),late)).toISOString();
+  for(const k of opened?['fw-bseen:','fw-bopen:']:['fw-bseen:']){const v=k==='fw-bopen:'?new Date().toISOString():t;SEEN[k+F.me]=v;try{localStorage.setItem(k+F.me,v)}catch(e){}}wbBadge()}; // shortcut: a few seconds of slack so a save still in flight when you leave is not shown back to you, and the newest thing on the board counts even if another phone's clock runs ahead; kept per phone, not synced
 function dueOf(i){if(!i.due)return null;const d=pd8(i.due),n=Math.round((d-today0())/864e5);
   return{n,t:n===0?'today':n===1?'tomorrow':n===-1?'yesterday':n<0?`${-n} days late`:n<7?d.toLocaleDateString(undefined,{weekday:'long'}):d.toLocaleDateString(undefined,{month:'short',day:'numeric'})}}
 const UL='<svg class=wbu viewBox="0 0 120 9" preserveAspectRatio="none" aria-hidden="true"><path d="M2 5.5C22 1.5 40 8 62 4.5S100 2.5 118 6"/></svg>';
@@ -1547,8 +1558,26 @@ $('wb').onclick=e=>{
   else if(b.dataset.we){const i=it(b.dataset.we);if(i)editBoard(i)}
   else if(b.dataset.nn){const i=it(b.dataset.nn);if(i)editBoard(i)}
   else if(b.dataset.wadd)editBoard(null,b.dataset.wadd);
-  else if(b.dataset.wclr!==undefined){if(!B.items.some(i=>i.kind==='todo'&&i.done==='Y'))return toast('Nothing ticked yet. Tick a to-do, then Wipe clears it.');B.items=B.items.filter(i=>!(i.kind==='todo'&&i.done==='Y'));drawBoard();cacheSave();bop('clearDone',{}).catch(()=>{toast('Could not wipe those');B.t=0;loadBoard(true)})}};
-$('wb').onsubmit=e=>{e.preventDefault();const inp=$('wbin'),t=inp.value.trim();if(!t)return;inp.value='';addBoard({kind:'todo',text:t});$('wbin').focus()};
+  else if(b.dataset.wclr!==undefined){if(!B.items.some(i=>i.kind==='todo'&&i.done==='Y'))return toast('Nothing ticked yet. Tick a to-do, then Wipe clears it.');
+    if(wiping)return;wiping=1;document.querySelectorAll('.wbt.done').forEach(r=>r.classList.add('wiping'));
+    setTimeout(()=>{wiping=0;B.items=B.items.filter(i=>!(i.kind==='todo'&&i.done==='Y'));drawBoard();cacheSave();bop('clearDone',{}).catch(()=>{toast('Could not wipe those');B.t=0;loadBoard(true)})},280)}};
+$('wb').onsubmit=e=>{e.preventDefault();const inp=$('wbin'),t=inp.value.trim();if(!t)return;inp.value='';const x=splitWho(t);addBoard({kind:'todo',text:x.text,assignee:x.who});$('wbin').focus()};
+/* "Take out the bins -dane" (any case, any spacing) gives the to-do to Dane and drops the "-dane". A name is a profile name, one of its words, or its e-mail name. */
+const NN=x=>String(x).toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+const NICK={john:['jack','johnny'],jack:['john','johnny']}; // shortcut: a few built-in nicknames, no nickname setting; add more here
+function whoIs(word){
+  const k=NN(word);if(!k)return null;
+  const hit=F.profiles.filter(p=>{const w=String(p.name).replace(/[^\p{L}\p{N}\s-]/gu,' ').split(/[\s-]+/).map(NN).filter(Boolean),runs=[];
+    for(let i=0;i<w.length;i++)for(let j=i+1;j<=w.length;j++)runs.push(w.slice(i,j).join('')); // "john-randy wells" -> john, johnrandy, johnrandywells, randy, randywells, wells
+    return [NN(String(p.email).split('@')[0]),...runs,...w.flatMap(x=>NICK[x]||[])].includes(k)});
+  return hit.length===1?hit[0].email:null; // two people with that name: do nothing
+}
+function splitWho(text){
+  for(let i=text.indexOf('-');i>0;i=text.indexOf('-',i+1)){
+    const before=text.slice(0,i).trim(),who=whoIs(text.slice(i+1).replace(/[.!\s]+$/,''));
+    if(before&&who)return{text:before,who}}
+  return{text,who:''};
+}
 /* the add / edit window: a to-do takes who and when, a note takes a colour */
 function editBoard(i,kind){
   BE=i?{id:i.id,kind:i.kind,assignee:i.assignee,due:i.due,color:i.color||'yellow'}:{id:'',kind,assignee:'',due:'',color:['yellow','pink','blue','green','orange','purple'][hsh(String(Date.now()))%6]};
@@ -1566,6 +1595,7 @@ $('wbx').onclick=e=>{const b=e.target.closest('button');if(!b)return;
   else if(b.dataset.wa!==undefined){BE.assignee=b.dataset.wa;BE.due=$('wbdue')?$('wbdue').value:BE.due;drawBoardX()}
   else if(b.dataset.wd!==undefined){const v=b.dataset.wd==='x'?'':key(new Date(today0().getTime()+(+b.dataset.wd)*864e5+36e5));$('wbdue').value=v;BE.due=v}};
 $('wbsv').onclick=()=>{let t=$('wbt').value.replace(/\r/g,'');if(BE.kind==='todo')t=t.replace(/\s*\n\s*/g,' ');t=t.trim();if(!t){$('wbm').textContent='Write something first.';return}
+  if(BE.kind==='todo'){const x=splitWho(t);t=x.text;if(x.who)BE.assignee=x.who}
   const due=BE.kind==='todo'&&$('wbdue')?$('wbdue').value:'',i=BE.id&&B.items.find(x=>x.id===BE.id);$('wbdlg').close();
   if(i)setBoard(i,BE.kind==='note'?{text:t,color:BE.color}:{text:t,assignee:BE.assignee,due});
   else addBoard(BE.kind==='note'?{kind:'note',text:t,color:BE.color}:{kind:'todo',text:t,assignee:BE.assignee,due})};
@@ -1874,7 +1904,7 @@ function go(s){
   const was=sec('board');
   document.querySelectorAll('.nb[data-s]').forEach(x=>x.classList.toggle('on',x.dataset.s===s));
   document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('on',x.id==='sec-'+s));
-  if(s==='board')markSeen();else if(was)markSeen(6e3);
+  if(s==='board')markSeen(0,true);else if(was)markSeen(6e3);
   scrollTo(0,0);LOAD[s]();
 }
 $('nav').onclick=e=>{const b=e.target.closest('[data-s]');if(b)go(b.dataset.s)};
