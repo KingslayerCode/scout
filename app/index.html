@@ -259,7 +259,7 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .cb{display:inline-block;background:#111a22;color:#fff;font-weight:700;font-size:12px;padding:2px 8px;border-radius:8px;letter-spacing:.3px}
 .cb.warn{color:#ffd23f}.cb.bad{color:#ff6b6b}
 .unit{position:relative;border-radius:24px;padding:14px 16px 8px;border:1px solid var(--line);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 26px -14px rgba(0,0,0,.5)}
-.unit>.fx{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.unit>*:not(.fx){position:relative;z-index:1}
+.unit>.fx{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.unit>*:not(.fx):not(.dropmsg){position:relative;z-index:1}
 .unit.fridge{box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 24px 40px -30px rgba(255,248,228,.35),0 10px 26px -14px rgba(0,0,0,.5)}
 .unit.freezer{box-shadow:inset 0 0 0 1px color-mix(in srgb,#bfe3ff 18%,transparent),inset 0 0 26px -6px rgba(190,225,255,.28),0 10px 26px -14px rgba(0,0,0,.5)}
 .unit+.unit{margin-top:16px}
@@ -271,7 +271,7 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .unit.freezer{background:linear-gradient(180deg,color-mix(in srgb,var(--sa) 11%,var(--card)),color-mix(in srgb,var(--sa) 4%,var(--card)) 75%)}
 .drawer{position:relative;height:46px;margin:12px 0 8px;border-radius:12px;border:1px solid color-mix(in srgb,#7cc0ff 38%,transparent);background:linear-gradient(180deg,color-mix(in srgb,#fff 16%,transparent),color-mix(in srgb,#fff 3%,transparent));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 3px 8px rgba(0,0,0,.14)}
 .drawer::after{content:"";position:absolute;left:50%;top:13px;width:84px;height:9px;margin-left:-42px;border-radius:6px;background:color-mix(in srgb,#7cc0ff 30%,var(--ink) 14%);opacity:.55}
-.shelf{display:grid;grid-template-columns:repeat(var(--per),minmax(0,1fr));gap:4px 12px;padding:14px 4px 0;min-height:132px;position:relative;align-items:end}
+.shelf{display:grid;grid-template-columns:repeat(var(--per),minmax(0,1fr));gap:4px 12px;padding:12px 4px 0;min-height:120px;position:relative;align-items:end}
 .shelf::after{content:"";position:absolute;left:-8px;right:-8px;bottom:0;height:9px;border-radius:5px;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.05));box-shadow:0 3px 8px rgba(0,0,0,.2)}
 .shelf .none{grid-column:1/-1;text-align:center;color:var(--mut);font-size:13px;align-self:center;padding-bottom:18px}
 .cont{border:0;background:none;padding:0 0 13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;transition:transform .16s ease,filter .16s ease}
@@ -369,7 +369,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   .drawer{height:38px}.drawer::after{top:10px}
   .stats{grid-template-columns:repeat(4,1fr)}.stats div{padding:6px 8px}.stats b{font-size:18px}
   .unit{border-radius:20px;padding:12px 10px 6px}
-  .shelf{gap:2px 6px;padding:12px 0 0;min-height:112px}
+  .shelf{gap:2px 6px;padding:10px 0 0;min-height:102px}
   .cont small{font-size:10.5px;line-height:1.2;white-space:normal;text-align:center;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:2.4em;width:100%}
   .two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.two.dates{grid-template-columns:minmax(0,1fr)}
   .lwrap{grid-template-columns:minmax(0,1fr);gap:10px}
@@ -487,13 +487,14 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 @media(prefers-reduced-motion:reduce){.mgf::after{animation:none;opacity:.3}}
 .dcs{position:absolute;inset:0;pointer-events:none;z-index:0}
 #sec-cal{overflow-x:clip}
+.dcs{position:absolute;inset:0;z-index:3;pointer-events:none}
 .dec{position:absolute;width:calc(var(--w)*var(--k));height:calc(var(--w)*var(--k));color:var(--c);transform:rotate(var(--r,0deg));opacity:.9;pointer-events:none}
-.dec.dsw{animation:sway 9s cubic-bezier(.45,.05,.55,.95) infinite;animation-delay:var(--d,0s);transform-origin:50% 15%;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.dec.dsw{animation:sway 7s ease-in-out infinite;animation-delay:calc(var(--d,0s) * -1.7);transform-origin:50% 95%;will-change:transform;filter:drop-shadow(0 1.5px 2px rgba(0,0,0,.3))}
 .dec.twk{animation:twk 5s ease-in-out infinite;animation-delay:var(--d,0s);filter:drop-shadow(0 0 4px color-mix(in srgb,var(--c) 70%,transparent))}
 .dec.rn{animation:rain 3s cubic-bezier(.5,0,.9,.6) infinite;animation-delay:var(--d,0s)}
 .dec.sun{animation:spin 90s linear infinite,sunp 6s ease-in-out infinite}
 @keyframes sunp{0%,100%{filter:drop-shadow(0 0 4px rgba(255,200,90,.45))}50%{filter:drop-shadow(0 0 12px rgba(255,200,90,.8))}}
-@keyframes sway{0%,100%{transform:rotate(calc(var(--r) - 4deg)) translate(0,0)}25%{transform:rotate(calc(var(--r) + 1deg)) translate(.6px,-.8px)}50%{transform:rotate(calc(var(--r) + 5deg)) translate(0,-1.2px)}75%{transform:rotate(calc(var(--r) + 1deg)) translate(-.6px,-.4px)}}
+@keyframes sway{0%,100%{transform:rotate(calc(var(--r) - 3deg))}50%{transform:rotate(calc(var(--r) + 4deg))}}
 @keyframes twk{0%,100%{opacity:.95;transform:rotate(var(--r,0deg)) scale(1)}50%{opacity:.45;transform:rotate(var(--r,0deg)) scale(.82)}}
 @keyframes rain{0%{transform:translateY(-6px) scale(.9);opacity:0}20%{opacity:.9}100%{transform:translateY(9px) scale(1.05);opacity:0}}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -599,7 +600,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 @media(prefers-reduced-motion:reduce){.wbt,.note{animation:none}}
 </style></head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="snow" viewBox="0 0 24 24"><path d="M12.0 2.0L12.0 22.0M20.7 7.0L3.3 17.0M20.7 17.0L3.3 7.0M12.0 5.4L14.0 2.9M12.0 5.4L10.0 2.9M17.7 8.7L20.9 9.1M17.7 8.7L18.9 5.7M17.7 15.3L18.9 18.3M17.7 15.3L20.9 14.9M6.3 8.7L5.1 5.7M6.3 8.7L3.1 9.1M6.3 15.3L3.1 14.9M6.3 15.3L5.1 18.3M12.0 18.6L10.0 21.1M12.0 18.6L14.0 21.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol><symbol id="leaf" viewBox="0 0 24 24"><path d="M12.0 1.0L13.2 5.1L14.4 3.5L13.9 8.0L18.1 3.9L17.3 6.3L18.6 6.5L15.6 9.8L20.7 9.1L18.8 10.9L22.2 12.2L17.0 13.2L21.0 15.9L15.7 14.9L15.3 16.6L13.2 17.0L12.0 17.2L10.8 17.0L8.7 16.6L8.3 14.9L3.0 15.9L7.0 13.2L1.8 12.2L5.2 10.9L3.3 9.1L8.4 9.8L5.4 6.5L6.7 6.3L5.9 3.9L10.1 8.0L9.6 3.5L10.8 5.1Z" fill="currentColor" stroke="currentColor" stroke-width=".7" stroke-linejoin="round"/><path d="M12 15.5V22.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 6V17M12 13.5 7.6 9.4M12 13.5 16.4 9.4" stroke="#000" stroke-opacity=".2" stroke-width=".8" stroke-linecap="round" fill="none"/></symbol><symbol id="flower" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12.0" cy="5.7" r="4.3"/><circle cx="6.0" cy="10.1" r="4.3"/><circle cx="8.3" cy="17.1" r="4.3"/><circle cx="15.7" cy="17.1" r="4.3"/><circle cx="18.0" cy="10.1" r="4.3"/></g><circle cx="12" cy="12" r="3.1" fill="#ffd23f"/></symbol><symbol id="drop" viewBox="0 0 24 24"><path d="M12 2.5C12 2.5 5.5 10 5.5 15a6.5 6.5 0 0 0 13 0C18.5 10 12 2.5 12 2.5Z" fill="currentColor"/></symbol><symbol id="sun" viewBox="0 0 48 48"><circle cx="24" cy="24" r="9.5" fill="currentColor"/><g stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M38.0 24.0L43.5 24.0"/><path d="M33.9 14.1L37.8 10.2"/><path d="M24.0 10.0L24.0 4.5"/><path d="M14.1 14.1L10.2 10.2"/><path d="M10.0 24.0L4.5 24.0"/><path d="M14.1 33.9L10.2 37.8"/><path d="M24.0 38.0L24.0 43.5"/><path d="M33.9 33.9L37.8 37.8"/></g></symbol><symbol id="star" viewBox="0 0 24 24"><path d="M12.0 1.0L9.3 8.3L1.5 8.6L7.6 13.4L5.5 20.9L12.0 16.6L18.5 20.9L16.4 13.4L22.5 8.6L14.7 8.3Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol><symbol id="clam" viewBox="0 0 24 24"><path d="M12 21.5 3.2 12.6C1.6 8.6 6.2 4 12 4s10.4 4.6 8.8 8.6Z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M12 21 12 6.5M12 21 7.2 7.4M12 21 16.8 7.4M12 21 4.4 11.2M12 21 19.6 11.2" stroke="#000" stroke-opacity=".2" stroke-width=".9" stroke-linecap="round" fill="none"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="snow" viewBox="0 0 24 24"><path d="M12.0 2.0L12.0 22.0M20.7 7.0L3.3 17.0M20.7 17.0L3.3 7.0M12.0 5.4L14.0 2.9M12.0 5.4L10.0 2.9M17.7 8.7L20.9 9.1M17.7 8.7L18.9 5.7M17.7 15.3L18.9 18.3M17.7 15.3L20.9 14.9M6.3 8.7L5.1 5.7M6.3 8.7L3.1 9.1M6.3 15.3L3.1 14.9M6.3 15.3L5.1 18.3M12.0 18.6L10.0 21.1M12.0 18.6L14.0 21.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol><symbol id="leaf" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.6l1.7 3.9 2-1.2-.5 4.6 3.6-2.8.7 2.2 2.9-.5-1.8 3.4 1.7 1.1-4.9 3.7.8 2-4.6-1V22.4h-1.2v-5.4l-4.6 1 .8-2-4.9-3.7 1.7-1.1-1.8-3.4 2.9.5.7-2.2 3.6 2.8-.5-4.6 2 1.2z"/><path d="M12 21.8V6.5M12 14.5l-4.2-3.3M12 14.5l4.2-3.3M12 11.2L9.6 8.2M12 11.2l2.4-3" fill="none" stroke="rgba(60,20,0,.35)" stroke-width=".7" stroke-linecap="round"/></symbol><symbol id="flower" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12.0" cy="5.7" r="4.3"/><circle cx="6.0" cy="10.1" r="4.3"/><circle cx="8.3" cy="17.1" r="4.3"/><circle cx="15.7" cy="17.1" r="4.3"/><circle cx="18.0" cy="10.1" r="4.3"/></g><circle cx="12" cy="12" r="3.1" fill="#ffd23f"/></symbol><symbol id="drop" viewBox="0 0 24 24"><path d="M12 2.5C12 2.5 5.5 10 5.5 15a6.5 6.5 0 0 0 13 0C18.5 10 12 2.5 12 2.5Z" fill="currentColor"/></symbol><symbol id="sun" viewBox="0 0 48 48"><circle cx="24" cy="24" r="9.5" fill="currentColor"/><g stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M38.0 24.0L43.5 24.0"/><path d="M33.9 14.1L37.8 10.2"/><path d="M24.0 10.0L24.0 4.5"/><path d="M14.1 14.1L10.2 10.2"/><path d="M10.0 24.0L4.5 24.0"/><path d="M14.1 33.9L10.2 37.8"/><path d="M24.0 38.0L24.0 43.5"/><path d="M33.9 33.9L37.8 37.8"/></g></symbol><symbol id="star" viewBox="0 0 24 24"><path d="M12.0 1.0L9.3 8.3L1.5 8.6L7.6 13.4L5.5 20.9L12.0 16.6L18.5 20.9L16.4 13.4L22.5 8.6L14.7 8.3Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol><symbol id="clam" viewBox="0 0 24 24"><path d="M12 21.5 3.2 12.6C1.6 8.6 6.2 4 12 4s10.4 4.6 8.8 8.6Z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M12 21 12 6.5M12 21 7.2 7.4M12 21 16.8 7.4M12 21 4.4 11.2M12 21 19.6 11.2" stroke="#000" stroke-opacity=".2" stroke-width=".9" stroke-linecap="round" fill="none"/></symbol></defs></svg>
 <div id="shell">
 <nav id="nav" aria-label="Sections">
   <button class="nb on" data-s="cal"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><span>Calendar</span></button>
@@ -1008,11 +1009,11 @@ function rowsFor(V,d){return V.filter(x=>key(x.sa)<=key(d)&&key(x.sb)>=key(d)).s
 const SEASON=m=>m===11||m<2?'winter':m<5?'spring':m<8?'summer':'fall';
 const SD={
   winter:{c:['#f6fbff','#cfe6ff','#a9d3fa'],an:'twk',k:{TL:['snow','snow','snow'],TR:['snow','snow','snow'],BL:['snow','snow','snow'],BR:['snow','snow','snow']}},
-  fall:{c:['#d9480f','#f08c00','#c92a2a','#e8590c','#b8860b','#f4a261'],an:'dsw',k:{TL:['leaf','leaf','leaf'],TR:['leaf','leaf','leaf'],BL:['leaf','leaf','leaf'],BR:['leaf','leaf','leaf']}},
+  fall:{c:['#d9480f','#f08c00','#c92a2a','#e8590c','#b8860b','#f4a261'],an:'dsw',k:{TL:['leaf','leaf','leaf'],TR:['leaf','',''],BL:['leaf','',''],BR:['leaf','leaf','leaf']}},
   summer:{c:['#f4a261','#fff3d6','#ff8fa3','#f6c177'],an:'',k:{TL:['clam','star',''],TR:['sun','',''],BL:['star','clam','star'],BR:['clam','','star']}},
   spring:{c:['#ff8fab','#ffd166','#ffffff','#c9a7ff','#ffb3c7'],an:'dsw',k:{TL:['drop','drop','drop'],TR:['flower','flower','drop'],BL:['flower','flower','flower'],BR:['drop','flower','flower']}}
 };
-const CL=[[-5,-5,31,0],[16,-8,22,35],[-8,16,19,-30]]; /* x and y in from the corner (minus is outside), size, tilt */
+const CL=[[-9,-9,28,0],[14,-12,20,35],[-12,14,18,-30]]; /* x and y in from the corner (minus is outside), size, tilt */
 function deco(s){
   const D=SD[s];let n=0,h='<div class=dcs aria-hidden="true">';
   ['TL','TR','BL','BR'].forEach((c,ci)=>D.k[c].forEach((y,i)=>{if(!y)return;n++;
