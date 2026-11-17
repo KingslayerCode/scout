@@ -18,6 +18,7 @@ const HEAD = {
   Config: ['key', 'value'],
   Events: ['sourceKey', 'owner', 'id', 'title', 'start', 'end', 'allDay', 'location'],
   SharedEvents: ['id', 'title', 'start', 'end', 'allDay', 'location', 'notes', 'createdBy', 'updatedBy', 'updated'],
+  Rev: ['family', 'lists', 'board', 'meals', 'rec'], // row 2: a stamp per part, changed on every save, so other phones know what to re-read
 };
 // Text the person typed is cut by whole characters, never in the middle of an emoji.
 const cut_ = (v, n) => { const a = Array.from(String(v == null ? '' : v)); return a.length > n ? a.slice(0, n).join('') : a.join(''); };
@@ -381,7 +382,7 @@ async function getFamily() {
   const have = new Set(prof.map(r => r.email.toLowerCase()));
   const invited = conf.filter(r => r.key.indexOf('invite:') === 0 && !have.has(r.key.slice(7))).map(r => ({ email: r.key.slice(7), at: r.value }));
   let writable = null; try { writable = JSON.parse(ls_.get(mk('writable')) || 'null'); } catch (e) {}
-  return { me, profiles: prof, invited, weather: placeOf_(cv(WX_KEY)), prefs: { theme: themePick_(cv('theme:' + me)) }, hasSaved: src.some(r => r.owner === me), writable,
+  return { me, profiles: prof, invited, weather: placeOf_(cv(WX_KEY)), prefs: { theme: themePick_(cv('theme:' + me)), nav: cv('nav:' + me) }, hasSaved: src.some(r => r.owner === me), writable,
     sharing, sync, sharedColor: sharedColor_(conf), sharedStale: !!rev && rev !== mirrored,
     events: evs.filter(e => sel.has(e.sourceKey)).map(e => Object.assign(e, { cal: names[e.sourceKey] || '' })).concat(shr.map(sharedOut_)) };
 }
@@ -740,14 +741,40 @@ function importMeals(p) { // p.items = [{container, loc}] so every container can
   });
 }
 
+// ---------- live updates ----------
+// Every save stamps its part of the household in Rev row 2. Open phones read that one row every few seconds and re-read only what changed.
+const AREA = { saveSources: 'family', savePrefs: 'family', saveNav: 'family', saveProfile: 'family', syncMe: 'family', saveEvent: 'family', deleteEvent: 'family', setSharedColor: 'family',
+  saveSharedEvent: 'family', deleteSharedEvent: 'family', syncShared: 'family', setWeatherPlace: 'family', inviteMember: 'family',
+  listOp: 'lists', boardOp: 'board', saveConfig: 'meals', saveMeal: 'meals', removeMeal: 'meals', importMeals: 'meals', saveRecipe: 'rec', deleteRecipe: 'rec' };
+const REV = { seen: null, mine: {} };
+function bump_(area) {
+  const v = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  REV.mine[area] = v;
+  return tabs_().then(() => g(S + '/values/' + enc('Rev!' + colL(HEAD.Rev.indexOf(area) + 1) + '2') + '?valueInputOption=RAW', { method: 'PUT', json: { values: [[v]] } })).catch(() => {});
+}
+async function revChanges() { // which parts someone else changed since the last call (the first call only takes a reading)
+  await tabs_();
+  const row = ((await g(S + '/values/' + enc('Rev!A2:' + colL(HEAD.Rev.length) + '2') + '?valueRenderOption=FORMATTED_VALUE')).values || [[]])[0] || [];
+  const now = Object.fromEntries(HEAD.Rev.map((k, i) => [k, row[i] == null ? '' : String(row[i])])), was = REV.seen;
+  REV.seen = now;
+  // shortcut: if someone else saves the same part and then this phone saves it again before the next check, their change waits for the next re-read
+  return was ? HEAD.Rev.filter(k => now[k] !== was[k] && now[k] !== REV.mine[k]) : [];
+}
+async function saveNav(order) {
+  const ok = ['cal', 'board', 'meals', 'lists', 'rec'], o = (Array.isArray(order) ? order : []).filter((x, i, a) => ok.indexOf(x) >= 0 && a.indexOf(x) === i);
+  if (o.length !== ok.length) throw new Error('Unknown menu order.');
+  await cfgSet_('nav:' + me_(), o.join(',')); return true;
+}
+
 // ---------- the list of everything the page may ask for ----------
 const API = { getSources, saveSources, getFamily, getHousehold, savePrefs, saveProfile, googleProfile, syncMe, getRecipes, saveRecipe, deleteRecipe,
   saveEvent, deleteEvent, setSharedColor, saveSharedEvent, deleteSharedEvent, syncShared, searchPlaces, setWeatherPlace, getForecast, getInvite, inviteMember,
-  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals };
+  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, revChanges, saveNav };
 window.AUTH = AUTH;
 window.SRV = { call(fn, args) {
   const f = API[fn];
   if (!f) return Promise.reject(new Error(fn + ' is not available in this version of Scout.'));
-  try { return Promise.resolve(f.apply(null, args)); } catch (e) { return Promise.reject(e); }
+  let p; try { p = Promise.resolve(f.apply(null, args)); } catch (e) { return Promise.reject(e); }
+  return AREA[fn] ? p.then(v => { bump_(AREA[fn]); return v; }) : p;
 } };
 })();

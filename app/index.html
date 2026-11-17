@@ -54,7 +54,7 @@ nav .sp{flex:1}
 h1.t{font-size:26px;font-weight:650;margin:0 auto 0 0;letter-spacing:-.2px}
 .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .bar2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.bar2 .chips{flex:1 1 220px;min-width:0}
+#ppl{justify-content:center;flex-wrap:wrap;margin:14px 0 4px;padding-bottom:4px}.bar2 .grp{margin-left:auto}
 
 /* controls */
 .btn{min-height:38px;border:1px solid var(--line);background:var(--card);padding:0 16px;border-radius:19px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
@@ -234,7 +234,10 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 #lst{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}#lst .chip{justify-content:center;padding:0 4px;min-width:0}
 
 /* meals */
-.mwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
+.mstat{display:flex;gap:8px;flex-wrap:wrap;margin:-2px 0 14px}.ms{display:inline-flex;align-items:baseline;gap:6px;padding:7px 14px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--mut)}
+.ms b{font-size:17px;color:var(--ink)}.ms.bad{border-color:color-mix(in srgb,var(--bad) 50%,var(--line))}.ms.bad b{color:var(--bad)}.ms.warn{border-color:color-mix(in srgb,var(--warn) 50%,var(--line))}.ms.warn b{color:var(--warn)}
+#units{display:grid;gap:16px;align-items:start}@media(min-width:1000px){#units{grid-template-columns:1fr 1fr}}#units .unit+.unit{margin-top:0}
+.mfoot{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 8px}.mfoot .btn{width:100%;max-width:440px;min-height:54px;font-size:17px;border-radius:18px}.mfoot .mh{margin:4px 8px 0;text-align:center;max-width:520px}
 .side{position:sticky;top:18px;display:flex;flex-direction:column;gap:14px}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
 .stats div{background:var(--bg);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column}
@@ -244,14 +247,15 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .cb{display:inline-block;background:#111a22;color:#fff;font-weight:700;font-size:12px;padding:2px 8px;border-radius:8px;letter-spacing:.3px}
 .cb.warn{color:#ffd23f}.cb.bad{color:#ff6b6b}
-.unit{position:relative;border-radius:24px;padding:14px 16px 8px;border:1px solid var(--line);overflow:hidden}
+.unit{position:relative;border-radius:24px;padding:14px 16px 10px;border:1px solid var(--line);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 22px rgba(0,0,0,.18)}
 .unit+.unit{margin-top:16px}
-.unit h2{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:10px}
+.unit h2{margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:10px}
+.unit h2::before{font-size:20px}.unit.fridge h2::before{content:'🥗'}.unit.freezer h2::before{content:'❄️'}
 .unit .tag{font-size:12px;font-weight:500;padding:2px 10px;border-radius:10px}
 .unit .cnt{margin-left:auto;font-weight:400;color:var(--mut);font-size:13px}
 .unit.fridge{background:linear-gradient(180deg,color-mix(in srgb,var(--sa) 6%,var(--card)),var(--card) 70%)}
 .unit .tag{background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--mut)}
-.unit.freezer{background:linear-gradient(180deg,color-mix(in srgb,var(--sa) 11%,var(--card)),color-mix(in srgb,var(--sa) 4%,var(--card)) 75%)}
+.unit.freezer{background:linear-gradient(180deg,color-mix(in srgb,#7cc0ff 14%,var(--card)),color-mix(in srgb,#7cc0ff 5%,var(--card)) 75%);border-color:color-mix(in srgb,#7cc0ff 26%,var(--line))}
 .drawer{position:relative;height:46px;margin:12px 0 8px;border-radius:12px;border:1px solid color-mix(in srgb,#7cc0ff 38%,transparent);background:linear-gradient(180deg,color-mix(in srgb,#fff 16%,transparent),color-mix(in srgb,#fff 3%,transparent));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 3px 8px rgba(0,0,0,.14)}
 .drawer::after{content:"";position:absolute;left:50%;top:13px;width:84px;height:9px;margin-left:-42px;border-radius:6px;background:color-mix(in srgb,#7cc0ff 30%,var(--ink) 14%);opacity:.55}
 .shelf{display:grid;grid-template-columns:repeat(var(--per),minmax(0,1fr));gap:4px 12px;padding:14px 4px 0;min-height:132px;position:relative;align-items:end}
@@ -332,7 +336,6 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   .sec{padding:12px 14px 24px}
   h1.t{font-size:22px}
   .top{margin-bottom:8px}
-  .bar2 .chips{flex-basis:100%;order:-1}
   .bar2 .grp{width:100%}
   .bar2 .grp .seg{margin-right:auto}
   .btn{min-height:44px}.btn.sq{width:44px}
@@ -348,10 +351,6 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   /* while a text box is being typed in, park the popup at the top so the on-screen keyboard cannot cover it */
   html.typ dialog[open]{top:calc(var(--vvt,0px) + var(--gap) + env(safe-area-inset-top));translate:-50% 0;max-height:var(--typh,48vh)}
   #toast{bottom:calc(88px + env(safe-area-inset-bottom))}
-  .mwrap{grid-template-columns:minmax(0,1fr);gap:14px}
-  #units{order:1}
-  .side{display:contents}.side>*{order:2}.side>.card:first-child{order:0;padding:12px}
-  .side .lg{display:none}.side .stats{margin-top:10px}
   .drawer{height:38px}.drawer::after{top:10px}
   .stats{grid-template-columns:repeat(4,1fr)}.stats div{padding:6px 8px}.stats b{font-size:18px}
   .unit{border-radius:20px;padding:12px 10px 6px}
@@ -503,6 +502,10 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 /* ---------- whiteboard: to-dos written on the board, notices as sticky notes ---------- */
 @font-face{font-family:Caveat;font-weight:700;font-display:swap;src:url(fonts/caveat-700.woff2) format("woff2")}
 #sec-board{--hand:Caveat,"Bradley Hand","Marker Felt","Segoe Print",cursive}
+.navord{display:flex;flex-direction:column;gap:6px}.nvr{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:12px;padding:4px 6px 4px 12px;min-height:48px}
+.nvi svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}.nvn{flex:1;font-weight:600}
+.nvb{width:44px;height:40px;border:0;border-radius:10px;background:var(--card);color:var(--ink);font-size:14px;cursor:pointer}.nvb:disabled{opacity:.3;cursor:default}.nvreset{align-self:flex-start;margin-top:4px}
+.bdg.dot{min-width:0;width:11px;height:11px;padding:0;top:5px;left:calc(50% + 8px)}
 .nb{position:relative}.bdg{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center;pointer-events:none}.bdg[hidden]{display:none}
 .nb.flash svg{animation:wbflash 2.6s ease-in-out infinite}
 @keyframes wbflash{0%,100%{color:#a9bccd;filter:none}50%{color:#ff4d4d;filter:drop-shadow(0 0 5px rgba(255,77,77,.75))}}
@@ -541,7 +544,6 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 .note .nby{margin-top:auto;font-size:19px;color:rgba(0,0,0,.5)}
 .note.new{background:none;box-shadow:none;border:2.5px dashed var(--wb-dash);border-radius:6px;align-items:center;justify-content:center;color:var(--wb-mut);font-size:25px;white-space:nowrap;text-align:center;transform:none;animation:none;min-height:110px;padding:12px}
 .note.new::before{display:none}
-.wbem{margin:6px 2px 0;font-size:25px;color:var(--wb-mut)}
 .wbwipe{flex:none;align-self:center;display:inline-flex;align-items:center;gap:8px;min-height:50px;padding:0 18px 0 14px;border:0;border-radius:25px;background:var(--blk);color:var(--wb-face);font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.28);-webkit-tap-highlight-color:transparent}
 .wbwipe:active{transform:scale(.95)}
 .wbwipe svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -563,10 +565,10 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 <div id="shell">
 <nav id="nav" aria-label="Sections">
   <button class="nb on" data-s="cal"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><span>Calendar</span></button>
-  <button class="nb" data-s="lists"><svg viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/></svg><span>Shopping</span></button>
-  <button class="nb" data-s="meals"><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M6 10h12M9 5.5v2M9 13v3"/></svg><span>Meals</span></button>
-  <button class="nb" data-s="rec"><svg viewBox="0 0 24 24"><path d="M7 20h10v-5H7z"/><path d="M7 15a4 4 0 0 1-1-7.9A4.5 4.5 0 0 1 12 4a4.5 4.5 0 0 1 6 3.1A4 4 0 0 1 17 15"/></svg><span>Recipes</span></button>
   <button class="nb" data-s="board"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M7 9h6M7 12.500h9"/><path d="M8.500 20l1.500-3.500M15.500 20L14 16.500"/></svg><span>Board</span><i class="bdg" id="wbbg" hidden></i></button>
+  <button class="nb" data-s="meals"><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M6 10h12M9 5.5v2M9 13v3"/></svg><span>Meals</span></button>
+  <button class="nb" data-s="lists"><svg viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/></svg><span>Shopping</span></button>
+  <button class="nb" data-s="rec"><svg viewBox="0 0 24 24"><path d="M7 20h10v-5H7z"/><path d="M7 15a4 4 0 0 1-1-7.9A4.5 4.5 0 0 1 12 4a4.5 4.5 0 0 1 6 3.1A4 4 0 0 1 17 15"/></svg><span>Recipes</span></button>
   <span class="sp"></span>
   <button class="nb" id="meb" aria-label="My profile and settings"><span id="meav"></span><span>Profile</span></button>
 </nav>
@@ -575,11 +577,12 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 <section class="sec on" id="sec-cal">
   <div class="top"><h1 class="t" id="title"></h1><span class="syn" id="syn" role="status"></span>
     <div class="grp"><button class="btn sq" id="prev" aria-label="Previous month">‹</button><button class="btn" id="today">Today</button><button class="btn sq" id="next" aria-label="Next month">›</button></div></div>
-  <div class="bar2"><div class="chips" id="ppl"></div>
+  <div class="bar2">
     <div class="grp"><div class="seg"><button id="vm" class="on">Month</button><button id="va">Agenda</button></div><button class="btn p" id="addev">+ Event</button><button class="btn sq" id="cals" aria-label="Choose calendars">⚙</button></div></div>
   <div id="wx"></div>
   <div id="nudge"></div>
   <div id="main"></div>
+  <div class="chips" id="ppl" role="group" aria-label="Whose calendars to show"></div>
 </section>
 
 <section class="sec" id="sec-lists">
@@ -589,13 +592,14 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 
 <section class="sec" id="sec-board">
   <div class="top"><h1 class="t">Whiteboard</h1></div>
-  <div id="wb"><p class="empty">Opening the whiteboard…</p></div>
+  <div id="wb"></div>
 </section>
 
 <section class="sec" id="sec-meals">
-  <div class="top"><h1 class="t">Meals</h1></div>
-  <p class="hint mh" id="mhint"></p>
-  <div class="mwrap"><div id="units"></div><aside class="side" id="mside"></aside></div>
+  <div class="top"><h1 class="t">Meals</h1><button class="btn sq" id="mset" aria-label="Meal settings">⚙</button></div>
+  <div class="mstat" id="mstat"></div>
+  <div id="units"></div>
+  <div class="mfoot"><button class="btn p big" id="mimp">+ Import meals</button><p class="hint mh" id="mhint"></p></div>
 </section>
 
 <section class="sec" id="sec-rec">
@@ -617,6 +621,8 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <h3>Event colour</h3><div id="sw"></div>
   <h3>Appearance</h3>
   <div class="seg w" id="thm"><button data-t="dark">Dark</button><button data-t="light">Light</button><button data-t="system">System</button></div>
+  <h3>Menu order <small class="hint">(Profile stays last)</small></h3>
+  <div id="navord" class="navord"></div>
   <h3>Account</h3>
   <div class="prow"><span class="hint" id="pacct" style="margin:0;flex:1;min-width:0;overflow-wrap:anywhere"></span><button class="btn d" id="pso" type="button">Sign out</button></div>
   <p id="pm" class="hint"></p>
@@ -761,6 +767,13 @@ document.addEventListener('close',()=>setTyping(false),true);
 const openD=d=>{if(d.open)return;d.showModal();if(PHN()){const a=document.activeElement;if(a&&a!==document.body&&d.contains(a))a.blur()}};
 let tt;const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)};
 document.addEventListener('click',e=>{const d=e.target;if(d.tagName==='DIALOG'){if(performance.now()-dockT<500)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()}});
+const NAVDEF=['cal','board','meals','lists','rec'];
+const navOrder=v=>{const o=String(v||'').split(',').filter((x,i,a)=>NAVDEF.includes(x)&&a.indexOf(x)===i);return o.length===NAVDEF.length?o:NAVDEF.slice()};
+function applyNav(v){ // the menu order this person picked; Profile always stays last
+  const o=navOrder(v),sp=document.querySelector('#nav .sp');o.forEach(k=>$('nav').insertBefore(document.querySelector(`.nb[data-s="${k}"]`),sp));
+  try{localStorage.setItem('fw-nav',o.join(','))}catch(e){}
+}
+try{applyNav(localStorage.getItem('fw-nav'))}catch(e){}
 function applyTheme(t){if(!['dark','light','system'].includes(t))t='dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('fw-theme',t)}catch(e){}
   document.querySelectorAll('#thm button').forEach(b=>b.classList.toggle('on',b.dataset.t===t))}
 
@@ -773,7 +786,7 @@ function cacheSave(){clearTimeout(ct);ct=setTimeout(()=>{try{localStorage.setIte
 function paintCache(){
   let c=null;try{c=JSON.parse(localStorage.getItem(CK)||'null')}catch(e){}
   if(!c||!c.F||!c.F.me)return false;
-  F=c.F;if(F.prefs)applyTheme(F.prefs.theme);
+  F=c.F;if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}
   if(c.L&&c.L.lists){setLists(c.L);L.t=0}
   if(Array.isArray(c.B)){B.items=c.B;B.loaded=true;B.t=0;wbBadge()}
   if(c.M&&c.M.meals){M.meals=c.M.meals;M.cfg=c.M.cfg;M.loaded=true;M.t=0}
@@ -1035,7 +1048,7 @@ function renderSources(){
 function note(r){$('msg').textContent=r?'Synced '+r.count+' events.':'';
   $('errs').innerHTML=[...(S.warnings||[]),...(r?r.errors:[])].map(x=>`<li>${esc(x)}</li>`).join('')}
 async function refresh(){
-  F=await run('getFamily');lastGet=Date.now();if(F.prefs)applyTheme(F.prefs.theme);syncWx();render();cacheSave();
+  F=await run('getFamily');lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();
   if(!F.hasSaved&&!asked){asked=true;openCals()}
   else if(F.writable==null&&!S.loaded)loadSources(false).catch(()=>{});
   autoSync();
@@ -1043,7 +1056,7 @@ async function refresh(){
 /* keep everyone's view fresh: re-read when the person comes back to the app, and top up their own calendars when they are old */
 let lastGet=Date.now(),auto=false;
 const setSyn=t=>{$('syn').textContent=t||''};
-async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs)applyTheme(F.prefs.theme);syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
+async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
 function autoSync(){
   if(auto)return;
   const t=(F.sync||{})[F.me],old=!t||Date.now()-new Date(t)>15*6e4;
@@ -1124,6 +1137,7 @@ function openCals(tab){
 }
 async function load(){
   const hit=paintCache();
+  run('revChanges').catch(()=>{}); // take the first reading before loading, so nothing saved meanwhile is missed
   warm();
   try{await refresh()}
   catch(e){if(/NOACCESS|WRONGDEPLOY/.test(String(e.message||e))){noAccess(String(e.message||e));return}
@@ -1150,9 +1164,16 @@ function drawProfile(){
   $('pav').innerHTML=avp(P,64);
   $('sw').innerHTML=PAL.map(c=>`<button class=sw style="background:${c}" data-c="${c}" aria-pressed="${P.color===c}" aria-label="${c}"></button>`).join('')+`<label class="sw swc" aria-pressed="${!PAL.includes(P.color)}" title="Custom colour" style="${PAL.includes(P.color)?'':'background:'+esc(P.color)}"><input type=color id=pcol value="${esc(P.color)}" aria-label="Custom colour"></label>`;
 }
-$('meb').onclick=()=>{P={...prof(F.me)};$('pn').value=P.name;$('pm').textContent='';$('pacct').textContent='Signed in as '+F.me;$('pso').textContent='Sign out';delete $('pso').dataset.sure;drawProfile();applyTheme(document.documentElement.dataset.theme);openD($('pdlg'))};
+$('meb').onclick=()=>{P={...prof(F.me)};drawNavOrd();$('pn').value=P.name;$('pm').textContent='';$('pacct').textContent='Signed in as '+F.me;$('pso').textContent='Sign out';delete $('pso').dataset.sure;drawProfile();applyTheme(document.documentElement.dataset.theme);openD($('pdlg'))};
 $('sw').onclick=e=>{if(e.target.dataset.c){P.color=e.target.dataset.c;drawProfile()}};
 $('sw').oninput=e=>{if(e.target.id==='pcol'){P.color=e.target.value;$('pav').innerHTML=avp(P,64)}};
+const NAVNM={cal:'Calendar',board:'Board',meals:'Meals',lists:'Shopping',rec:'Recipes'};
+function drawNavOrd(){const o=navOrder(localStorage.getItem('fw-nav'));
+  $('navord').innerHTML=o.map((k,i)=>`<div class=nvr><span class=nvi>${document.querySelector(`.nb[data-s="${k}"] svg`).outerHTML}</span><span class=nvn>${NAVNM[k]}</span><button type=button class=nvb data-up="${i}" ${i?'':'disabled'} aria-label="Move ${NAVNM[k]} up">▲</button><button type=button class=nvb data-dn="${i}" ${i<o.length-1?'':'disabled'} aria-label="Move ${NAVNM[k]} down">▼</button></div>`).join('')+
+    (o.join()!==NAVDEF.join()?`<button type=button class="btn nvreset" data-rs>Back to the default order</button>`:'')}
+$('navord').onclick=e=>{const b=e.target.closest('button');if(!b)return;let o=navOrder(localStorage.getItem('fw-nav'));
+  if(b.dataset.rs!==undefined)o=NAVDEF.slice();else{const i=+(b.dataset.up??b.dataset.dn),j=b.dataset.up!==undefined?i-1:i+1;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]]}
+  applyNav(o.join(','));if(F.prefs)F.prefs.nav=o.join(',');drawNavOrd();cacheSave();run('saveNav',o).catch(x=>$('pm').textContent='Could not save the menu order: '+(x.message||x))};
 $('thm').onclick=e=>{const t=e.target.dataset.t;if(!t)return;applyTheme(t);run('savePrefs',{theme:t}).catch(x=>$('pm').textContent='Could not save the theme: '+(x.message||x))};
 $('pf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
   const c=document.createElement('canvas'),z=128,m=Math.min(im.width,im.height);c.width=c.height=z;
@@ -1474,8 +1495,19 @@ $('ldel').onclick=async()=>{const b=$('ldel');if(!b.dataset.sure){b.dataset.sure
 $('lcx').onclick=()=>$('ldlg').close();
 
 /* recipe ingredients -> a shopping list */
+/* "3 tbsp lemon pepper seasoning" -> "Lemon pepper seasoning", "2 x 796mL cans of diced tomatoes" -> "Diced tomatoes" */
+const UNIT=/^(?:x|×|\/|of|about|approx\.?|~|[-–+&]|and|a|an|heaping|heaped|level|large|small|medium|whole|(?:tbsps?|tablespoons?|tsps?|teaspoons?|cups?|c|ml|millilit(?:er|re)s?|l|lit(?:er|re)s?|g|grams?|kg|kilograms?|mg|oz|ounces?|lbs?|pounds?|cans?|tins?|jars?|bottles?|packages?|pkgs?|packs?|bags?|boxes|box|cartons?|cloves?|slices?|pieces?|pinch(?:es)?|dash(?:es)?|handfuls?|bunch(?:es)?|sprigs?|sticks?|heads?|stalks?|fillets?|sheets?|drops?|qt|quarts?|pt|pints?|gal|gallons?)\.?)$/i;
+const NUMW=/^(?:[\d½¼¾⅓⅔⅛⅜⅝⅞.,/–-]+(?:[a-zA-Z]+\.?)?|one|two|three|four|five|six|seven|eight|nine|ten|twelve|dozen|half)$/i;
+function shopName(line){
+  let t=String(line).replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();
+  const w=t.split(' ');let i=0;
+  while(i<w.length-1){const x=w[i].replace(/,$/,'');if(NUMW.test(x)&&(!/[a-z]/i.test(x)||UNIT.test(x.replace(/^[\d½¼¾⅓⅔⅛⅜⅝⅞.,/–-]+/,''))||/^(one|two|three|four|five|six|seven|eight|nine|ten|twelve|dozen|half)$/i.test(x))||UNIT.test(x))i++;else break}
+  t=w.slice(i).join(' ').replace(/^(?:(?:uncooked|boneless|skinless|fresh|freshly|raw)[ ,]+(?:and )?)+/i,'').replace(/,.*$/,'').replace(/\s+(?:to taste|for serving|for garnish|divided|optional)$/i,'').trim();
+  return t?t[0].toUpperCase()+t.slice(1):String(line).trim();
+}
 async function addIngredients(){
-  const boxes=[...$('rvc').querySelectorAll('input[type=checkbox]')],pick=boxes.filter(b=>b.checked),texts=(pick.length?pick:boxes).map(b=>b.parentElement.textContent.trim());
+  const boxes=[...$('rvc').querySelectorAll('input[type=checkbox]')],pick=boxes.filter(b=>b.checked),
+    texts=[...new Map((pick.length?pick:boxes).map(b=>shopName(b.parentElement.textContent.trim())).filter(Boolean).map(x=>[x.toLowerCase(),x])).values()];
   if(!texts.length)return;
   if(!L.loaded)await loadLists();
   const go=async id=>{$('pickdlg').close();try{localStorage.setItem('fw-lastlist',id)}catch(e){}const n=await addItems(id,texts);if(n)toast(`Added ${n} item${n>1?'s':''} to ${L.lists.find(l=>l.id===id).name}`)};
@@ -1500,13 +1532,14 @@ const stored=k=>{if(SEEN[k]==null){try{SEEN[k]=localStorage.getItem(k)||''}catch
 const seenAt=()=>stored('fw-bseen:'+F.me),openAt=()=>stored('fw-bopen:'+F.me);
 function wbNew(){
   const me=F.me,t=seenAt(),live=B.items.filter(i=>!i._tmp),
-    mine=live.filter(i=>i.kind==='todo'&&i.assignee===me&&i.done!=='Y'&&String(i.updated)>(i.by===me?openAt():t)), // one you gave yourself waits for the next time you open the board
-    fresh=live.filter(i=>i.by!==me&&String(i.created)>t&&!(i.kind==='todo'&&i.done==='Y'));
-  return{n:new Set(fresh.concat(mine)).size,mine:mine.length>0};
+    open=live.filter(i=>i.kind==='todo'&&i.assignee===me&&i.done!=='Y'),
+    fresh=live.filter(i=>i.by!==me&&(String(i.created)>t||(i.assignee===me&&String(i.updated)>t))&&!(i.kind==='todo'&&i.done==='Y'));
+  return{n:fresh.length,mine:open.length>0};
 }
 function wbBadge(){
   const e=$('wbbg'),w=F.me&&!$('sec-board').classList.contains('on')?wbNew():{n:0,mine:false};
-  e.hidden=!w.n;e.textContent=w.n>9?'9+':w.n;document.querySelector('.nb[data-s=board]').classList.toggle('flash',w.mine);
+  e.hidden=!(w.n||w.mine);e.textContent=w.n?(w.n>9?'9+':w.n):'';e.classList.toggle('dot',!w.n);
+  document.querySelector('.nb[data-s=board]').classList.toggle('flash',w.mine);
 }
 const markSeen=(pad,opened)=>{if(!F.me)return;const late=B.items.reduce((m,i)=>Math.max(m,Date.parse(i.updated)||0,Date.parse(i.created)||0),0),t=new Date(Math.max(Date.now()+(pad||0),late)).toISOString();
   for(const k of opened?['fw-bseen:','fw-bopen:']:['fw-bseen:']){const v=k==='fw-bopen:'?new Date().toISOString():t;SEEN[k+F.me]=v;try{localStorage.setItem(k+F.me,v)}catch(e){}}wbBadge()}; // shortcut: a few seconds of slack so a save still in flight when you leave is not shown back to you, and the newest thing on the board counts even if another phone's clock runs ahead; kept per phone, not synced
@@ -1523,8 +1556,8 @@ function drawBoard(){
       `<button class=wbtx data-we="${esc(i.id)}"><span class=wbw>${esc(i.text)}</span>${m.length?`<span class=wbm>${m.join(' · ')}</span>`:''}</button></div>`};
   const note=i=>{const h=hsh(i.id),by=prof(i.by),dt=i.created?new Date(i.created):null;
     return `<button class=note data-nn="${esc(i.id)}" style="--nc:${NOTEC[i.color]||NOTEC.yellow};--pin:${PINS[h%PINS.length]};--r:${((h>>4)%7-3)*.9}deg"><span class=nt>${esc(i.text)}</span><span class=nby>— ${esc(by.name.split(' ')[0])}${dt&&!isNaN(dt)?' · '+dt.toLocaleDateString(undefined,{month:'short',day:'numeric'}):''}</span></button>`};
-  $('wb').innerHTML=`<div class=wbd><div class=wbs><h2 class=wbh>To do${UL}<span class=wbc>${open.length?open.length+' left':td.length?'all done ✌️':''}</span><button type=button class="wbwipe${dn.length?'':' off'}" data-wclr aria-label="Wipe the ticked to-dos off the board"><svg viewBox="0 0 24 24"><path d="M4 16l8-9 7 6-5 6H8z"/><path d="M8 19h12"/></svg>Wipe${dn.length?`<b>${dn.length}</b>`:''}</button></h2>`+
-    open.concat(dn).map(row).join('')+(td.length?'':`<p class=wbem>Nothing to do yet. Write the first one ↓</p>`)+
+  $('wb').innerHTML=`<div class=wbd><div class=wbs><h2 class=wbh>To do${UL}<span class=wbc>${open.length?open.length+' left':''}</span><button type=button class="wbwipe${dn.length?'':' off'}" data-wclr aria-label="Wipe the ticked to-dos off the board"><svg viewBox="0 0 24 24"><path d="M4 16l8-9 7 6-5 6H8z"/><path d="M8 19h12"/></svg>Wipe${dn.length?`<b>${dn.length}</b>`:''}</button></h2>`+
+    open.concat(dn).map(row).join('')+
     `<form class=wbadd id=wbadd><input type=text id=wbin placeholder="Write a to-do…" maxlength=140 autocomplete=off autocapitalize=sentences enterkeyhint=done aria-label="New to-do"><button aria-label="Add to-do">+</button></form>`+
     `<h2 class="wbh n">Notices${UL}</h2><div class=wbn>${notes.map(note).join('')}<button class="note new" data-wadd=note>＋ New note</button></div></div></div>`;
   if(draft)$('wbin').value=draft;if(had)$('wbin').focus();wbBadge();
@@ -1558,7 +1591,7 @@ $('wb').onclick=e=>{
   else if(b.dataset.we){const i=it(b.dataset.we);if(i)editBoard(i)}
   else if(b.dataset.nn){const i=it(b.dataset.nn);if(i)editBoard(i)}
   else if(b.dataset.wadd)editBoard(null,b.dataset.wadd);
-  else if(b.dataset.wclr!==undefined){if(!B.items.some(i=>i.kind==='todo'&&i.done==='Y'))return toast('Nothing ticked yet. Tick a to-do, then Wipe clears it.');
+  else if(b.dataset.wclr!==undefined){if(!B.items.some(i=>i.kind==='todo'&&i.done==='Y'))return;
     if(wiping)return;wiping=1;document.querySelectorAll('.wbt.done').forEach(r=>r.classList.add('wiping'));
     setTimeout(()=>{wiping=0;B.items=B.items.filter(i=>!(i.kind==='todo'&&i.done==='Y'));drawBoard();cacheSave();bop('clearDone',{}).catch(()=>{toast('Could not wipe those');B.t=0;loadBoard(true)})},280)}};
 $('wb').onsubmit=e=>{e.preventDefault();const inp=$('wbin'),t=inp.value.trim();if(!t)return;inp.value='';const x=splitWho(t);addBoard({kind:'todo',text:x.text,assignee:x.who});$('wbin').focus()};
@@ -1601,14 +1634,26 @@ $('wbsv').onclick=()=>{let t=$('wbt').value.replace(/\r/g,'');if(BE.kind==='todo
   else addBoard(BE.kind==='note'?{kind:'note',text:t,color:BE.color}:{kind:'todo',text:t,assignee:BE.assignee,due})};
 $('wbdel').onclick=()=>{const b=$('wbdel');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again to delete';return}const i=B.items.find(x=>x.id===BE.id);$('wbdlg').close();if(i)delBoard(i)};
 $('wbcx').onclick=()=>$('wbdlg').close();
-setInterval(()=>{if(sec('board')&&!document.hidden&&!pend&&!$('wbdlg').open&&!(document.activeElement&&document.activeElement.id==='wbin'&&$('wbin').value))loadBoard(true)},30000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&F.me&&!pend)loadBoard(sec('board'))});
-setInterval(()=>{if(F.me&&!sec('board')&&!document.hidden&&!pend)loadBoard()},6e4); // off the board: quiet check, so the red circle shows up
+/* live updates: while the app is open, read one tiny row every few seconds that says which parts of the household someone changed, and re-read only those */
+let revBusy=false,revLast=0;
+const REFRESH={
+  family:()=>reloadF().catch(()=>{}),
+  board:()=>loadBoard(true),
+  lists:()=>{L.t=0;if(sec('lists'))return loadLists();return run('getLists').then(r=>{if(!pend){setLists(r);cacheSave()}}).catch(()=>{})},
+  meals:()=>{M.t=0;if(DD.on)return;if(sec('meals'))return loadMeals();return run('getMeals').then(r=>{if(!pend){M.meals=r.meals;M.cfg=r.config;M.loaded=true;M.t=Date.now();cacheSave()}}).catch(()=>{})},
+  rec:()=>{R.t=0;if(R.loaded&&sec('rec'))return loadRecipes();R.loaded=false}};
+async function revTick(){
+  if(revBusy||!F.me||document.hidden||pend||Date.now()-revLast<2500)return;revBusy=true;revLast=Date.now();
+  try{const ch=await run('revChanges');for(const a of ch)if(REFRESH[a])await REFRESH[a]()}catch(e){}finally{revBusy=false}
+}
+setInterval(revTick,8e3);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)revTick()});addEventListener('focus',revTick);addEventListener('online',revTick);
 
 /* ---------- meals ---------- */
 let M={meals:[],cfg:{containers:30,fridgeDays:4,freezerDays:90,fridgeTemp:4,freezerTemp:-18},loaded:false,cur:null,flash:null,t:0,imp:{loc:'fridge',sel:{}}};
 const DAY=864e5,today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
-const cnum=c=>+String(c).slice(5),cname=n=>'CONT-'+pad(n),per=()=>innerWidth<340?3:innerWidth<560?4:5;
+const cnum=c=>+String(c).slice(5),cname=n=>'CONT-'+pad(n);
+const per=()=>{const W=$('units').clientWidth||Math.min(innerWidth,1100),w=(innerWidth>=1000?W/2-10:W)-26;return Math.max(3,Math.min(6,Math.floor(w/(innerWidth<560?74:112))))}; // containers per shelf, from the room each unit has
 const sec=n=>$('sec-'+n).classList.contains('on');
 function expiry(m){
   const c=M.cfg;let base,days;
@@ -1683,24 +1728,22 @@ function cSVG(m,s,ice,th){
 const contHTML=m=>{const s=status(m),t=thawOf(m),th=t&&!t.done,ice=m.loc==='freezer'?1:th?1-t.p:0,tt=th?'thawing, about '+fmtH(t.left)+' left':'';
   return `<button class="cont ${s.cls}${th?' melt':''}${M.cur===m.id?' sel':''}${M.flash===m.id?' land':''}" data-m="${esc(m.id)}" aria-label="${esc(m.container+', '+m.name+'. '+s.txt+(tt?'. '+tt:''))}" title="${esc(m.name+' · '+s.txt+(tt?' · '+tt:''))}">${cSVG(m,s,ice,t)}<small>${esc(m.name)}</small></button>`};
 function unitHTML(loc){
-  const n=per(),L2=M.meals.filter(m=>m.loc===loc).sort(byExp),rows=Math.max(2,Math.ceil(L2.length/n));let sh='';
-  for(let r=0;r<rows;r++)sh+=`<div class=shelf style="--per:${n}">${L2.slice(r*n,(r+1)*n).map(contHTML).join('')||(r===0&&!L2.length?`<span class=none>Nothing in the ${loc} yet</span>`:'')}</div>`;
+  const n=per(),L2=M.meals.filter(m=>m.loc===loc).sort(byExp),rows=Math.max(1,Math.ceil(L2.length/n));let sh='';
+  for(let r=0;r<rows;r++)sh+=`<div class=shelf style="--per:${n}">${L2.slice(r*n,(r+1)*n).map(contHTML).join('')||(r===0&&!L2.length?`<span class=none>Empty</span>`:'')}</div>`;
   const nm=loc==='fridge'?'Fridge':'Freezer';
   return `<section class="unit ${loc}" data-loc="${loc}"><h2>${nm}<span class=tag>${tfmt(loc==='fridge'?FT():ZT())}</span><span class=cnt>${L2.length} meal${L2.length===1?'':'s'}</span></h2>${sh}${loc==='freezer'?'<div class=drawer aria-hidden=true></div>':''}<div class=dropmsg aria-hidden=true>Drop to move to the ${nm.toLowerCase()}</div></section>`;
 }
 const freeConts=()=>{const used=new Set(M.meals.map(m=>m.container)),out=[];for(let i=1;i<=M.cfg.containers;i++)if(!used.has(cname(i)))out.push(cname(i));return out};
 function drawUnits(){$('units').innerHTML=unitHTML('fridge')+unitHTML('freezer')}
-function drawSide(){
+function drawSide(){ // the numbers along the top
   const st=M.meals.map(status),bad=st.filter(s=>s.cls==='bad').length,warn=st.filter(s=>s.cls==='warn').length;
-  $('mside').innerHTML=`<div class=card><button class="btn p big" id=mimp>+ Import meals</button>
-    <div class=stats><div><b>${M.meals.length}</b><span>in use</span></div><div><b>${freeConts().length}</b><span>free</span></div><div class=bad><b>${bad}</b><span>expired</span></div><div class=warn><b>${warn}</b><span>due soon</span></div></div>
-    <div class=lg><span><i style="background:var(--bad)"></i>Expired</span><span><i style="background:var(--warn)"></i>Expires within a day</span></div></div>`+
-    `<button class=btn id=mset style="align-self:flex-start">⚙ Meal settings</button>`;
+  $('mstat').innerHTML=`<span class=ms><b>${M.meals.length}</b> in use</span><span class=ms><b>${freeConts().length}</b> free</span>`+
+    (bad?`<span class="ms bad"><b>${bad}</b> expired</span>`:'')+(warn?`<span class="ms warn"><b>${warn}</b> due soon</span>`:'');
 }
 const msig=()=>JSON.stringify([M.meals,M.cfg,innerWidth])+Math.floor(Date.now()/3e5);
 function drawMeals(){
   M.sig=msig();drawUnits();drawSide();M.flash=null;
-  $('mhint').textContent=matchMedia('(hover:hover)').matches?'Tip: drag a container to the other side to move it between the fridge and the freezer.':'Tip: press and hold a container, then drag it to move it between the fridge and the freezer.';
+  $('mhint').textContent=(matchMedia('(hover:hover)').matches?'Drag a container':'Press and hold a container, then drag it')+' to move it between the fridge and the freezer. A red number has expired, a yellow one expires within a day.';
 }
 const markSel=()=>document.querySelectorAll('#units .cont').forEach(c=>c.classList.toggle('sel',c.dataset.m===M.cur));
 async function loadMeals(){
