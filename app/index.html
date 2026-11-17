@@ -54,7 +54,11 @@ nav .sp{flex:1}
 h1.t{font-size:26px;font-weight:650;margin:0 auto 0 0;letter-spacing:-.2px}
 .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .bar2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-#ppl{justify-content:center;flex-wrap:wrap;margin:14px 0 4px;padding-bottom:4px}.bar2 .grp{margin-left:auto}
+#ppl{display:inline-flex;gap:4px;padding:4px;border-radius:24px;background:var(--card);border:1px solid var(--line);max-width:100%;overflow-x:auto;scrollbar-width:none}#ppl::-webkit-scrollbar{display:none}.bar2 .grp{margin-left:auto}
+#ppl .pp{flex:none;display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px 0 4px;border:0;border-radius:18px;background:none;color:var(--mut);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,opacity .15s}
+#ppl .pp .pic,#ppl .pp img{flex:none;box-shadow:0 0 0 2px var(--card),0 0 0 3.5px transparent;transition:box-shadow .15s,filter .15s}
+#ppl .pp.on{background:color-mix(in srgb,var(--c) 20%,var(--card));color:var(--ink)}#ppl .pp.on .pic,#ppl .pp.on img{box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--c)}
+#ppl .pp:not(.on){opacity:.6}#ppl .pp:not(.on) .pic,#ppl .pp:not(.on) img{filter:grayscale(1)}#ppl .pp:not(.on) .nm{text-decoration:line-through}
 
 /* controls */
 .btn{min-height:38px;border:1px solid var(--line);background:var(--card);padding:0 16px;border-radius:19px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
@@ -112,7 +116,7 @@ dialog h2{margin:0 0 4px;font-size:20px}
 dialog input,dialog select,dialog textarea{min-width:0;max-width:100%}
 dialog h3{font-size:13px;margin:16px 0 4px;color:var(--mut);font-weight:600}
 dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:pointer}
-#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:22px;z-index:99;box-shadow:var(--sh);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+#toast{inset:auto;margin:0;border:0;overflow:visible;position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:22px;z-index:99;box-shadow:var(--sh);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* calendar */
@@ -235,9 +239,9 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 
 /* meals */
 .mstat{display:flex;gap:8px;flex-wrap:wrap;margin:-2px 0 14px}.ms{display:inline-flex;align-items:baseline;gap:6px;padding:7px 14px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--mut)}
-.ms b{font-size:17px;color:var(--ink)}.ms.bad{border-color:color-mix(in srgb,var(--bad) 50%,var(--line))}.ms.bad b{color:var(--bad)}.ms.warn{border-color:color-mix(in srgb,var(--warn) 50%,var(--line))}.ms.warn b{color:var(--warn)}
-#units{display:grid;gap:16px;align-items:start}@media(min-width:1000px){#units{grid-template-columns:1fr 1fr}}#units .unit+.unit{margin-top:0}
-.mfoot{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 8px}.mfoot .btn{width:100%;max-width:440px;min-height:54px;font-size:17px;border-radius:18px}.mfoot .mh{margin:4px 8px 0;text-align:center;max-width:520px}
+.ms b{font-size:17px;color:var(--ink)}.ms i{width:8px;height:8px;border-radius:50%;background:#4cc9a0;align-self:center}.ms.bad i{background:var(--bad)}.ms.warn i{background:var(--warn)}.ms.bad{border-color:color-mix(in srgb,var(--bad) 50%,var(--line))}.ms.bad b{color:var(--bad)}.ms.warn{border-color:color-mix(in srgb,var(--warn) 50%,var(--line))}.ms.warn b{color:var(--warn)}
+#units{max-width:900px}
+.mfoot{max-width:900px;display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 8px}.mfoot .btn{width:100%;max-width:440px;min-height:54px;font-size:17px;border-radius:18px}.mfoot .mh{margin:4px 8px 0;text-align:center;max-width:520px}
 .side{position:sticky;top:18px;display:flex;flex-direction:column;gap:14px}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
 .stats div{background:var(--bg);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column}
@@ -247,15 +251,14 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .cb{display:inline-block;background:#111a22;color:#fff;font-weight:700;font-size:12px;padding:2px 8px;border-radius:8px;letter-spacing:.3px}
 .cb.warn{color:#ffd23f}.cb.bad{color:#ff6b6b}
-.unit{position:relative;border-radius:24px;padding:14px 16px 10px;border:1px solid var(--line);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 22px rgba(0,0,0,.18)}
+.unit{position:relative;border-radius:24px;padding:14px 16px 8px;border:1px solid var(--line);overflow:hidden}
 .unit+.unit{margin-top:16px}
-.unit h2{margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:10px}
-.unit h2::before{font-size:20px}.unit.fridge h2::before{content:'🥗'}.unit.freezer h2::before{content:'❄️'}
+.unit h2{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:10px}
 .unit .tag{font-size:12px;font-weight:500;padding:2px 10px;border-radius:10px}
 .unit .cnt{margin-left:auto;font-weight:400;color:var(--mut);font-size:13px}
 .unit.fridge{background:linear-gradient(180deg,color-mix(in srgb,var(--sa) 6%,var(--card)),var(--card) 70%)}
 .unit .tag{background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--mut)}
-.unit.freezer{background:linear-gradient(180deg,color-mix(in srgb,#7cc0ff 14%,var(--card)),color-mix(in srgb,#7cc0ff 5%,var(--card)) 75%);border-color:color-mix(in srgb,#7cc0ff 26%,var(--line))}
+.unit.freezer{background:linear-gradient(180deg,color-mix(in srgb,var(--sa) 11%,var(--card)),color-mix(in srgb,var(--sa) 4%,var(--card)) 75%)}
 .drawer{position:relative;height:46px;margin:12px 0 8px;border-radius:12px;border:1px solid color-mix(in srgb,#7cc0ff 38%,transparent);background:linear-gradient(180deg,color-mix(in srgb,#fff 16%,transparent),color-mix(in srgb,#fff 3%,transparent));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 3px 8px rgba(0,0,0,.14)}
 .drawer::after{content:"";position:absolute;left:50%;top:13px;width:84px;height:9px;margin-left:-42px;border-radius:6px;background:color-mix(in srgb,#7cc0ff 30%,var(--ink) 14%);opacity:.55}
 .shelf{display:grid;grid-template-columns:repeat(var(--per),minmax(0,1fr));gap:4px 12px;padding:14px 4px 0;min-height:132px;position:relative;align-items:end}
@@ -294,19 +297,21 @@ input.mvn:focus{background:var(--soft);border-bottom-color:transparent;padding-l
 /* import: one row per free container, with its own Fridge / Freezer choice beside it */
 .gh{display:flex;align-items:center;gap:4px;margin-top:20px!important}.gh span{flex:1}
 .gh .lk{margin-left:0;font-size:13px;padding:6px 10px}
-.clist{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.cr{display:flex;align-items:center;gap:8px;padding:6px;border:1.5px solid var(--line);background:var(--bg);border-radius:14px;transition:border-color .12s,background .12s}
-.cr.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 9%,var(--bg))}
-.cn{position:relative;flex:none;min-width:50px;height:42px;padding:0 6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:inherit;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;cursor:pointer;transition:background .12s,transform .1s}
+.clist{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;margin-top:8px}
+#mgrid .cr{display:flex;flex-direction:column;gap:6px;padding:8px 8px 7px;border:1.5px solid var(--line);background:var(--bg);border-radius:16px;transition:border-color .15s,background .15s,transform .15s}
+#mgrid .cr.on.fridge{border-color:#4cc9a0;background:color-mix(in srgb,#4cc9a0 11%,var(--bg))}#mgrid .cr.on.freezer{border-color:#7cc0ff;background:color-mix(in srgb,#7cc0ff 12%,var(--bg))}
+.cn{position:relative;display:grid;place-items:center;width:100%;height:62px;padding:0;border:0;background:none;color:var(--ink);cursor:pointer;font:inherit}
+.cn svg{width:72px;height:auto;display:block;overflow:visible}.cn .tb{fill:color-mix(in srgb,var(--ink) 7%,transparent);stroke:color-mix(in srgb,var(--ink) 38%,transparent);stroke-width:1.4}
+.cn .tf{fill:transparent;transition:fill .15s}.cn .tl{fill:color-mix(in srgb,var(--ink) 28%,var(--card))}
+#mgrid .cr.on.fridge .tf{fill:color-mix(in srgb,#4cc9a0 60%,transparent)}#mgrid .cr.on.freezer .tf{fill:color-mix(in srgb,#9fd3ff 62%,transparent)}#mgrid .cr.on .tl{fill:color-mix(in srgb,var(--ink) 40%,var(--card))}
+.cn b{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;background:color-mix(in srgb,var(--bg) 82%,transparent);padding:1px 8px;border-radius:8px}
 .cn:active{transform:scale(.95)}
-.cr.on .cn{background:var(--acc);border-color:var(--acc);color:var(--onacc)}
-.cs{flex:1;min-width:0;display:flex;gap:2px;padding:2px;background:var(--card);border:1px solid var(--line);border-radius:11px}
-.cs button{flex:1;min-width:0;height:36px;padding:0 4px;border:0;border-radius:9px;background:none;color:var(--mut);font:inherit;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer}
-.cs button:active{transform:scale(.96)}
-.cs button.on{color:var(--ink)}
-.cs button.on[data-l=fridge]{background:color-mix(in srgb,#4cc9a0 38%,var(--card));box-shadow:inset 0 0 0 1.5px #4cc9a0}
-.cs button.on[data-l=freezer]{background:color-mix(in srgb,#7cc0ff 40%,var(--card));box-shadow:inset 0 0 0 1.5px #7cc0ff}
-.cuse{margin:10px 2px 0}
+.cs{display:flex;gap:4px}
+.cs button{flex:1;min-width:0;height:38px;padding:0;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--mut);font:inherit;font-size:15px;line-height:1;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.cs button span{font-size:9.5px;font-weight:700;letter-spacing:.2px}
+.cs button:not(.on){filter:grayscale(.7);opacity:.75}
+.cs button.on[data-l=fridge]{background:color-mix(in srgb,#4cc9a0 30%,var(--card));border-color:#4cc9a0;color:var(--ink)}
+.cs button.on[data-l=freezer]{background:color-mix(in srgb,#7cc0ff 32%,var(--card));border-color:#7cc0ff;color:var(--ink)}
 /* drag and drop */
 .cont{cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-select:none}
@@ -336,7 +341,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   .sec{padding:12px 14px 24px}
   h1.t{font-size:22px}
   .top{margin-bottom:8px}
-  .bar2 .grp{width:100%}
+  #ppl{order:-1}.bar2 .grp{width:100%}
   .bar2 .grp .seg{margin-right:auto}
   .btn{min-height:44px}.btn.sq{width:44px}
   .seg button{min-height:38px}
@@ -379,7 +384,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   #rvc[data-tab=ing] #rping .ih,#rvc[data-tab=st] #rpst .ih{margin-top:12px!important}
   .sfoot{flex-wrap:wrap;gap:6px 10px}.sfoot .hint{flex:1 1 100%;order:-1;text-align:center}.sfoot .hint:empty{display:none}.sfoot .btn.p{flex:1}
   dialog.sheet{padding:0}.shd{padding:14px 16px 6px}.sbody{padding:0 16px 14px}.sfoot{padding:10px 16px}
-  .clist{grid-template-columns:minmax(0,1fr)}.cn{height:46px;min-width:56px;font-size:17px}.cs button{height:40px;font-size:14px}
+  .clist{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.cs button{height:40px}
   .mg{border-radius:14px;margin:0 -6px}
   .dows div{font-size:11px;padding:4px 0}
   .wk{grid-template-rows:28px repeat(4,17px) 15px}
@@ -577,12 +582,11 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 <section class="sec on" id="sec-cal">
   <div class="top"><h1 class="t" id="title"></h1><span class="syn" id="syn" role="status"></span>
     <div class="grp"><button class="btn sq" id="prev" aria-label="Previous month">‹</button><button class="btn" id="today">Today</button><button class="btn sq" id="next" aria-label="Next month">›</button></div></div>
-  <div class="bar2">
+  <div class="bar2"><div id="ppl" role="group" aria-label="Whose calendars to show"></div>
     <div class="grp"><div class="seg"><button id="vm" class="on">Month</button><button id="va">Agenda</button></div><button class="btn p" id="addev">+ Event</button><button class="btn sq" id="cals" aria-label="Choose calendars">⚙</button></div></div>
   <div id="wx"></div>
   <div id="nudge"></div>
   <div id="main"></div>
-  <div class="chips" id="ppl" role="group" aria-label="Whose calendars to show"></div>
 </section>
 
 <section class="sec" id="sec-lists">
@@ -704,9 +708,8 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
     <label class="f ew">Meal name<input type="text" id="mn" maxlength="80" placeholder="Chicken curry" autocomplete="off"><button type="button" class="emo" data-for="mn" aria-label="Add an emoji" title="Add an emoji"></button></label>
     <div class="two dates"><label class="f">Date created<input type="date" id="mcd"></label><label class="f">Stored on<input type="date" id="msd"></label></div>
     <h3 class="gh"><span>Containers</span><button class="lk" id="mnext" type="button">+ Next free</button><button class="lk" id="mclr" type="button">Clear</button></h3>
-    <p class="hint" id="mtip">Tick each container you are filling, then pick Fridge or Freezer beside it. Freezer is the default.</p>
+    <p class="hint" id="mtip">Tick each container you are filling, then pick 🥗 Fridge or ❄️ Freezer under it. Freezer is the default.</p>
     <div id="mgrid" class="clist" role="group" aria-label="Containers"></div>
-    <p class="hint cuse" id="muse"></p>
     <p id="mm" class="hint"></p>
   </div>
   <div class="sfoot"><span id="msum" class="hint"></span><button class="btn p" id="mgo">Import</button></div>
@@ -736,7 +739,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="emg" id="emg"></div>
   <div class="emf"><span class="hint" style="flex:1;margin:0">Tap to add it</span><button class="btn p" id="emx" type="button" autofocus>Done</button></div>
 </dialog>
-<div id="toast" role="status" aria-live="polite"></div>
+<div id="toast" role="status" aria-live="polite" popover="manual"></div>
 <script>
 const $=id=>document.getElementById(id);
 const run=(fn,...a)=>SRV.call(fn,a);
@@ -765,7 +768,10 @@ document.addEventListener('focusin',e=>{const d=e.target.closest&&e.target.close
 document.addEventListener('focusout',()=>setTimeout(()=>{const a=document.activeElement;if(!(isTxt(a)&&a.closest('dialog[open]')))setTyping(false)},160));
 document.addEventListener('close',()=>setTyping(false),true);
 const openD=d=>{if(d.open)return;d.showModal();if(PHN()){const a=document.activeElement;if(a&&a!==document.body&&d.contains(a))a.blur()}};
-let tt;const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)};
+let tt;const toast=m=>{const t=$('toast');t.textContent=m;
+  try{if(t.showPopover){if(t.matches(':popover-open'))t.hidePopover();t.showPopover()} // a popover sits above any open window
+    else{const d=[...document.querySelectorAll('dialog[open]')].pop();(d||document.body).appendChild(t)}}catch(e){}
+  t.classList.remove('on');void t.offsetWidth;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)};
 document.addEventListener('click',e=>{const d=e.target;if(d.tagName==='DIALOG'){if(performance.now()-dockT<500)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()}});
 const NAVDEF=['cal','board','meals','lists','rec'];
 const navOrder=v=>{const o=String(v||'').split(',').filter((x,i,a)=>NAVDEF.includes(x)&&a.indexOf(x)===i);return o.length===NAVDEF.length?o:NAVDEF.slice()};
@@ -919,8 +925,8 @@ function deco(s){
   return h+'</div>';
 }
 function render(){
-  $('ppl').innerHTML=F.profiles.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<button class="chip pp${hide.has(p.email)?'':' on'}" style="--c:${esc(p.color)}" data-o="${esc(p.email)}" title="${esc(statusOf(p).t)}">${avp(p,22)}${esc(p.name)}${p.email===F.me?' (you)':''}</button>`).join('')
-    +`<button class="chip pp${hide.has('*shared')?'':' on'}" style="--c:${esc(SC())}" data-o="*shared" title="Events shared with everyone"><span class=pic style="width:22px;height:22px;background:${esc(SC())};color:${ink(SC())}">${PPL}</span>Shared</button>`;
+  $('ppl').innerHTML=F.profiles.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<button class="chip pp${hide.has(p.email)?'':' on'}" style="--c:${esc(p.color)}" data-o="${esc(p.email)}" aria-pressed="${!hide.has(p.email)}" title="${esc(statusOf(p).t)}">${avp(p,26)}<span class=nm>${esc(p.name.split(/\s+/).find(w=>/\p{L}/u.test(w))||p.name)}</span></button>`).join('')
+    +`<button class="chip pp${hide.has('*shared')?'':' on'}" style="--c:${esc(SC())}" data-o="*shared" aria-pressed="${!hide.has('*shared')}" title="Events shared with everyone"><span class=pic style="width:26px;height:26px;background:${esc(SC())};color:${ink(SC())}">${PPL}</span><span class=nm>Shared</span></button>`;
   drawNudge();drawWx();
   $('meav').innerHTML=av(F.me||'',24);
   $('vm').className=view==='month'?'on':'';$('va').className=view==='agenda'?'on':'';
@@ -1441,7 +1447,7 @@ function drawLists(){
   $('lbody').innerHTML=`<div class="card lcard" style="--lc:${lcol(l)}"><div class=lhero><div class=lhd><span class=lbig>${em?em[1]:CART}</span><div class=lti><h2>${esc(em?l.name.slice(em[0].length)||l.name:l.name)}</h2><p class=lsub>${sub}</p></div><button class=lpen data-le aria-label="Change the store or date, or delete this list">${PEN}</button></div>`+
     `<button class="ltrip${w?w.n<0?' past':w.n<2?' soon':'':' none'}" data-le>${CAL}<span>${w?esc(w.long):'Plan the trip date'}</span></button>`+
     (its.length?`<div class=lprog><div class=prog aria-hidden="true"><i style="width:${pct}%"></i></div><small>${dn.length} of ${its.length}</small></div>`:'')+`</div><div class=lin>`+
-    `<form id=ladd><input type=text id=lin placeholder="Add an item" autocomplete=off enterkeyhint=done aria-label="New item">${emoBtn('lin')}<button class="btn p">Add</button></form>`+
+    `<form id=ladd><input type=text id=lin placeholder="Add an item" autocapitalize=sentences autocomplete=off enterkeyhint=done aria-label="New item">${emoBtn('lin')}<button class="btn p">Add</button></form>`+
     (sg.length?`<div class=lsg aria-label="Often bought"><span>Often</span>${sg.map(t=>`<button class=chip data-s="${esc(t)}">+ ${esc(t)}</button>`).join('')}</div>`:'')+
     (op.length?`<div class=lsec><h3>To get<b>${op.length}</b></h3>${op.map(row).join('')}</div>`:its.length?`<div class=lall><span>✓</span>Everything is in the cart</div>`:`<p class="empty lem">Nothing here yet. Add your first item above.</p>`)+
     (dn.length?`<div class="lsec cart${L.fold?' fold':''}"><h3><button class=lfold data-fold aria-expanded="${!L.fold}">In the cart<b>${dn.length}</b>${CHEV}</button><button class=lk data-clr>Clear</button></h3>${L.fold?'':dn.map(row).join('')}</div>`:'')+`</div></div>`;
@@ -1452,6 +1458,7 @@ async function newList(name,date){
   try{const l=await lop('addList',{name,date:date||''});L.lists.push(l);L.lists.sort(tripOrder);L.cur=l.id;drawLists();cacheSave();return l}catch(e){toast(e.message||'Could not create the list')}
 }
 async function addItems(listId,texts){
+  texts=texts.map(t=>{t=String(t).trim();return t?t[0].toLocaleUpperCase()+t.slice(1):t}); // "milk" -> "Milk"
   const made=texts.map(t=>({id:'tmp'+(++tmpN),list:listId,text:t,done:'N',assignee:'',addedBy:F.me,created:new Date().toISOString()}));
   L.items.push(...made);if(listId===L.cur)drawLists();
   try{const r=await lop('addItems',{list:listId,texts});
@@ -1653,7 +1660,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)revTick()}
 let M={meals:[],cfg:{containers:30,fridgeDays:4,freezerDays:90,fridgeTemp:4,freezerTemp:-18},loaded:false,cur:null,flash:null,t:0,imp:{loc:'fridge',sel:{}}};
 const DAY=864e5,today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
 const cnum=c=>+String(c).slice(5),cname=n=>'CONT-'+pad(n);
-const per=()=>{const W=$('units').clientWidth||Math.min(innerWidth,1100),w=(innerWidth>=1000?W/2-10:W)-26;return Math.max(3,Math.min(6,Math.floor(w/(innerWidth<560?74:112))))}; // containers per shelf, from the room each unit has
+const per=()=>innerWidth<340?3:innerWidth<560?4:5;
 const sec=n=>$('sec-'+n).classList.contains('on');
 function expiry(m){
   const c=M.cfg;let base,days;
@@ -1728,17 +1735,17 @@ function cSVG(m,s,ice,th){
 const contHTML=m=>{const s=status(m),t=thawOf(m),th=t&&!t.done,ice=m.loc==='freezer'?1:th?1-t.p:0,tt=th?'thawing, about '+fmtH(t.left)+' left':'';
   return `<button class="cont ${s.cls}${th?' melt':''}${M.cur===m.id?' sel':''}${M.flash===m.id?' land':''}" data-m="${esc(m.id)}" aria-label="${esc(m.container+', '+m.name+'. '+s.txt+(tt?'. '+tt:''))}" title="${esc(m.name+' · '+s.txt+(tt?' · '+tt:''))}">${cSVG(m,s,ice,t)}<small>${esc(m.name)}</small></button>`};
 function unitHTML(loc){
-  const n=per(),L2=M.meals.filter(m=>m.loc===loc).sort(byExp),rows=Math.max(1,Math.ceil(L2.length/n));let sh='';
-  for(let r=0;r<rows;r++)sh+=`<div class=shelf style="--per:${n}">${L2.slice(r*n,(r+1)*n).map(contHTML).join('')||(r===0&&!L2.length?`<span class=none>Empty</span>`:'')}</div>`;
+  const n=per(),L2=M.meals.filter(m=>m.loc===loc).sort(byExp),rows=Math.max(2,Math.ceil(L2.length/n));let sh='';
+  for(let r=0;r<rows;r++)sh+=`<div class=shelf style="--per:${n}">${L2.slice(r*n,(r+1)*n).map(contHTML).join('')||(r===0&&!L2.length?`<span class=none>Nothing in the ${loc} yet</span>`:'')}</div>`;
   const nm=loc==='fridge'?'Fridge':'Freezer';
   return `<section class="unit ${loc}" data-loc="${loc}"><h2>${nm}<span class=tag>${tfmt(loc==='fridge'?FT():ZT())}</span><span class=cnt>${L2.length} meal${L2.length===1?'':'s'}</span></h2>${sh}${loc==='freezer'?'<div class=drawer aria-hidden=true></div>':''}<div class=dropmsg aria-hidden=true>Drop to move to the ${nm.toLowerCase()}</div></section>`;
 }
 const freeConts=()=>{const used=new Set(M.meals.map(m=>m.container)),out=[];for(let i=1;i<=M.cfg.containers;i++)if(!used.has(cname(i)))out.push(cname(i));return out};
 function drawUnits(){$('units').innerHTML=unitHTML('fridge')+unitHTML('freezer')}
-function drawSide(){ // the numbers along the top
-  const st=M.meals.map(status),bad=st.filter(s=>s.cls==='bad').length,warn=st.filter(s=>s.cls==='warn').length;
-  $('mstat').innerHTML=`<span class=ms><b>${M.meals.length}</b> in use</span><span class=ms><b>${freeConts().length}</b> free</span>`+
-    (bad?`<span class="ms bad"><b>${bad}</b> expired</span>`:'')+(warn?`<span class="ms warn"><b>${warn}</b> due soon</span>`:'');
+function drawSide(){ // free containers, plus anything that needs eating soon
+  const st=M.meals.map(status),bad=st.filter(s=>s.cls==='bad').length,warn=st.filter(s=>s.cls==='warn').length,f=freeConts().length;
+  $('mstat').innerHTML=`<span class="ms free"><i></i><b>${f}</b> container${f===1?'':'s'} free</span>`+
+    (bad?`<span class="ms bad"><i></i><b>${bad}</b> expired</span>`:'')+(warn?`<span class="ms warn"><i></i><b>${warn}</b> due soon</span>`:'');
 }
 const msig=()=>JSON.stringify([M.meals,M.cfg,innerWidth])+Math.floor(Date.now()/3e5);
 function drawMeals(){
@@ -1893,15 +1900,15 @@ function openImport(){
   $('mn').value='';$('mcd').value=t;$('msd').value=t;$('mm').textContent='';drawImp();openD($('mdlg'));
 }
 const impList=()=>Object.keys(M.imp.sel).sort((a,b)=>cnum(a)-cnum(b)).map(c=>({c,loc:M.imp.sel[c]}));
+const TUB='<svg viewBox="0 0 64 46" aria-hidden="true"><path class=tb d="M7 13H57L54.6 40Q54.3 43 51.3 43H12.7Q9.7 43 9.4 40Z"/><path class=tf d="M9.2 24H54.8L54.6 40Q54.3 43 51.3 43H12.7Q9.7 43 9.4 40Z"/><rect class=tl x="4" y="5" width="56" height="9" rx="3.5"/></svg>';
 function drawImp(focus){
-  const I=M.imp,free=freeConts(),taken=M.meals.map(m=>m.container).sort((a,b)=>cnum(a)-cnum(b));let g='';
+  const I=M.imp,free=freeConts();let g='';
   for(const c of free){
     const l=I.sel[c],n=pad(cnum(c));
-    g+=`<div class="cr${l?' on':''}" data-c="${c}"><button type="button" class="cn" data-t="${c}" aria-pressed="${l?'true':'false'}" aria-label="Container ${n}${l?', selected':''}">${n}</button>`+
-      `<div class="cs" role="group" aria-label="Where container ${n} goes"><button type="button" data-l="fridge" class="${l==='fridge'?'on':''}" aria-pressed="${l==='fridge'}">Fridge</button><button type="button" data-l="freezer" class="${l==='freezer'?'on':''}" aria-pressed="${l==='freezer'}">Freezer</button></div></div>`;
+    g+=`<div class="cr${l?' on '+l:''}" data-c="${c}"><button type="button" class="cn" data-t="${c}" aria-pressed="${l?'true':'false'}" aria-label="Container ${n}${l?', selected':''}">${TUB}<b>${n}</b></button>`+
+      `<div class="cs" role="group" aria-label="Where container ${n} goes"><button type="button" data-l="fridge" class="${l==='fridge'?'on':''}" aria-pressed="${l==='fridge'}" aria-label="Fridge">🥗<span>Fridge</span></button><button type="button" data-l="freezer" class="${l==='freezer'?'on':''}" aria-pressed="${l==='freezer'}" aria-label="Freezer">❄️<span>Freezer</span></button></div></div>`;
   }
   $('mgrid').innerHTML=g;
-  $('muse').textContent=taken.length?`Already in use: ${taken.map(c=>pad(cnum(c))).join(', ')}`:'';
   if(focus){const r=$('mgrid').querySelector(`[data-c="${focus.c}"]`),el=r&&r.querySelector(focus.l?`[data-l="${focus.l}"]`:'[data-t]');if(el)el.focus({preventScroll:true})}
   const L2=impList(),nf=L2.filter(r=>r.loc==='fridge').length,nz=L2.length-nf;
   $('mgo').disabled=!L2.length;
