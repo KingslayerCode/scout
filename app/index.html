@@ -258,7 +258,10 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .cb{display:inline-block;background:#111a22;color:#fff;font-weight:700;font-size:12px;padding:2px 8px;border-radius:8px;letter-spacing:.3px}
 .cb.warn{color:#ffd23f}.cb.bad{color:#ff6b6b}
-.unit{position:relative;border-radius:24px;padding:14px 16px 8px;border:1px solid var(--line);overflow:hidden}
+.unit{position:relative;border-radius:24px;padding:14px 16px 8px;border:1px solid var(--line);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 26px -14px rgba(0,0,0,.5)}
+.unit>.fx{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.unit>*:not(.fx){position:relative;z-index:1}
+.unit.fridge{box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 24px 40px -30px rgba(255,248,228,.35),0 10px 26px -14px rgba(0,0,0,.5)}
+.unit.freezer{box-shadow:inset 0 0 0 1px color-mix(in srgb,#bfe3ff 18%,transparent),inset 0 0 26px -6px rgba(190,225,255,.28),0 10px 26px -14px rgba(0,0,0,.5)}
 .unit+.unit{margin-top:16px}
 .unit h2{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:10px}
 .unit .tag{font-size:12px;font-weight:500;padding:2px 10px;border-radius:10px}
@@ -475,6 +478,12 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 /* ---------- calendar: soft seasonal edge with small motifs peeking out of the corners ---------- */
 .mgf{position:relative;padding:7px;border-radius:27px;background:var(--fg);box-shadow:0 0 0 1px var(--fb),0 14px 40px -22px var(--fs);--k:1}
 .mgf>.mg{position:relative;z-index:1;margin:0;border-radius:21px}
+.mgf .mgx{position:absolute;inset:-18px;width:calc(100% + 36px);height:calc(100% + 36px);z-index:0;pointer-events:none}
+@property --ga{syntax:'<angle>';inherits:false;initial-value:0deg}
+.mgf::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:2px;background:conic-gradient(from var(--ga),transparent 0 62%,color-mix(in srgb,var(--fs) 70%,#fff) 74%,transparent 86%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);opacity:.55;pointer-events:none;z-index:2;animation:ga 14s linear infinite}
+@keyframes ga{to{--ga:360deg}}
+@media(prefers-reduced-motion:reduce){.mgf::after{animation:none;opacity:.3}}
 .dcs{position:absolute;inset:0;pointer-events:none;z-index:0}
 #sec-cal{overflow-x:clip}
 .dec{position:absolute;width:calc(var(--w)*var(--k));height:calc(var(--w)*var(--k));color:var(--c);transform:rotate(var(--r,0deg));opacity:.9;pointer-events:none}
@@ -500,7 +509,7 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 .wxs .wt i{font-style:normal;color:var(--mut)}.wxs .wm{color:var(--mut);font-size:13px;flex:none}
 .wxs[class*=sky-]{position:relative;overflow:hidden;isolation:isolate;border:0;color:#fff;min-height:50px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.22),0 6px 18px rgba(0,0,0,.16)}
 .wxs[class*=sky-]>*:not(.fx){position:relative;z-index:2}.wxs[class*=sky-] .wt i,.wxs[class*=sky-] .wm{color:rgba(255,255,255,.8)}
-.wxs[class*=sky-] .wt{text-shadow:0 1px 2px rgba(0,0,0,.15);font-weight:600}.wxs[class*=sky-] .wm{font-weight:500}
+.wxs[class*=sky-] .wt{text-shadow:0 1px 2px rgba(0,0,0,.15);font-weight:600}.wxs[class*=sky-] .wm{font-weight:650;color:#fff;font-size:15px;text-shadow:0 1px 2px rgba(0,0,0,.2)}
 .wxs .fx{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block}
 .sky-day{background:linear-gradient(180deg,#2b6fcf,#4f97e3 70%,#6aa9ea)}
 .sky-pday{background:linear-gradient(180deg,#3a74bf,#5e93d1 70%,#77a6d8)}
@@ -538,7 +547,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 @keyframes wbflash{0%,100%{color:#a9bccd;filter:none}50%{color:#ff4d4d;filter:drop-shadow(0 0 5px rgba(255,77,77,.75))}}
 @media(prefers-reduced-motion:reduce){.nb.flash svg{animation:none;color:#ff4d4d}}
 .wbd{max-width:760px;margin:0 auto;padding:9px;border-radius:20px;background:var(--wb-frame);box-shadow:0 14px 34px rgba(0,0,0,.35),inset 0 1px 0 var(--wb-hi),inset 0 -1px 0 rgba(0,0,0,.25)}
-.wbs{position:relative;border-radius:12px;padding:16px 14px 20px;min-height:56dvh;color:var(--wb-text);font-family:var(--hand);font-weight:700;
+.wbs{position:relative;border-radius:12px;padding:16px 14px 20px;min-height:calc(100dvh - 190px);color:var(--wb-text);font-family:var(--hand);font-weight:700;
   background:radial-gradient(130% 46% at 14% 0%,var(--wb-glow),transparent 62%),radial-gradient(55% 22% at 84% 34%,var(--wb-smudge),transparent 70%),radial-gradient(40% 14% at 10% 72%,var(--wb-smudge),transparent 70%),var(--wb-face);
   box-shadow:inset 0 0 0 1px var(--wb-edge),inset 0 3px 10px rgba(0,0,0,.10)}
 .wbs button,.wbs input,.wbs textarea{font-family:inherit;font-weight:inherit}
@@ -841,44 +850,81 @@ const deg=t=>t==null?'':(t<0?'−':'')+Math.abs(Math.round(t))+'°';
 /* the sky behind today's weather, like the iPhone Weather app: clear (day or night), cloudy, fog, rain, snow, storm */
 function sky(c){const h=new Date().getHours(),day=h>=6&&h<19;c=+c;
   return c>=95?'storm':(c>=71&&c<=77)||c===85||c===86?'snow':(c>=51&&c<=67)||(c>=80&&c<=82)?'rain':c===45||c===48?'fog':c===3?'cloud':c===1||c===2?(day?'pday':'night'):day?'day':'night'}
-/* The sky is painted on a small canvas: a few soft particles, slow, about 30 frames a second, and only while the strip is on screen. */
-const SKY={raf:0,k:'',t0:0,p:[],cl:[],fl:0,nf:0,last:0};
-function skyRun(){
-  cancelAnimationFrame(SKY.raf);
-  const cv=document.querySelector('#wx canvas.fx');if(!cv)return;
-  const k=[...cv.parentElement.classList].find(c=>c.startsWith('sky-')).slice(4),r=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);
-  if(!r.width)return;
-  cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);
-  const W=r.width,H=r.height,rnd=(a,b)=>a+Math.random()*(b-a);
-  if(SKY.k!==k+W){SKY.k=k+W;
-    const n=k==='rain'?Math.round(W/9):k==='storm'?Math.round(W/7):k==='snow'?Math.round(W/10):k==='night'?Math.round(W/12):0;
-    SKY.p=Array.from({length:n},()=>({x:rnd(0,W),y:rnd(-H,H),z:rnd(.35,1),s:rnd(0,6.28)}));
+/* Living backgrounds: small canvases (class fx, data-fx=kind) for the weather strip, the fridge and freezer, and the calendar frame.
+   One loop paints whichever are on screen, about 30 times a second; it rests while the app is hidden and picks canvases up again
+   whenever they are redrawn, so switching tabs never leaves one stuck. With Reduce Motion each is painted once, still. */
+const FXS=new WeakMap(),rnd=(a,b)=>a+Math.random()*(b-a),FXSTILL=matchMedia('(prefers-reduced-motion:reduce)');
+let fxRaf=0,fxPrev=0;
+function fxState(cv){
+  const r=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),W=Math.round(r.width),H=Math.round(r.height),k=cv.dataset.fx;
+  let st=FXS.get(cv);
+  if(!st||st.W!==W||st.H!==H||st.k!==k){
+    cv.width=Math.max(1,W*dpr);cv.height=Math.max(1,H*dpr);const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);
+    st={x,W,H,k,last:0,fl:0,nf:performance.now()+rnd(6e3,12e3),p:[],cl:[]};
+    const n=k==='rain'?W/9:k==='storm'?W/7:k==='snow'?W/10:k==='night'?W/12:k==='freezer'?(W*H)/5200:k==='fridge'?(W*H)/16000:
+      k==='winter'?(W+H)/14:k==='fall'?(W+H)/60:k==='spring'?(W+H)/45:k==='summer'?(W+H)/28:0;
+    st.p=Array.from({length:Math.round(n)},()=>({x:rnd(0,W),y:rnd(-H,H),z:rnd(.35,1),s:rnd(0,6.28),r:rnd(0,6.28),v:rnd(-1,1)}));
     const nc=/cloud|pday|rain|storm|snow/.test(k)?(k==='pday'?2:4):k==='fog'?3:0;
-    SKY.cl=Array.from({length:nc},(_,i)=>({x:rnd(-.2,1.1)*W,y:k==='fog'?H*(.3+.25*i):rnd(-.15,.45)*H,w:rnd(.35,.6)*W,h:k==='fog'?H*.5:rnd(.5,.9)*H,v:rnd(4,9)*(i%2?1:-1)}));
-    SKY.nf=performance.now()+rnd(6e3,12e3);
+    st.cl=Array.from({length:nc},(_,i)=>({x:rnd(-.2,1.1)*W,y:k==='fog'?H*(.3+.25*i):rnd(-.15,.45)*H,w:rnd(.35,.6)*W,h:k==='fog'?H*.5:rnd(.5,.9)*H,v:rnd(4,9)*(i%2?1:-1)}));
+    FXS.set(cv,st);
   }
-  const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const frame=now=>{
-    const dt=Math.min(.05,(now-(SKY.last||now))/1e3);SKY.last=now;
-    x.clearRect(0,0,W,H);
+  return st;
+}
+const FXP={ // the painters: (state, seconds since the last frame, now)
+  sky(st,dt,now){const{x,W,H,k}=st;
     if(k==='day'||k==='pday'){const a=.55+.08*Math.sin(now/2600),g=x.createRadialGradient(W*.88,-H*.25,0,W*.88,-H*.25,H*2.3);
       g.addColorStop(0,`rgba(255,240,190,${a})`);g.addColorStop(.35,`rgba(255,220,150,${a*.3})`);g.addColorStop(1,'rgba(255,220,150,0)');x.fillStyle=g;x.fillRect(0,0,W,H)}
-    SKY.cl.forEach(c=>{c.x+=c.v*dt;if(c.x>W*1.3)c.x=-c.w;if(c.x<-c.w*1.3)c.x=W+c.w*.3;
+    st.cl.forEach(c=>{c.x+=c.v*dt;if(c.x>W*1.3)c.x=-c.w;if(c.x<-c.w*1.3)c.x=W+c.w*.3;
       const g=x.createRadialGradient(c.x,c.y,0,c.x,c.y,c.w*.6),al=k==='fog'?.16:k==='storm'?.10:.17;
       g.addColorStop(0,`rgba(255,255,255,${al})`);g.addColorStop(1,'rgba(255,255,255,0)');x.save();x.scale(1,c.h/c.w);x.fillStyle=g;x.beginPath();x.arc(c.x,c.y*c.w/c.h,c.w*.6,0,7);x.fill();x.restore()});
-    if(k==='rain'||k==='storm'){x.lineCap='round';SKY.p.forEach(d=>{d.y+=(380+260*d.z)*dt;d.x-=40*d.z*dt;if(d.y>H+12){d.y=rnd(-30,-6);d.x=rnd(0,W+20)}
-      const l=6+9*d.z;x.strokeStyle=`rgba(225,236,250,${.10+.22*d.z})`;x.lineWidth=.6+.6*d.z;x.beginPath();x.moveTo(d.x,d.y);x.lineTo(d.x-l*.12,d.y-l);x.stroke()})}
-    if(k==='snow')SKY.p.forEach(f=>{f.y+=(10+16*f.z)*dt;f.s+=dt*.8;const sx=f.x+Math.sin(f.s)*6*f.z;if(f.y>H+4){f.y=-4;f.x=rnd(0,W)}
-      x.fillStyle=`rgba(255,255,255,${.35+.45*f.z})`;x.beginPath();x.arc(sx,f.y,.6+1.1*f.z,0,7);x.fill()});
-    if(k==='night')SKY.p.forEach(st=>{const a=.25+.55*(.5+.5*Math.sin(now/1400*st.z+st.s));x.fillStyle=`rgba(255,255,255,${a*st.z})`;x.beginPath();x.arc(st.x,(st.y+H)%H,.5+.8*st.z,0,7);x.fill()});
-    if(k==='storm'){if(now>SKY.nf){SKY.fl=1;SKY.nf=now+rnd(7e3,14e3)}if(SKY.fl>.01){x.fillStyle=`rgba(230,238,255,${.28*SKY.fl})`;x.fillRect(0,0,W,H);SKY.fl*=Math.pow(.02,dt)}}
-  };
-  if(still){frame(performance.now());return}
-  let prev=0;const loop=now=>{SKY.raf=requestAnimationFrame(loop);if(now-prev<32)return;prev=now;
-    if(document.hidden||!sec('cal')||!cv.isConnected)return;frame(now)};
-  SKY.last=0;SKY.raf=requestAnimationFrame(loop);
+    if(k==='rain'||k==='storm')FXP.rain(st,dt);
+    if(k==='snow')FXP.flakes(st,dt,1);
+    if(k==='night')st.p.forEach(p=>{const a=.25+.55*(.5+.5*Math.sin(now/1400*p.z+p.s));x.fillStyle=`rgba(255,255,255,${a*p.z})`;x.beginPath();x.arc(p.x,(p.y+H)%H,.5+.8*p.z,0,7);x.fill()});
+    if(k==='storm'){if(now>st.nf){st.fl=1;st.nf=now+rnd(7e3,14e3)}if(st.fl>.01){x.fillStyle=`rgba(230,238,255,${.28*st.fl})`;x.fillRect(0,0,W,H);st.fl*=Math.pow(.02,dt)}}
+  },
+  rain(st,dt){const{x,W,H}=st;x.lineCap='round';st.p.forEach(d=>{d.y+=(380+260*d.z)*dt;d.x-=40*d.z*dt;if(d.y>H+12){d.y=rnd(-30,-6);d.x=rnd(0,W+20)}
+    const l=6+9*d.z;x.strokeStyle=`rgba(225,236,250,${.10+.22*d.z})`;x.lineWidth=.6+.6*d.z;x.beginPath();x.moveTo(d.x,d.y);x.lineTo(d.x-l*.12,d.y-l);x.stroke()})},
+  flakes(st,dt,sp,col='255,255,255',al=1){const{x,W,H}=st;st.p.forEach(f=>{f.y+=(10+16*f.z)*sp*dt;f.s+=dt*.8;const sx=f.x+Math.sin(f.s)*6*f.z;if(f.y>H+4){f.y=-4;f.x=rnd(0,W)}
+    x.fillStyle=`rgba(${col},${(.35+.45*f.z)*al})`;x.beginPath();x.arc(sx,f.y,.6+1.1*f.z,0,7);x.fill()})},
+  fridge(st,dt,now){const{x,W,H}=st,a=.24+.04*Math.sin(now/3000),g=x.createRadialGradient(W/2,-H*.15,0,W/2,-H*.15,H*1.05);
+    g.addColorStop(0,`rgba(255,250,235,${a})`);g.addColorStop(.5,`rgba(255,248,230,${a*.35})`);g.addColorStop(1,'rgba(255,248,230,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
+    st.p.forEach(m=>{m.y-=4*m.z*dt;m.x+=Math.sin(now/4000+m.s)*3*dt;if(m.y<-H)m.y+=2*H;const o=.12+.18*(.5+.5*Math.sin(now/1800+m.s));
+      x.fillStyle=`rgba(255,255,255,${o*m.z})`;x.beginPath();x.arc(m.x,(m.y+H)%H,.8+.9*m.z,0,7);x.fill()})},
+  freezer(st,dt,now){const{x,W,H}=st;
+    const g=x.createLinearGradient(0,H*.65,0,H);g.addColorStop(0,'rgba(200,230,255,0)');g.addColorStop(1,`rgba(200,230,255,${.15+.04*Math.sin(now/2500)})`);x.fillStyle=g;x.fillRect(0,0,W,H);
+    st.p.forEach(f=>{f.y+=(5+7*f.z)*dt;f.s+=dt*.6;f.r+=f.v*.4*dt;const sx=f.x+Math.sin(f.s)*5*f.z;if(f.y>H+6){f.y=-6;f.x=rnd(0,W)}
+      const tw=.35+.4*(.5+.5*Math.sin(now/900+f.s*3)),R=1.2+2.2*f.z;x.save();x.translate(sx,f.y);x.rotate(f.r);x.strokeStyle=`rgba(225,242,255,${tw*f.z})`;x.lineWidth=.7;
+      x.beginPath();for(let i=0;i<3;i++){const an=i*Math.PI/3;x.moveTo(-Math.cos(an)*R,-Math.sin(an)*R);x.lineTo(Math.cos(an)*R,Math.sin(an)*R)}x.stroke();x.restore()})},
+  winter(st,dt){FXP.flakes(st,dt,.8,'235,245,255',.9)},
+  fall(st,dt){const{x,W,H}=st,C=['217,72,15','240,140,0','201,42,42','232,89,12','244,162,97'];
+    st.p.forEach((l,i)=>{l.y+=(14+12*l.z)*dt;l.s+=dt*.9;l.r+=l.v*dt*1.2;const lx=l.x+Math.sin(l.s)*14*l.z;if(l.y>H+10){l.y=-10;l.x=rnd(0,W)}
+      x.save();x.translate(lx,l.y);x.rotate(l.r);x.scale(1,.55+.45*Math.cos(l.s*1.3));x.fillStyle=`rgba(${C[i%C.length]},${.45+.35*l.z})`;
+      x.beginPath();x.ellipse(0,0,3+3*l.z,1.6+1.6*l.z,0,0,7);x.fill();x.restore()})},
+  spring(st,dt){const{x,W,H}=st;st.p.forEach(p=>{p.y+=(10+10*p.z)*dt;p.s+=dt;p.r+=p.v*dt;const px=p.x+Math.sin(p.s)*12*p.z;if(p.y>H+8){p.y=-8;p.x=rnd(0,W)}
+    x.save();x.translate(px,p.y);x.rotate(p.r);x.fillStyle=`rgba(255,${170+40*p.z|0},${200+20*p.z|0},${.4+.35*p.z})`;x.beginPath();x.ellipse(0,0,2.6+2*p.z,1.5+1*p.z,0,0,7);x.fill();x.restore()})},
+  summer(st,dt,now){const{x,H}=st;st.p.forEach(p=>{p.y-=3*p.z*dt;if(p.y<-H)p.y+=2*H;const a=Math.max(0,Math.sin(now/1100*p.z+p.s));
+    const py=(p.y+H)%H,R=(1+2*p.z)*a;if(R<.2)return;x.fillStyle=`rgba(255,226,140,${.55*a})`;
+    x.beginPath();x.moveTo(p.x,py-R*2);x.lineTo(p.x+R*.5,py);x.lineTo(p.x,py+R*2);x.lineTo(p.x-R*.5,py);x.closePath();x.fill();
+    x.beginPath();x.moveTo(p.x-R*2,py);x.lineTo(p.x,py+R*.5);x.lineTo(p.x+R*2,py);x.lineTo(p.x,py-R*.5);x.closePath();x.fill()})}
+};
+const fxKind=k=>/^(day|pday|cloud|night|rain|storm|snow|fog)$/.test(k)?'sky':k;
+function fxPaint(cv,now){
+  const st=fxState(cv),f=FXP[fxKind(st.k)];if(!f||!st.W)return;
+  const dt=Math.min(.05,(now-(st.last||now))/1e3);st.last=now;st.x.clearRect(0,0,st.W,st.H);f(st,dt,now);
 }
-addEventListener('resize',()=>{clearTimeout(SKY.rz);SKY.rz=setTimeout(skyRun,200)});
+function fxLoop(now){
+  fxRaf=requestAnimationFrame(fxLoop);
+  if(now-fxPrev<32)return;fxPrev=now;
+  const vh=innerHeight;
+  document.querySelectorAll('.sec.on canvas.fx[data-fx]').forEach(cv=>{const r=cv.getBoundingClientRect();if(r.width&&r.bottom>0&&r.top<vh)fxPaint(cv,now)});
+}
+function fxKick(){ // start (or restart) painting; safe to call any time
+  cancelAnimationFrame(fxRaf);fxRaf=0;
+  if(document.hidden)return;
+  if(FXSTILL.matches){requestAnimationFrame(now=>document.querySelectorAll('.sec.on canvas.fx[data-fx]').forEach(cv=>fxPaint(cv,now)));return}
+  fxRaf=requestAnimationFrame(fxLoop);
+}
+document.addEventListener('visibilitychange',fxKick);addEventListener('pageshow',fxKick);addEventListener('resize',()=>{clearTimeout(fxKick.t);fxKick.t=setTimeout(fxKick,200)});
 function drawWx(){
   const el=$('wx');if(!el)return;
   if(!F.me){el.innerHTML='';return}
@@ -887,8 +933,8 @@ function drawWx(){
   const d=WX.days[0];
   if(!d){el.innerHTML=`<button class="wxs off" id=wxretry type=button>${esc(WX.err?WX.err+' Tap to retry.':'Loading the forecast…')}</button>`;return}
   const w=wmo(d.code);
-  el.innerHTML=`<button class="wxs sky-${sky(d.code)}" id=wxopen type=button><canvas class=fx aria-hidden=true></canvas>${/^(cloud|pday)$/.test(sky(d.code))?`<span class=wi>${w[1]}</span>`:''}<span class=wt>${esc(w[2])} in ${esc(pl.name.split(',')[0])} <i>· today</i></span><span class=wm>${deg(d.hi)} / ${deg(d.lo)}${d.pop!=null?' · '+d.pop+'%':''}</span></button>`;
-  requestAnimationFrame(skyRun);
+  el.innerHTML=`<button class="wxs sky-${sky(d.code)}" id=wxopen type=button><canvas class=fx data-fx="${sky(d.code)}" aria-hidden=true></canvas>${/^(cloud|pday)$/.test(sky(d.code))?`<span class=wi>${w[1]}</span>`:''}<span class=wt>${esc(w[2])} in ${esc(pl.name.split(',')[0])} <i>· today</i></span><span class=wm>${deg(d.hi)} / ${deg(d.lo)}${d.pop!=null?' · '+d.pop+'%':''}</span></button>`;
+  fxKick();
 }
 async function loadWx(force){
   if(WX.busy||!F.me)return;
@@ -1007,7 +1053,7 @@ function render(){
   const sea=SEASON(cur.getMonth());
   let h='<div class=mg><div class=dows>'+DOW.map(x=>`<div>${x}</div>`).join('')+'</div>';
   for(let w=0;w<n;w++)h+=weekHTML(new Date(cur.getFullYear(),cur.getMonth(),1-first.getDay()+7*w),V,cur.getMonth());
-  $('main').innerHTML=`<div class="mgf ${sea}">${deco(sea)}${h}</div></div>`;
+  $('main').innerHTML=`<div class="mgf ${sea}"><canvas class="fx mgx" data-fx="${sea}" aria-hidden=true></canvas>${deco(sea)}${h}</div></div>`;fxKick();
 }
 const when=e=>{const a=pd8(e.start),b=pd8(e.end);
   if(e.allDay==='Y'){const l=new Date(b);l.setDate(l.getDate()-1);return l<=a?a.toLocaleDateString(undefined,DF):a.toLocaleDateString(undefined,DF)+' – '+l.toLocaleDateString(undefined,DF)}
@@ -1830,10 +1876,10 @@ function unitHTML(loc){
   const n=per(),L2=M.meals.filter(m=>m.loc===loc).sort(byExp),rows=Math.max(2,Math.ceil(L2.length/n));let sh='';
   for(let r=0;r<rows;r++)sh+=`<div class=shelf style="--per:${n}">${L2.slice(r*n,(r+1)*n).map(contHTML).join('')||(r===0&&!L2.length?`<span class=none>Nothing in the ${loc} yet</span>`:'')}</div>`;
   const nm=loc==='fridge'?'Fridge':'Freezer';
-  return `<section class="unit ${loc}" data-loc="${loc}"><h2>${nm}<span class=tag>${tfmt(loc==='fridge'?FT():ZT())}</span><span class=cnt>${L2.length} meal${L2.length===1?'':'s'}</span></h2>${sh}${loc==='freezer'?'<div class=drawer aria-hidden=true></div>':''}<div class=dropmsg aria-hidden=true>Drop to move to the ${nm.toLowerCase()}</div></section>`;
+  return `<section class="unit ${loc}" data-loc="${loc}"><canvas class=fx data-fx="${loc}" aria-hidden=true></canvas><h2>${nm}<span class=tag>${tfmt(loc==='fridge'?FT():ZT())}</span><span class=cnt>${L2.length} meal${L2.length===1?'':'s'}</span></h2>${sh}${loc==='freezer'?'<div class=drawer aria-hidden=true></div>':''}<div class=dropmsg aria-hidden=true>Drop to move to the ${nm.toLowerCase()}</div></section>`;
 }
 const freeConts=()=>{const used=new Set(M.meals.map(m=>m.container)),out=[];for(let i=1;i<=M.cfg.containers;i++)if(!used.has(cname(i)))out.push(cname(i));return out};
-function drawUnits(){$('units').innerHTML=unitHTML('fridge')+unitHTML('freezer')}
+function drawUnits(){$('units').innerHTML=unitHTML('fridge')+unitHTML('freezer');fxKick()}
 function drawSide(){ // free containers, plus anything that needs eating soon
   const st=M.meals.map(status),bad=st.filter(s=>s.cls==='bad').length,warn=st.filter(s=>s.cls==='warn').length,f=freeConts().length;
   $('mstat').innerHTML=`<span class="ms free"><i></i><b>${f}</b> container${f===1?'':'s'} free</span>`+
@@ -2046,7 +2092,7 @@ function go(s){
   document.querySelectorAll('.nb[data-s]').forEach(x=>x.classList.toggle('on',x.dataset.s===s));
   document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('on',x.id==='sec-'+s));
   if(s==='board')markSeen(0,true);else if(was)markSeen(6e3);
-  scrollTo(0,0);LOAD[s]();
+  scrollTo(0,0);LOAD[s]();fxKick();
 }
 $('nav').onclick=e=>{const b=e.target.closest('[data-s]');if(b)go(b.dataset.s)};
 matchMedia('(max-width:720px)').addEventListener('change',()=>{render();if(M.loaded&&sec('meals'))drawMeals()});
