@@ -230,6 +230,9 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .li .ib svg,.xb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .li .ib:hover,.li .ib:focus-visible{background:var(--soft);opacity:1;color:var(--bad)}
 @media(hover:hover){.li .ib{opacity:0}.li:hover .ib,.li:focus-within .ib{opacity:.85}}
+.lp{flex:none;color:var(--mut);opacity:.75;font-size:14px;font-variant-numeric:tabular-nums}.li.done .lp{opacity:.45}
+.lrow{display:flex;align-items:flex-end;gap:12px}.lrow .ltrip{flex:0 1 auto;min-width:0}.lrow .ltot{margin-left:auto}
+.ltot{flex:none;display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;margin-right:2px}.ltot small{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.7}.ltot b{font-size:22px;font-variant-numeric:tabular-nums}
 .lall{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 4px;padding:18px;border-radius:16px;background:color-mix(in srgb,var(--lc) 14%,var(--card));color:var(--lc);font-weight:700;font-size:17px}.lall span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--lc);color:#fff;font-size:16px}
 .lem{padding:28px 12px}
 .lempty{text-align:center;padding:36px 20px!important}.lempty .lbig{margin:0 auto 12px;width:64px;height:64px;border-radius:20px}.lempty .lbig svg{width:34px;height:34px}.lempty h2{margin:0 0 6px;font-size:22px}
@@ -341,7 +344,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   .sec{padding:12px 14px 24px}
   h1.t{font-size:22px}
   .top{margin-bottom:8px}
-  #ppl{order:-1}.bar2 .grp{width:100%}
+  #ppl{order:-1;flex:0 1 auto;min-width:0}.bar2{flex-wrap:nowrap}
   .bar2 .grp .seg{margin-right:auto}
   .btn{min-height:44px}.btn.sq{width:44px}
   .seg button{min-height:38px}
@@ -485,9 +488,44 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 .mgf.spring{--fb:color-mix(in srgb,#7fd491 38%,transparent);--fs:#ff9fbd;--fg:linear-gradient(150deg,color-mix(in srgb,#ffb3c7 17%,var(--card)),color-mix(in srgb,#9ad8ff 6%,var(--card)) 55%,color-mix(in srgb,#8fdc9b 18%,var(--card)))}
 /* ---------- forecast ---------- */
 #wx:empty{display:none}
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:calc(24px + env(safe-area-inset-bottom));z-index:40;width:58px;height:58px;border-radius:50%;border:0;background:var(--acc);color:var(--onacc);display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px color-mix(in srgb,var(--acc) 45%,transparent),0 2px 6px rgba(0,0,0,.3)}
+.fab svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}.fab:active{transform:scale(.93)}
+@media(max-width:720px){.fab{bottom:calc(96px + env(safe-area-inset-bottom))}}
 .wxs{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;margin:0 0 10px;padding:6px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;text-align:left;cursor:pointer}
 .wxs .wi{font-size:22px;line-height:1;flex:none}.wxs .wt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .wxs .wt i{font-style:normal;color:var(--mut)}.wxs .wm{color:var(--mut);font-size:13px;flex:none}
+.wxs[class*=sky-]{position:relative;overflow:hidden;isolation:isolate;border:0;color:#fff;min-height:48px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),inset 0 1px 0 rgba(255,255,255,.28),0 6px 18px rgba(0,0,0,.18)}
+.wxs[class*=sky-]>*:not(.fx){position:relative;z-index:2}.wxs[class*=sky-] .wt i,.wxs[class*=sky-] .wm{color:rgba(255,255,255,.82)}
+.wxs[class*=sky-] .wt{text-shadow:0 1px 2px rgba(0,0,0,.18)}
+.wxs[class*=sky-]::before,.wxs[class*=sky-]::after,.wxs .fx{content:'';position:absolute;inset:0;pointer-events:none;z-index:1}
+.sky-day{background:linear-gradient(160deg,#2f7fd6,#5aa9ee 60%,#86c3f5)}
+.sky-day::before,.sky-pday::before{background:radial-gradient(120px 90px at 88% -10%,rgba(255,236,170,.75),rgba(255,214,120,.25) 45%,transparent 70%);animation:sunb 7s ease-in-out infinite}
+.sky-pday{background:linear-gradient(160deg,#3a7fc8,#6ea7dd 60%,#9cc4e8)}
+.sky-pday::after,.sky-cloud::after{background:radial-gradient(70px 26px at 20% 70%,rgba(255,255,255,.45),transparent 70%),radial-gradient(90px 30px at 55% 40%,rgba(255,255,255,.35),transparent 70%),radial-gradient(80px 26px at 85% 80%,rgba(255,255,255,.3),transparent 70%);background-size:340px 100%;animation:drift 38s linear infinite}
+.sky-cloud{background:linear-gradient(160deg,#5d6f86,#7e90a6 60%,#9aaabd)}
+.sky-cloud::before{background:radial-gradient(110px 34px at 70% 30%,rgba(255,255,255,.22),transparent 70%),radial-gradient(130px 40px at 15% 85%,rgba(255,255,255,.18),transparent 70%);background-size:420px 100%;animation:drift 60s linear infinite reverse}
+.sky-night{background:linear-gradient(160deg,#0b1633,#1c2c57 65%,#2b3d6e)}
+.sky-night::before{background-image:radial-gradient(1.2px 1.2px at 12% 30%,#fff,transparent),radial-gradient(1px 1px at 34% 70%,#fff,transparent),radial-gradient(1.4px 1.4px at 58% 22%,#fff,transparent),radial-gradient(1px 1px at 77% 62%,#fff,transparent),radial-gradient(1.2px 1.2px at 91% 30%,#fff,transparent),radial-gradient(1px 1px at 46% 45%,#fff,transparent);animation:twk 4.5s ease-in-out infinite}
+.sky-night::after{background-image:radial-gradient(1px 1px at 22% 55%,#fff,transparent),radial-gradient(1.3px 1.3px at 68% 80%,#fff,transparent),radial-gradient(1px 1px at 84% 12%,#fff,transparent),radial-gradient(1.1px 1.1px at 6% 82%,#fff,transparent);animation:twk 6s ease-in-out 2s infinite}
+.sky-rain,.sky-storm{background:linear-gradient(160deg,#3a4758,#56657a 60%,#6d7b8f)}.sky-storm{background:linear-gradient(160deg,#252b38,#3a4252 60%,#4b5466)}
+.sky-rain::before,.sky-storm::before{background-image:linear-gradient(100deg,transparent 47%,rgba(255,255,255,.34) 49%,rgba(255,255,255,.34) 51%,transparent 53%);background-size:18px 22px;animation:rain .5s linear infinite;opacity:.8;-webkit-mask-image:linear-gradient(transparent,#000 30%);mask-image:linear-gradient(transparent,#000 30%)}
+.sky-rain::after,.sky-storm::after{background-image:linear-gradient(100deg,transparent 47%,rgba(255,255,255,.2) 49%,rgba(255,255,255,.2) 51%,transparent 53%);background-size:11px 15px;animation:rain2 .8s linear infinite;opacity:.7}
+.sky-storm .fx{background:rgba(255,255,255,.9);opacity:0;animation:flash 9s ease-out infinite}
+.sky-snow{background:linear-gradient(160deg,#6b7f95,#8fa1b5 60%,#b3c1d0)}
+.sky-snow::before{background-image:radial-gradient(circle,#fff 0 1.6px,transparent 2.2px);background-size:31px 27px;animation:snow 8s linear infinite;opacity:.6}
+.sky-snow::after{background-image:radial-gradient(circle,#fff 0 1px,transparent 1.6px);background-size:19px 23px;animation:snow2 12s linear infinite;opacity:.4}
+.sky-fog{background:linear-gradient(160deg,#76808c,#959ea9 60%,#aeb5be)}
+.sky-fog::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,.28) 30%,transparent 55%,rgba(255,255,255,.22) 80%,transparent);background-size:300px 100%;animation:drift 26s linear infinite}
+@keyframes sunb{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes drift{from{background-position-x:0}to{background-position-x:-340px}}
+@keyframes twk{0%,100%{opacity:.9}50%{opacity:.35}}
+@keyframes rain{from{background-position:0 0}to{background-position:-4px 22px}}
+@keyframes rain2{from{background-position:5px 0}to{background-position:2px 15px}}
+@keyframes snow{from{background-position:0 0}to{background-position:15px 54px}}
+@keyframes snow2{from{background-position:0 0}to{background-position:-10px 46px}}
+@keyframes flash{0%,88%,100%{opacity:0}89%{opacity:.45}90%{opacity:0}91.5%{opacity:.3}94%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.wxs[class*=sky-]::before,.wxs[class*=sky-]::after,.wxs .fx{animation:none}}
+html.scr .wxs[class*=sky-]::before,html.scr .wxs[class*=sky-]::after{animation-play-state:paused}
 .wxs.add,.wxs.off{color:var(--mut);background:none;border-style:dashed;font-size:13px}
 .wxd{display:grid;grid-template-columns:minmax(74px,auto) 30px 1fr auto 40px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
 .wxd:first-child{border-top:0}.wxd .wdn{color:var(--mut)}.wxd .wdi{font-size:20px;text-align:center}.wxd .wdt b{font-weight:650}.wxd .wdp{color:var(--mut);font-size:12px;text-align:right}
@@ -583,10 +621,11 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="top"><h1 class="t" id="title"></h1><span class="syn" id="syn" role="status"></span>
     <div class="grp"><button class="btn sq" id="prev" aria-label="Previous month">‹</button><button class="btn" id="today">Today</button><button class="btn sq" id="next" aria-label="Next month">›</button></div></div>
   <div class="bar2"><div id="ppl" role="group" aria-label="Whose calendars to show"></div>
-    <div class="grp"><div class="seg"><button id="vm" class="on">Month</button><button id="va">Agenda</button></div><button class="btn p" id="addev">+ Event</button><button class="btn sq" id="cals" aria-label="Choose calendars">⚙</button></div></div>
+    <div class="grp"><button class="btn sq" id="cals" aria-label="Choose calendars">⚙</button></div></div>
   <div id="wx"></div>
   <div id="nudge"></div>
   <div id="main"></div>
+  <button class="fab" id="addev" aria-label="Add an event" title="Add an event"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
 </section>
 
 <section class="sec" id="sec-lists">
@@ -603,7 +642,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="top"><h1 class="t">Meals</h1><button class="btn sq" id="mset" aria-label="Meal settings">⚙</button></div>
   <div class="mstat" id="mstat"></div>
   <div id="units"></div>
-  <div class="mfoot"><button class="btn p big" id="mimp">+ Import meals</button><p class="hint mh" id="mhint"></p></div>
+  <div class="mfoot"><button class="btn p big" id="mimp">+ Import meals</button></div>
 </section>
 
 <section class="sec" id="sec-rec">
@@ -815,6 +854,9 @@ const WCODE=[[[0],'☀️','Clear'],[[1],'🌤️','Mainly clear'],[[2],'⛅','P
   [[51,53,55,56,57],'🌦️','Drizzle'],[[61,63,65,66,67,80,81,82],'🌧️','Rain'],[[71,73,75,77,85,86],'🌨️','Snow'],[[95,96,99],'⛈️','Thunderstorm']];
 const wmo=c=>WCODE.find(x=>x[0].includes(c))||['','🌡️','—'];
 const deg=t=>t==null?'':(t<0?'−':'')+Math.abs(Math.round(t))+'°';
+/* the sky behind today's weather, like the iPhone Weather app: clear (day or night), cloudy, fog, rain, snow, storm */
+function sky(c){const h=new Date().getHours(),day=h>=6&&h<19;c=+c;
+  return c>=95?'storm':(c>=71&&c<=77)||c===85||c===86?'snow':(c>=51&&c<=67)||(c>=80&&c<=82)?'rain':c===45||c===48?'fog':c===3?'cloud':c===1||c===2?(day?'pday':'night'):day?'day':'night'}
 function drawWx(){
   const el=$('wx');if(!el)return;
   if(!F.me){el.innerHTML='';return}
@@ -823,7 +865,7 @@ function drawWx(){
   const d=WX.days[0];
   if(!d){el.innerHTML=`<button class="wxs off" id=wxretry type=button>${esc(WX.err?WX.err+' Tap to retry.':'Loading the forecast…')}</button>`;return}
   const w=wmo(d.code);
-  el.innerHTML=`<button class="wxs" id=wxopen type=button><span class=wi>${w[1]}</span><span class=wt>${esc(w[2])} in ${esc(pl.name.split(',')[0])} <i>· today</i></span><span class=wm>${deg(d.hi)} / ${deg(d.lo)}${d.pop!=null?' · '+d.pop+'%':''}</span></button>`;
+  el.innerHTML=`<button class="wxs sky-${sky(d.code)}" id=wxopen type=button><span class=fx aria-hidden=true></span><span class=wi>${w[1]}</span><span class=wt>${esc(w[2])} in ${esc(pl.name.split(',')[0])} <i>· today</i></span><span class=wm>${deg(d.hi)} / ${deg(d.lo)}${d.pop!=null?' · '+d.pop+'%':''}</span></button>`;
 }
 async function loadWx(force){
   if(WX.busy||!F.me)return;
@@ -929,7 +971,7 @@ function render(){
     +`<button class="chip pp${hide.has('*shared')?'':' on'}" style="--c:${esc(SC())}" data-o="*shared" aria-pressed="${!hide.has('*shared')}" title="Events shared with everyone"><span class=pic style="width:26px;height:26px;background:${esc(SC())};color:${ink(SC())}">${PPL}</span><span class=nm>Shared</span></button>`;
   drawNudge();drawWx();
   $('meav').innerHTML=av(F.me||'',24);
-  $('vm').className=view==='month'?'on':'';$('va').className=view==='agenda'?'on':'';
+  view='month';
   const V=vis();
   document.documentElement.dataset.season=SEASON(view==='agenda'?new Date().getMonth():cur.getMonth()); // the whole app takes the colours of the month on screen
   if(view==='agenda'){
@@ -1035,7 +1077,7 @@ function goMonth(d){cur=new Date(d.getFullYear(),d.getMonth(),1);const t=new Dat
 $('prev').onclick=()=>goMonth(new Date(cur.getFullYear(),cur.getMonth()-1,1));
 $('next').onclick=()=>goMonth(new Date(cur.getFullYear(),cur.getMonth()+1,1));
 $('today').onclick=()=>goMonth(new Date());
-$('vm').onclick=()=>{view='month';render()};$('va').onclick=()=>{view='agenda';render()};
+
 const newEvent=()=>{$('optsh').style.setProperty('--c',SC());openD($('chdlg'))};
 $('addev').onclick=newEvent;
 $('chdlg').onclick=async e=>{const b=e.target.closest('[data-k]');if(!b)return;$('chdlg').close();
@@ -1442,10 +1484,10 @@ function drawLists(){
   const its=L.items.filter(i=>i.list===l.id),op=its.filter(i=>i.done!=='Y').sort(byC),dn=its.filter(i=>i.done==='Y').sort(byC),pct=its.length?Math.round(dn.length/its.length*100):0,w=tripWhen(l),em=lead({title:l.name});
   const sub=!its.length?'Nothing on the list yet':op.length?`${op.length} to get${dn.length?` · ${dn.length} in the cart`:''}`:'Everything is in the cart';
   const row=i=>{const d=i.done==='Y';
-    return `<div class="li${d?' done':''}"><button class="ck${d?' on':''}" data-t="${esc(i.id)}" aria-label="${d?'Put back on the list':'Got it'}">${TICK}</button><button class=tx data-t="${esc(i.id)}">${esc(i.text)}</button><button class=ib data-x="${esc(i.id)}" aria-label="Delete item">${CROSS}</button></div>`};
+    return `<div class="li${d?' done':''}"><button class="ck${d?' on':''}" data-t="${esc(i.id)}" aria-label="${d?'Put back on the list':'Got it'}">${TICK}</button><button class=tx data-t="${esc(i.id)}">${esc(i.text)}</button><span class=lp title="Estimated price">~${money(priceOf(i.text,l.name))}</span><button class=ib data-x="${esc(i.id)}" aria-label="Delete item">${CROSS}</button></div>`};
   const sg=suggest(l);
   $('lbody').innerHTML=`<div class="card lcard" style="--lc:${lcol(l)}"><div class=lhero><div class=lhd><span class=lbig>${em?em[1]:CART}</span><div class=lti><h2>${esc(em?l.name.slice(em[0].length)||l.name:l.name)}</h2><p class=lsub>${sub}</p></div><button class=lpen data-le aria-label="Change the store or date, or delete this list">${PEN}</button></div>`+
-    `<button class="ltrip${w?w.n<0?' past':w.n<2?' soon':'':' none'}" data-le>${CAL}<span>${w?esc(w.long):'Plan the trip date'}</span></button>`+
+    `<div class=lrow><button class="ltrip${w?w.n<0?' past':w.n<2?' soon':'':' none'}" data-le>${CAL}<span>${w?esc(w.long):'Plan the trip date'}</span></button>${its.length?`<div class=ltot title="Estimated total for this trip"><small>Est. total</small><b>~${money(its.reduce((a,i)=>a+priceOf(i.text,l.name),0))}</b></div>`:''}</div>`+
     (its.length?`<div class=lprog><div class=prog aria-hidden="true"><i style="width:${pct}%"></i></div><small>${dn.length} of ${its.length}</small></div>`:'')+`</div><div class=lin>`+
     `<form id=ladd><input type=text id=lin placeholder="Add an item" autocapitalize=sentences autocomplete=off enterkeyhint=done aria-label="New item">${emoBtn('lin')}<button class="btn p">Add</button></form>`+
     (sg.length?`<div class=lsg aria-label="Often bought"><span>Often</span>${sg.map(t=>`<button class=chip data-s="${esc(t)}">+ ${esc(t)}</button>`).join('')}</div>`:'')+
@@ -1453,6 +1495,18 @@ function drawLists(){
     (dn.length?`<div class="lsec cart${L.fold?' fold':''}"><h3><button class=lfold data-fold aria-expanded="${!L.fold}">In the cart<b>${dn.length}</b>${CHEV}</button><button class=lk data-clr>Clear</button></h3>${L.fold?'':dn.map(row).join('')}</div>`:'')+`</div></div>`;
   if(draft)$('lin').value=draft;if(had)$('lin').focus();
 }
+/* rough prices in CAD at Walmart, scaled for the store; items we don't know are about $5. Bulk sizes make Costco items cost more each. */
+const PRICE={"milk":6.2,"chocolate milk":4.5,"almond milk":4.3,"oat milk":4.8,"cream":4.3,"whipping cream":4.8,"half and half":3.5,"sour cream":3.6,"yogurt":5.5,"greek yogurt":6.5,"butter":6.8,"margarine":4.5,"cheese":8.0,"cheddar":8.0,"mozzarella":8.0,"parmesan":7.5,"cream cheese":4.3,"cottage cheese":5.2,"feta":5.5,"cheese strings":7.0,"eggs":4.6,"egg":4.6,"bread":3.3,"buns":3.8,"bagels":3.9,"tortillas":4.3,"wraps":4.3,"english muffins":3.5,"croissants":5.5,"pita":3.5,"naan":3.8,"muffins":5.5,"cake":14.0,"cookies":4.5,"chicken breast":17.0,"chicken breasts":17.0,"chicken thighs":14.0,"chicken":15.0,"rotisserie chicken":11.5,"chicken wings":14.0,"ground beef":9.5,"beef":14.0,"steak":18.0,"roast":20.0,"ground turkey":9.0,"turkey":12.0,"pork chops":11.0,"pork":10.0,"ribs":16.0,"bacon":6.5,"ham":7.0,"sausage":6.5,"sausages":6.5,"hot dogs":4.5,"deli meat":5.5,"pepperoni":5.5,"salmon":16.0,"shrimp":12.0,"tuna":2.2,"fish":12.0,"tilapia":10.0,"meatballs":9.0,"bananas":2.0,"banana":2.0,"apples":5.0,"apple":5.0,"oranges":5.0,"grapes":6.0,"strawberries":4.5,"blueberries":5.0,"raspberries":4.5,"berries":5.0,"frozen berries":9.0,"lemons":3.5,"lemon":1.0,"limes":3.0,"lime":0.7,"avocado":1.5,"avocados":4.5,"watermelon":6.0,"pineapple":4.0,"mango":1.8,"pears":4.5,"peaches":4.5,"kiwi":3.5,"potatoes":5.5,"sweet potatoes":4.5,"onions":3.5,"onion":1.2,"green onions":1.5,"garlic":2.0,"carrots":2.5,"celery":3.0,"broccoli":3.0,"cauliflower":4.0,"lettuce":3.0,"romaine":3.5,"spinach":4.0,"salad":5.0,"kale":3.5,"cucumber":1.8,"cucumbers":4.0,"tomatoes":4.5,"tomato":1.2,"peppers":4.5,"bell pepper":1.8,"mushrooms":3.5,"zucchini":2.5,"corn":3.5,"green beans":4.0,"asparagus":5.0,"cabbage":3.5,"herbs":2.5,"cilantro":1.5,"parsley":1.5,"basil":2.5,"ginger":2.0,"jalapeno":0.5,"rice":12.0,"white rice":12.0,"brown rice":8.0,"pasta":2.5,"spaghetti":2.5,"macaroni":2.5,"noodles":3.0,"ramen":4.0,"flour":6.0,"sugar":4.5,"brown sugar":4.0,"salt":2.0,"pepper":4.5,"black pepper":4.5,"olive oil":11.0,"oil":8.0,"vegetable oil":8.0,"vinegar":3.0,"soy sauce":3.5,"honey":8.0,"maple syrup":9.0,"syrup":5.0,"peanut butter":6.0,"jam":4.5,"nutella":6.5,"cereal":5.5,"oatmeal":5.0,"oats":5.0,"granola":5.5,"crackers":4.0,"chips":4.5,"popcorn":4.0,"nuts":8.0,"almonds":9.0,"chocolate":3.5,"candy":4.0,"canned tomatoes":2.0,"diced tomatoes":2.0,"tomato paste":1.3,"tomato sauce":2.0,"pasta sauce":3.5,"salsa":4.5,"beans":1.8,"black beans":1.8,"chickpeas":1.8,"soup":2.5,"broth":3.0,"chicken broth":3.0,"stock":3.0,"coconut milk":2.5,"ketchup":4.5,"mustard":2.5,"mayo":5.5,"mayonnaise":5.5,"relish":3.0,"bbq sauce":3.5,"hot sauce":4.0,"dressing":4.0,"gravy":2.0,"spices":3.5,"seasoning":4.0,"lemon pepper seasoning":4.0,"chili powder":3.5,"paprika":3.5,"cumin":3.5,"garlic powder":3.5,"onion powder":3.5,"oregano":3.0,"thyme":3.0,"rosemary":3.0,"cinnamon":3.5,"cornstarch":3.0,"baking soda":2.0,"baking powder":3.5,"vanilla":6.0,"yeast":3.0,"frozen pizza":6.5,"pizza":8.0,"ice cream":6.0,"frozen vegetables":3.5,"frozen fries":4.5,"fries":4.5,"nuggets":10.0,"chicken nuggets":10.0,"waffles":4.0,"perogies":5.0,"lasagna":10.0,"coffee":12.0,"coffee pods":15.0,"k-cups":15.0,"tea":5.0,"juice":4.0,"orange juice":4.5,"pop":8.0,"soda":8.0,"sparkling water":7.0,"water":4.5,"bottled water":4.5,"beer":25.0,"wine":16.0,"gatorade":8.0,"energy drinks":10.0,"paper towels":14.0,"paper towel":14.0,"toilet paper":16.0,"tissues":6.0,"kleenex":6.0,"napkins":4.0,"garbage bags":12.0,"trash bags":12.0,"ziploc":5.5,"zip bags":5.5,"foil":6.0,"tin foil":6.0,"plastic wrap":5.0,"dish soap":4.5,"dishwasher pods":16.0,"dishwasher tabs":16.0,"laundry detergent":15.0,"detergent":15.0,"dryer sheets":7.0,"fabric softener":8.0,"cleaner":5.0,"bleach":4.5,"sponges":4.0,"batteries":12.0,"light bulbs":10.0,"shampoo":7.0,"conditioner":7.0,"soap":5.0,"body wash":7.0,"toothpaste":4.0,"toothbrush":4.0,"deodorant":6.0,"razors":15.0,"lotion":8.0,"sunscreen":12.0,"vitamins":14.0,"tylenol":10.0,"advil":12.0,"band-aids":5.0,"dog food":35.0,"cat food":25.0,"cat litter":18.0,"litter":18.0,"dog treats":8.0},PKEYS=Object.keys(PRICE).sort((a,b)=>b.length-a.length);
+const STOREX={costco:1.9,walmart:1,'co-op':1.18,coop:1.18,superstore:1,'real canadian superstore':1,'no frills':.95,safeway:1.22,sobeys:1.22,'save-on':1.2,'save-on-foods':1.2,sunterra:1.35,'shoppers':1.3,'shoppers drug mart':1.3};
+function priceOf(text,store){ // shortcut: a fixed price table, not live prices; good enough for a ballpark
+  const t=String(text).toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu,' '),k=PKEYS.find(k=>new RegExp('(^|\\s)'+k.replace(/[-]/g,'\\-')+'(s|es)?(\\s|$)').test(t)),
+    q=Math.min(24,+((t.match(/^\s*(\d{1,2})\s*x?\s/)||t.match(/\sx\s*(\d{1,2})\s*$/)||[])[1]||1)),
+    f=STOREX[String(store).trim().toLowerCase()]??1.1;
+  const c=/^costco/.test(String(store).trim().toLowerCase())&&COSTCO[k];
+  return Math.round((c||(k?PRICE[k]:5)*f)*q*2)/2; // to the nearest 50 cents
+}
+const COSTCO={'rotisserie chicken':8,'eggs':8.5,'egg':8.5,'bananas':2.5,'banana':2.5,'milk':11.5};
+const money=v=>'$'+(v%1?v.toFixed(2):v.toFixed(0));
 const lop=(op,a)=>mut('listOp',op,a);
 async function newList(name,date){
   try{const l=await lop('addList',{name,date:date||''});L.lists.push(l);L.lists.sort(tripOrder);L.cur=l.id;drawLists();cacheSave();return l}catch(e){toast(e.message||'Could not create the list')}
@@ -1750,7 +1804,6 @@ function drawSide(){ // free containers, plus anything that needs eating soon
 const msig=()=>JSON.stringify([M.meals,M.cfg,innerWidth])+Math.floor(Date.now()/3e5);
 function drawMeals(){
   M.sig=msig();drawUnits();drawSide();M.flash=null;
-  $('mhint').textContent=(matchMedia('(hover:hover)').matches?'Drag a container':'Press and hold a container, then drag it')+' to move it between the fridge and the freezer. A red number has expired, a yellow one expires within a day.';
 }
 const markSel=()=>document.querySelectorAll('#units .cont').forEach(c=>c.classList.toggle('sel',c.dataset.m===M.cur));
 async function loadMeals(){
