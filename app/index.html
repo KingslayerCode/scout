@@ -489,12 +489,13 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 #sec-cal{overflow-x:clip}
 .dcs{position:absolute;inset:0;z-index:3;pointer-events:none}
 .dec{position:absolute;width:calc(var(--w)*var(--k));height:calc(var(--w)*var(--k));color:var(--c);transform:rotate(var(--r,0deg));opacity:.9;pointer-events:none}
-.dec.dsw{animation:sway 7s ease-in-out infinite;animation-delay:calc(var(--d,0s) * -1.7);transform-origin:50% 95%;will-change:transform;filter:drop-shadow(0 1.5px 2px rgba(0,0,0,.3))}
+.dec.dsw{filter:drop-shadow(0 1.5px 2px rgba(0,0,0,.3));overflow:visible}
+.dec.dsw use{animation:sway2 7s ease-in-out infinite;animation-delay:calc(var(--d,0s) * -1.7);transform-box:view-box;transform-origin:12px 22px}
 .dec.twk{animation:twk 5s ease-in-out infinite;animation-delay:var(--d,0s);filter:drop-shadow(0 0 4px color-mix(in srgb,var(--c) 70%,transparent))}
 .dec.rn{animation:rain 3s cubic-bezier(.5,0,.9,.6) infinite;animation-delay:var(--d,0s)}
 .dec.sun{animation:spin 90s linear infinite,sunp 6s ease-in-out infinite}
 @keyframes sunp{0%,100%{filter:drop-shadow(0 0 4px rgba(255,200,90,.45))}50%{filter:drop-shadow(0 0 12px rgba(255,200,90,.8))}}
-@keyframes sway{0%,100%{transform:rotate(calc(var(--r) - 3deg))}50%{transform:rotate(calc(var(--r) + 4deg))}}
+@keyframes sway2{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
 @keyframes twk{0%,100%{opacity:.95;transform:rotate(var(--r,0deg)) scale(1)}50%{opacity:.45;transform:rotate(var(--r,0deg)) scale(.82)}}
 @keyframes rain{0%{transform:translateY(-6px) scale(.9);opacity:0}20%{opacity:.9}100%{transform:translateY(9px) scale(1.05);opacity:0}}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -534,10 +535,10 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
   .wxd{grid-template-columns:minmax(66px,auto) 26px 1fr auto 34px;gap:6px}
   .wxs{min-height:44px}
 }
-html.scr .cont .bd,html.scr .cont .wvz,html.scr .cont .fs,html.scr .dec,body.dragging .cont .bd,body.dragging .cont .wvz{animation-play-state:paused}
-html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dialog[open]) .dec{animation-play-state:paused}
+html.scr .cont .bd,html.scr .cont .wvz,html.scr .cont .fs,html.scr .dec,html.scr .dec use,body.dragging .cont .bd,body.dragging .cont .wvz{animation-play-state:paused}
+html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dialog[open]) .dec,html:has(dialog[open]) .dec use{animation-play-state:paused}
 .cont.melt svg{filter:none!important}
-@media(prefers-reduced-motion:reduce){.cont .bd,.cont .wvz,.cont .fs,.dec,.wv{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.cont .bd,.cont .wvz,.cont .fs,.dec,.dec use,.wv{animation:none!important}}
 /* ---------- whiteboard: to-dos written on the board, notices as sticky notes ---------- */
 @font-face{font-family:Caveat;font-weight:700;font-display:swap;src:url(fonts/caveat-700.woff2) format("woff2")}
 #sec-board{--hand:Caveat,"Bradley Hand","Marker Felt","Segoe Print",cursive}
@@ -1013,11 +1014,12 @@ const SD={
   summer:{c:['#f4a261','#fff3d6','#ff8fa3','#f6c177'],an:'',k:{TL:['clam','star',''],TR:['sun','',''],BL:['star','clam','star'],BR:['clam','','star']}},
   spring:{c:['#ff8fab','#ffd166','#ffffff','#c9a7ff','#ffb3c7'],an:'dsw',k:{TL:['drop','drop','drop'],TR:['flower','flower','drop'],BL:['flower','flower','flower'],BR:['drop','flower','flower']}}
 };
-const CL=[[-9,-9,28,0],[14,-12,20,35],[-12,14,18,-30]]; /* x and y in from the corner (minus is outside), size, tilt */
+const CL=[[-8,-8,32,0],[16,-10,23,30],[-10,16,21,-30]];
+const LEAFA={TL:-45,TR:45,BL:-135,BR:135}; // leaves point out of their corner /* x and y in from the corner (minus is outside), size, tilt */
 function deco(s){
   const D=SD[s];let n=0,h='<div class=dcs aria-hidden="true">';
   ['TL','TR','BL','BR'].forEach((c,ci)=>D.k[c].forEach((y,i)=>{if(!y)return;n++;
-    const[dx,dy,w,r]=CL[i],an=y==='drop'?'rn':y==='sun'?'sun':D.an,col=y==='drop'?'#6cb6ff':D.c[(n*2+ci)%D.c.length];
+    const[dx,dy,w,t]=CL[i],r=y==='leaf'?LEAFA[c]+t*(c==='TL'||c==='BR'?1:-1):t+ci*57,an=y==='drop'?'rn':y==='sun'?'sun':D.an,col=y==='drop'?'#6cb6ff':D.c[(n*2+ci)%D.c.length];
     h+=`<svg class="dec${an?' '+an:''}" style="--w:${y==='sun'?56:w}px;--c:${col};--r:${r+ci*57}deg;--d:${(n*.7)%4}s;${c[1]==='L'?'left':'right'}:calc(${dx}px*var(--k));${c[0]==='T'?'top':'bottom'}:calc(${dy}px*var(--k))"><use href="#${y}"/></svg>`}));
   return h+'</div>';
 }
