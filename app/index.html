@@ -487,7 +487,6 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 @media(prefers-reduced-motion:reduce){.mgf::after{animation:none;opacity:.3}}
 .dcs{position:absolute;inset:0;pointer-events:none;z-index:0}
 #sec-cal{overflow-x:clip}
-.dcs{position:absolute;inset:0;z-index:3;pointer-events:none}
 .dec{position:absolute;width:calc(var(--w)*var(--k));height:calc(var(--w)*var(--k));color:var(--c);transform:rotate(var(--r,0deg));opacity:.9;pointer-events:none}
 .dec.dsw{filter:drop-shadow(0 1.5px 2px rgba(0,0,0,.3));overflow:visible}
 .dec.dsw use{animation:sway2 7s ease-in-out infinite;animation-delay:calc(var(--d,0s) * -1.7);transform-box:view-box;transform-origin:12px 22px}
@@ -505,6 +504,7 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 .mgf.spring{--fb:color-mix(in srgb,#7fd491 38%,transparent);--fs:#ff9fbd;--fg:linear-gradient(150deg,color-mix(in srgb,#ffb3c7 17%,var(--card)),color-mix(in srgb,#9ad8ff 6%,var(--card)) 55%,color-mix(in srgb,#8fdc9b 18%,var(--card)))}
 /* ---------- forecast ---------- */
 #wx:empty{display:none}
+html.noadd .fab{display:none}
 .fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:calc(24px + env(safe-area-inset-bottom));z-index:40;width:58px;height:58px;border-radius:50%;border:0;background:var(--acc);color:var(--onacc);display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px color-mix(in srgb,var(--acc) 45%,transparent),0 2px 6px rgba(0,0,0,.3)}
 .fab svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}.fab:active{transform:scale(.93)}
 @media(max-width:720px){.fab{bottom:calc(96px + env(safe-area-inset-bottom))}}
@@ -524,15 +524,27 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 .sky-snow{background:linear-gradient(180deg,#5f7389,#7d8fa3 70%,#909fb1)}
 .sky-fog{background:linear-gradient(180deg,#6f7984,#8a939d 70%,#979fa8)}
 .wxs.add,.wxs.off{color:var(--mut);background:none;border-style:dashed;font-size:13px}
-.wxd{display:grid;grid-template-columns:minmax(74px,auto) 30px 1fr auto 40px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
-.wxd:first-child{border-top:0}.wxd .wdn{color:var(--mut)}.wxd .wdi{font-size:20px;text-align:center}.wxd .wdt b{font-weight:650}.wxd .wdp{color:var(--mut);font-size:12px;text-align:right}
+.wxp{position:relative;color:#fff;padding:0;overflow:hidden auto;isolation:isolate;box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.14)}
+.wxp>#wxfx{position:absolute;left:0;top:0;width:100%;height:230px;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.wxp>*:not(#wxfx){position:relative;z-index:1}
+.wxhero{text-align:center;padding:26px 20px 14px}.wxhero h2{font-size:24px;font-weight:600;margin:0;text-shadow:0 1px 3px rgba(0,0,0,.2)}
+.wxbig{font-size:72px;font-weight:200;line-height:1;margin:6px 0 2px;letter-spacing:-2px;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+.wxcond{margin:0;font-size:18px;font-weight:600;opacity:.92}.wxhl{margin:4px 0 0;font-size:15px;font-weight:600;opacity:.85}
+.wxlab{margin:6px 16px 0;padding:10px 14px 8px;border-radius:16px 16px 0 0;background:rgba(255,255,255,.13);font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.9;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+#wxb{margin:0 16px;padding:0 14px 6px;border-radius:0 0 16px 16px;background:rgba(255,255,255,.13);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.wxd{display:grid;grid-template-columns:62px 40px 40px 1fr 40px;gap:8px;align-items:center;padding:10px 0;border-top:1px solid rgba(255,255,255,.16);font-size:17px;font-weight:600}
+.wxd:first-child{border-top:0}.wxd .wdi{font-size:22px;text-align:center;display:flex;flex-direction:column;align-items:center;line-height:1}.wxd .wdi small{font-size:11px;font-weight:700;color:#8fd0ff;margin-top:2px}
+.wxd .wlo{text-align:right;opacity:.6}.wxd .whi{text-align:right}
+.wbar{position:relative;height:5px;border-radius:3px;background:rgba(0,0,0,.2)}.wbar i{position:absolute;top:0;bottom:0;border-radius:3px;min-width:6px}
+.wxp .acts{padding:14px 16px 18px;margin:0;display:flex;gap:10px}.wxp .acts .btn{flex:1;margin:0;width:auto;justify-content:center;text-align:center}.wxp .btn{background:rgba(255,255,255,.2);border-color:transparent;color:#fff}.wxp .btn.p{background:#fff;color:#1d2a3a}
+.wxp .hint{color:rgba(255,255,255,.85);padding:12px 0}
 .wxline{margin:2px 0 10px;color:var(--mut);font-size:14px}
 .wxr{display:block;width:100%;text-align:left;margin-top:6px}
 #wxcur{margin:6px 0}
 @media(max-width:720px){
   .mgf{padding:5px;margin:0 -6px;border-radius:21px;--k:.85}
   .mgf>.mg{border-radius:17px}
-  .wxd{grid-template-columns:minmax(66px,auto) 26px 1fr auto 34px;gap:6px}
+  .wxd{grid-template-columns:54px 36px 38px 1fr 38px;gap:6px;font-size:16px}
   .wxs{min-height:44px}
 }
 html.scr .cont .bd,html.scr .cont .wvz,html.scr .cont .fs,html.scr .dec,html.scr .dec use,body.dragging .cont .bd,body.dragging .cont .wvz{animation-play-state:paused}
@@ -751,7 +763,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="sfoot"><span id="msum" class="hint"></span><button class="btn p" id="mgo">Import</button></div>
 </dialog>
 <dialog id="vdlg"><div id="vdc"></div></dialog>
-<dialog id="wxdlg"><h2 id="wxh">Forecast</h2><div id="wxb"></div><p class="acts"><button class="btn wxr" id="wxplace" type="button">Change town</button><button class="btn p" id="wxx" type="button">Close</button></p></dialog>
+<dialog id="wxdlg" class="wxp"><canvas class="fx" id="wxfx" aria-hidden="true"></canvas><div class="wxhero"><h2 id="wxh">Forecast</h2><p class="wxbig" id="wxbig"></p><p class="wxcond" id="wxcond"></p><p class="wxhl" id="wxhl"></p></div><p class="wxlab">7-day forecast</p><div id="wxb"></div><p class="acts"><button class="btn wxr" id="wxplace" type="button">Change town</button><button class="btn p" id="wxx" type="button">Close</button></p></dialog>
 <dialog id="sdlg">
   <h2>Meal settings</h2>
   <label class="f">Total containers (CONT-01 up to this number)<input type="number" id="sc" min="1" max="99" inputmode="numeric"></label>
@@ -809,6 +821,8 @@ let tt;const toast=m=>{const t=$('toast');t.textContent=m;
     else{const d=[...document.querySelectorAll('dialog[open]')].pop();(d||document.body).appendChild(t)}}catch(e){}
   t.classList.remove('on');void t.offsetWidth;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)};
 document.addEventListener('click',e=>{const d=e.target;if(d.tagName==='DIALOG'){if(performance.now()-dockT<500)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()}});
+const SHOW_ADD_BUTTON='SCOUT_SHOWADD' in window?window.SCOUT_SHOWADD:false; // the round + on the calendar: set to true to bring it back
+if(!SHOW_ADD_BUTTON)document.documentElement.classList.add('noadd');
 const NAVDEF=['cal','board','meals','lists','rec'];
 const navOrder=v=>{const o=String(v||'').split(',').filter((x,i,a)=>NAVDEF.includes(x)&&a.indexOf(x)===i);return o.length===NAVDEF.length?o:NAVDEF.slice()};
 function applyNav(v){ // the menu order this person picked; Profile always stays last
@@ -903,12 +917,12 @@ function fxLoop(now){
   fxRaf=requestAnimationFrame(fxLoop);
   if(now-fxPrev<32)return;fxPrev=now;
   const vh=innerHeight;
-  document.querySelectorAll('.sec.on canvas.fx[data-fx]').forEach(cv=>{const r=cv.getBoundingClientRect();if(r.width&&r.bottom>0&&r.top<vh)fxPaint(cv,now)});
+  document.querySelectorAll('.sec.on canvas.fx[data-fx],dialog[open] canvas.fx[data-fx]').forEach(cv=>{const r=cv.getBoundingClientRect();if(r.width&&r.bottom>0&&r.top<vh)fxPaint(cv,now)});
 }
 function fxKick(){ // start (or restart) painting; safe to call any time
   cancelAnimationFrame(fxRaf);fxRaf=0;
   if(document.hidden)return;
-  if(FXSTILL.matches){requestAnimationFrame(now=>document.querySelectorAll('.sec.on canvas.fx[data-fx]').forEach(cv=>fxPaint(cv,now)));return}
+  if(FXSTILL.matches){requestAnimationFrame(now=>document.querySelectorAll('.sec.on canvas.fx[data-fx],dialog[open] canvas.fx[data-fx]').forEach(cv=>fxPaint(cv,now)));return}
   fxRaf=requestAnimationFrame(fxLoop);
 }
 document.addEventListener('visibilitychange',fxKick);addEventListener('pageshow',fxKick);addEventListener('resize',()=>{clearTimeout(fxKick.t);fxKick.t=setTimeout(fxKick,200)});
@@ -934,11 +948,18 @@ async function loadWx(force){
 /* the town is shared by the household: follow whatever the server says, and fetch the forecast when it changed or is old */
 function syncWx(){const w=F.weather||null;if(JSON.stringify(w)!==JSON.stringify(WX.place)){WX.place=w;WX.days=[];WX.by={};WX.t=0}if(WX.place)loadWx()}
 function openWxDlg(){
-  $('wxh').textContent=WX.place?WX.place.name:'Forecast';
-  $('wxb').innerHTML=WX.days.length?WX.days.map((d,i)=>{const w=wmo(d.code),dt=pd8(d.date);
-    return `<div class=wxd><span class=wdn>${i===0?'Today':dt.toLocaleDateString(undefined,{weekday:'short',day:'numeric'})}</span><span class=wdi>${w[1]}</span><span class=wdt>${esc(w[2])}</span><span>${deg(d.lo)} · <b>${deg(d.hi)}</b></span><span class=wdp>${d.pop!=null?d.pop+'%':''}</span></div>`}).join('')
+  const D=WX.days,t=D[0],k=t?sky(t.code):'cloud',dl=$('wxdlg');
+  dl.className='wxp sky-'+k;$('wxfx').dataset.fx=k;
+  $('wxh').textContent=WX.place?WX.place.name.split(',')[0]:'Forecast';
+  $('wxbig').textContent=t?deg(t.hi):'';$('wxcond').textContent=t?wmo(t.code)[2]:'';
+  $('wxhl').textContent=t?`H:${deg(t.hi)}  L:${deg(t.lo)}${t.pop!=null?'  ·  '+t.pop+'% chance of rain or snow':''}`:'';
+  const lo=Math.min(...D.map(d=>d.lo)),hi=Math.max(...D.map(d=>d.hi)),sp=Math.max(1,hi-lo),pc=v=>((v-lo)/sp*100).toFixed(1),
+    tc=v=>v<=-10?'#7cc4ff':v<=0?'#8fd3ff':v<=10?'#9be7b4':v<=20?'#ffd166':'#ff9f43';
+  $('wxb').innerHTML=D.length?D.map((d,i)=>{const w=wmo(d.code),dt=pd8(d.date);
+    return `<div class=wxd><span class=wdn>${i===0?'Today':dt.toLocaleDateString(undefined,{weekday:'short'})}</span><span class=wdi>${w[1]}${d.pop>=20?`<small>${d.pop}%</small>`:''}</span><span class=wlo>${deg(d.lo)}</span>`+
+      `<span class=wbar><i style="left:${pc(d.lo)}%;right:${(100-pc(d.hi)).toFixed(1)}%;background:linear-gradient(90deg,${tc(d.lo)},${tc(d.hi)})"></i></span><span class=whi>${deg(d.hi)}</span></div>`}).join('')
     :`<p class=hint>${esc(WX.err||'No forecast yet.')}</p>`;
-  openD($('wxdlg'));
+  openD(dl);fxKick();
 }
 $('wxx').onclick=()=>$('wxdlg').close();
 $('wxplace').onclick=()=>{$('wxdlg').close();openCals('hh')};
@@ -1010,16 +1031,15 @@ function rowsFor(V,d){return V.filter(x=>key(x.sa)<=key(d)&&key(x.sb)>=key(d)).s
 const SEASON=m=>m===11||m<2?'winter':m<5?'spring':m<8?'summer':'fall';
 const SD={
   winter:{c:['#f6fbff','#cfe6ff','#a9d3fa'],an:'twk',k:{TL:['snow','snow','snow'],TR:['snow','snow','snow'],BL:['snow','snow','snow'],BR:['snow','snow','snow']}},
-  fall:{c:['#d9480f','#f08c00','#c92a2a','#e8590c','#b8860b','#f4a261'],an:'dsw',k:{TL:['leaf','leaf','leaf'],TR:['leaf','',''],BL:['leaf','',''],BR:['leaf','leaf','leaf']}},
+  fall:{c:['#d9480f','#f08c00','#c92a2a','#e8590c','#b8860b','#f4a261'],an:'dsw',k:{TL:['leaf','leaf','leaf'],TR:['leaf','leaf','leaf'],BL:['leaf','leaf','leaf'],BR:['leaf','leaf','leaf']}},
   summer:{c:['#f4a261','#fff3d6','#ff8fa3','#f6c177'],an:'',k:{TL:['clam','star',''],TR:['sun','',''],BL:['star','clam','star'],BR:['clam','','star']}},
   spring:{c:['#ff8fab','#ffd166','#ffffff','#c9a7ff','#ffb3c7'],an:'dsw',k:{TL:['drop','drop','drop'],TR:['flower','flower','drop'],BL:['flower','flower','flower'],BR:['drop','flower','flower']}}
 };
-const CL=[[-8,-8,32,0],[16,-10,23,30],[-10,16,21,-30]];
-const LEAFA={TL:-45,TR:45,BL:-135,BR:135}; // leaves point out of their corner /* x and y in from the corner (minus is outside), size, tilt */
+const CL=[[-5,-5,31,0],[16,-8,22,35],[-8,16,19,-30]]; /* x and y in from the corner (minus is outside), size, tilt */
 function deco(s){
   const D=SD[s];let n=0,h='<div class=dcs aria-hidden="true">';
   ['TL','TR','BL','BR'].forEach((c,ci)=>D.k[c].forEach((y,i)=>{if(!y)return;n++;
-    const[dx,dy,w,t]=CL[i],r=y==='leaf'?LEAFA[c]+t*(c==='TL'||c==='BR'?1:-1):t+ci*57,an=y==='drop'?'rn':y==='sun'?'sun':D.an,col=y==='drop'?'#6cb6ff':D.c[(n*2+ci)%D.c.length];
+    const[dx,dy,w,t]=CL[i],r=t+ci*57,an=y==='drop'?'rn':y==='sun'?'sun':D.an,col=y==='drop'?'#6cb6ff':D.c[(n*2+ci)%D.c.length];
     h+=`<svg class="dec${an?' '+an:''}" style="--w:${y==='sun'?56:w}px;--c:${col};--r:${r+ci*57}deg;--d:${(n*.7)%4}s;${c[1]==='L'?'left':'right'}:calc(${dx}px*var(--k));${c[0]==='T'?'top':'bottom'}:calc(${dy}px*var(--k))"><use href="#${y}"/></svg>`}));
   return h+'</div>';
 }
