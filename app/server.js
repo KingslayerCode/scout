@@ -11,9 +11,9 @@ const HEAD = {
   Sources: ['key', 'owner', 'kind', 'sourceId', 'name', 'color', 'selected'],
   Profiles: ['email', 'name', 'color', 'photo'],
   Recipes: ['id', 'title', 'image', 'source', 'servings', 'time', 'tags', 'ingredients', 'steps', 'notes', 'fav', 'addedBy', 'created'],
-  Lists: ['id', 'name', 'kind', 'owner', 'created', 'date'],
+  Lists: ['id', 'name', 'kind', 'owner', 'created', 'date', 'event'],
   Board: ['id', 'kind', 'text', 'done', 'color', 'assignee', 'due', 'by', 'created', 'updated'],
-  ListItems: ['id', 'list', 'text', 'done', 'assignee', 'addedBy', 'created'],
+  ListItems: ['id', 'list', 'text', 'done', 'assignee', 'addedBy', 'created', 'qty'],
   Meals: ['id', 'container', 'name', 'created', 'frozen', 'moved', 'loc', 'addedBy', 'movedAt'],
   Config: ['key', 'value'],
   Events: ['sourceKey', 'owner', 'id', 'title', 'start', 'end', 'allDay', 'location'],
@@ -610,7 +610,7 @@ async function inviteMember(email) {
 // ---------- shopping lists: one per trip, named for the store, with an optional planned date ----------
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 async function getLists() { const [l, i] = (await manyR_(['Lists', 'ListItems'])).map(a => a.map(x => x.o)); return { lists: l.filter(x => x.kind !== 'todo'), items: i }; } // old to-do lists stay in the sheet but are not shown
-function listOp(op, a) {
+function listOp_(op, a) {
   const me = me_(), now = new Date().toISOString(), nid = () => uuid_().slice(0, 8), t = (v, n) => clip_(v, n);
   return locked_(async () => {
     if (op === 'addList') {
@@ -630,13 +630,13 @@ function listOp(op, a) {
     if (op === 'addItems') {
       if (!(await byKey_('Lists', a.list))) throw new Error('That list no longer exists.');
       const out = [];
-      (a.texts || []).slice(0, 200).forEach(x => { x = t(x, 200); if (x) out.push({ id: nid(), list: a.list, text: x, done: 'N', assignee: t(a.assignee, 120), addedBy: me, created: now }); });
+      (a.texts || []).slice(0, 200).forEach((x, k) => { x = t(x, 200); if (x) out.push({ id: nid(), list: a.list, text: x, done: 'N', assignee: t(a.assignee, 120), addedBy: me, created: now, qty: qty_((a.qtys || [])[k]) }); });
       await addRows_('ListItems', out); return out;
     }
     if (op === 'setItem') {
       const x = await byKey_('ListItems', a.id); if (!x) return true;
       const i = x.o;
-      Object.assign(i, a.done != null ? { done: a.done ? 'Y' : 'N' } : {}, a.assignee != null ? { assignee: t(a.assignee, 120) } : {}, a.text != null ? { text: t(a.text, 200) || i.text } : {});
+      Object.assign(i, a.done != null ? { done: a.done ? 'Y' : 'N' } : {}, a.assignee != null ? { assignee: t(a.assignee, 120) } : {}, a.text != null ? { text: t(a.text, 200) || i.text } : {}, a.qty != null ? { qty: qty_(a.qty) } : {});
       await putRow_('ListItems', x.r, i); return true;
     }
     if (op === 'delItem') { const x = await byKey_('ListItems', a.id); if (x) await delRow_('ListItems', x.r); return true; }
@@ -646,6 +646,34 @@ function listOp(op, a) {
     }
     throw new Error('Unknown list action.');
   });
+}
+
+const qty_ = v => { const n = Math.round(+v); return n > 1 ? String(Math.min(n, 99)) : ''; }; // 1 is stored as blank
+// A shopping trip with a date shows on everyone's calendar as an all-day shared event; the list keeps the event's id.
+async function listOp(op, a) {
+  const before = op === 'delList' ? await byKey_('Lists', a.id) : null;
+  const r = await listOp_(op, a);
+  if (op === 'addList' || op === 'editList' || op === 'delList') {
+    try { await tripEvent_(op === 'delList' ? (before && before.o) : null, op === 'addList' ? r.id : a.id, op === 'delList'); bump_('family'); } catch (e) { /* the list is saved even if the calendar could not be updated */ }
+  }
+  if (op === 'addList') { const x = await byKey_('Lists', r.id); if (x) r.event = x.o.event; }
+  return r;
+}
+async function tripEvent_(gone, id, deleted) {
+  const x = deleted ? null : await byKey_('Lists', id), l = deleted ? gone : x && x.o;
+  if (!l) return;
+  if (!deleted && ISO_DAY.test(l.date)) {
+    const d = new Date(l.date + 'T12:00:00'); d.setDate(d.getDate() + 1);
+    const end = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const ev = { title: '🛒 ' + l.name + ' trip', allDay: true, start: l.date, end, notes: 'From the Shopping list in Scout' };
+    let saved;
+    try { saved = await saveSharedEvent(l.event ? Object.assign({ id: l.event }, ev) : ev); }
+    catch (e) { if (!l.event) throw e; saved = await saveSharedEvent(ev); } // someone deleted it from the calendar: make a new one
+    if (saved.id !== l.event) await locked_(async () => { const y = await byKey_('Lists', id); if (y) { y.o.event = saved.id; await putRow_('Lists', y.r, y.o); } });
+  } else if (l.event) {
+    await deleteSharedEvent(l.event);
+    if (!deleted) await locked_(async () => { const y = await byKey_('Lists', id); if (y) { y.o.event = ''; await putRow_('Lists', y.r, y.o); } });
+  }
 }
 
 // ---------- whiteboard: to-dos written on the board and sticky-note notices, shared by the household ----------
