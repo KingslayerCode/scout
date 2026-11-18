@@ -355,11 +355,17 @@ async function syncMe() {
     } catch (e) { errors.push(s.name + ': ' + e.message); failed.add(s.key); return []; }
   }));
   const ev = [].concat(...got);
-  // a calendar that failed keeps its old events instead of vanishing
-  await locked_(async () => write_('Events', (await rows_('Events')).filter(r => r.owner !== me || failed.has(r.sourceKey)).concat(ev)));
+  const sig = a => a.map(o => HEAD.Events.map(k => o[k] == null ? '' : String(o[k])).join('\u0001')).sort().join('\u0002');
+  let changed = false;
+  // a calendar that failed keeps its old events instead of vanishing; nothing is written when nothing changed
+  await locked_(async () => {
+    const all = await rows_('Events'), was = all.filter(r => r.owner === me && !failed.has(r.sourceKey));
+    if (sig(was) === sig(ev)) return;
+    changed = true; await write_('Events', all.filter(r => r.owner !== me || failed.has(r.sourceKey)).concat(ev));
+  });
   try { await mirrorShared_(); } catch (e) { errors.push('Shared Events calendar: ' + e.message); } // also put the household's shared events in this person's Google Calendar
   await cfgSet_('sync:' + me, new Date().toISOString()); // so everyone can see how fresh each person's calendar is
-  return { count: ev.length, errors };
+  return { count: ev.length, errors, unchanged: !changed };
 }
 
 // ---------- the family view ----------
@@ -803,6 +809,6 @@ window.SRV = { call(fn, args) {
   const f = API[fn];
   if (!f) return Promise.reject(new Error(fn + ' is not available in this version of Scout.'));
   let p; try { p = Promise.resolve(f.apply(null, args)); } catch (e) { return Promise.reject(e); }
-  return AREA[fn] ? p.then(v => { bump_(AREA[fn]); return v; }) : p;
+  return AREA[fn] ? p.then(v => { if (!(v && v.unchanged)) bump_(AREA[fn]); return v; }) : p; // a sync that found nothing new tells nobody
 } };
 })();

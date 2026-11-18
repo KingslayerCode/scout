@@ -248,14 +248,7 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .mstat{display:flex;gap:8px;flex-wrap:wrap;margin:-2px 0 14px}.ms{display:inline-flex;align-items:baseline;gap:6px;padding:7px 14px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--mut)}
 .ms b{font-size:17px;color:var(--ink)}.ms i{width:8px;height:8px;border-radius:50%;background:#4cc9a0;align-self:center}.ms.bad i{background:var(--bad)}.ms.warn i{background:var(--warn)}.ms.bad{border-color:color-mix(in srgb,var(--bad) 50%,var(--line))}.ms.bad b{color:var(--bad)}.ms.warn{border-color:color-mix(in srgb,var(--warn) 50%,var(--line))}.ms.warn b{color:var(--warn)}
 #units{max-width:900px}
-.mfoot{max-width:900px;display:flex;flex-direction:column;align-items:center;gap:6px;margin:0 0 12px}.mfoot .btn{width:100%;max-width:440px;min-height:54px;font-size:17px;border-radius:18px}.mfoot .mh{margin:4px 8px 0;text-align:center;max-width:520px}
-.side{position:sticky;top:18px;display:flex;flex-direction:column;gap:14px}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
-.stats div{background:var(--bg);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column}
-.stats b{font-size:22px;line-height:1.1}.stats span{font-size:12px;color:var(--mut)}
-.stats .bad b{color:var(--bad)}.stats .warn b{color:var(--warn)}
-.lg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-top:10px}
-.lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.mfoot{max-width:900px;display:flex;flex-direction:column;align-items:center;gap:6px;margin:0 0 12px}.mfoot .btn{width:100%;max-width:440px;min-height:54px;font-size:17px;border-radius:18px}
 .cb{display:inline-block;background:#111a22;color:#fff;font-weight:700;font-size:12px;padding:2px 8px;border-radius:8px;letter-spacing:.3px}
 .cb.warn{color:#ffd23f}.cb.bad{color:#ff6b6b}
 .unit{position:relative;border-radius:24px;padding:14px 16px 8px;border:1px solid var(--line);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 26px -14px rgba(0,0,0,.5)}
@@ -338,7 +331,6 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
 .cont.land .gl{animation:ring 1.6s ease-out forwards}
 @keyframes land{0%{transform:translateY(-14px) scale(1.18)}55%{transform:translateY(1px) scale(.96)}100%{transform:none}}
 @keyframes ring{0%,55%{stroke:var(--acc);stroke-width:3}100%{stroke:color-mix(in srgb,var(--ink) 42%,transparent);stroke-width:1.4}}
-.mh{margin:-6px 2px 12px}
 
 /* phones */
 @media(max-width:720px){
@@ -367,7 +359,6 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   html.typ dialog[open]{top:calc(var(--vvt,0px) + var(--gap) + env(safe-area-inset-top));translate:-50% 0;max-height:var(--typh,48vh)}
   #toast{bottom:calc(88px + env(safe-area-inset-bottom))}
   .drawer{height:38px}.drawer::after{top:10px}
-  .stats{grid-template-columns:repeat(4,1fr)}.stats div{padding:6px 8px}.stats b{font-size:18px}
   .unit{border-radius:20px;padding:12px 10px 6px}
   .shelf{gap:2px 6px;padding:10px 0 0;min-height:102px}
   .cont small{font-size:10.5px;line-height:1.2;white-space:normal;text-align:center;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:2.4em;width:100%}
@@ -405,7 +396,6 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   .bar.cl{margin-left:0}.bar.cr{margin-right:0}
   .tm b{display:none}
   .mo{font-size:10px;height:14px;line-height:14px;text-align:center;padding:0;margin:0 1px}
-  .mh{font-size:12px;margin-top:-4px}
 }
 
 
@@ -1184,13 +1174,14 @@ const setSyn=t=>{$('syn').textContent=t||''};
 async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
 function autoSync(){
   if(auto)return;
-  const t=(F.sync||{})[F.me],old=!t||Date.now()-new Date(t)>15*6e4;
+  const t=(F.sync||{})[F.me],old=!t||Date.now()-new Date(t)>3*6e4; // Google Calendar is read again every few minutes while the app is open
   if(F.hasSaved&&old){auto=true;setSyn('Syncing your calendars…');
-    mut('syncMe').then(()=>reloadF()).catch(x=>toast('Could not sync your calendars: '+(x.message||x))).finally(()=>{auto=false;setSyn('')})}
+    mut('syncMe').then(r=>{F.sync=F.sync||{};F.sync[F.me]=new Date().toISOString();if(!(r&&r.unchanged))return reloadF()}).catch(x=>toast('Could not sync your calendars: '+(x.message||x))).finally(()=>{auto=false;setSyn('')})}
   else if(F.sharedStale){auto=true;setSyn('Updating your Shared Events calendar…');
     mut('syncShared').then(()=>{F.sharedStale=false;cacheSave()}).catch(()=>{}).finally(()=>{auto=false;setSyn('')})}
 }
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend&&Date.now()-lastGet>6e4)reloadF().then(autoSync).catch(()=>{})});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend)(Date.now()-lastGet>6e4?reloadF():Promise.resolve()).then(autoSync).catch(()=>{})});
+setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4);
 const agoIso=iso=>{const m=Math.round((Date.now()-new Date(iso))/6e4);return m<1?'just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' days ago'};
 function statusOf(p){
   const n=(F.sharing||{})[p.email]||0,t=(F.sync||{})[p.email];
@@ -1682,7 +1673,8 @@ const byDue=(a,b)=>(a.due?0:1)-(b.due?0:1)||String(a.due).localeCompare(b.due)||
    A to-do given to this person also makes the icon flash. */
 const SEEN={};
 const stored=k=>{if(SEEN[k]==null){try{SEEN[k]=localStorage.getItem(k)||''}catch(e){SEEN[k]=''}}return SEEN[k]};
-const seenAt=()=>stored('fw-bseen:'+F.me),openAt=()=>stored('fw-bopen:'+F.me);
+const seenAt=()=>stored('fw-bseen:'+F.me);
+
 function wbNew(){
   const me=F.me,t=seenAt(),live=B.items.filter(i=>!i._tmp),
     open=live.filter(i=>i.kind==='todo'&&i.assignee===me&&i.done!=='Y'),
@@ -1695,7 +1687,7 @@ function wbBadge(){
   document.querySelector('.nb[data-s=board]').classList.toggle('flash',w.mine);
 }
 const markSeen=(pad,opened)=>{if(!F.me)return;const late=B.items.reduce((m,i)=>Math.max(m,Date.parse(i.updated)||0,Date.parse(i.created)||0),0),t=new Date(Math.max(Date.now()+(pad||0),late)).toISOString();
-  for(const k of opened?['fw-bseen:','fw-bopen:']:['fw-bseen:']){const v=k==='fw-bopen:'?new Date().toISOString():t;SEEN[k+F.me]=v;try{localStorage.setItem(k+F.me,v)}catch(e){}}wbBadge()}; // shortcut: a few seconds of slack so a save still in flight when you leave is not shown back to you, and the newest thing on the board counts even if another phone's clock runs ahead; kept per phone, not synced
+  SEEN['fw-bseen:'+F.me]=t;try{localStorage.setItem('fw-bseen:'+F.me,t)}catch(e){}wbBadge()}; // shortcut: a few seconds of slack so a save still in flight when you leave is not shown back to you, and the newest thing on the board counts even if another phone's clock runs ahead; kept per phone, not synced
 function dueOf(i){if(!i.due)return null;const d=pd8(i.due),n=Math.round((d-today0())/864e5);
   return{n,t:n===0?'today':n===1?'tomorrow':n===-1?'yesterday':n<0?`${-n} days late`:n<7?d.toLocaleDateString(undefined,{weekday:'long'}):d.toLocaleDateString(undefined,{month:'short',day:'numeric'})}}
 const UL='<svg class=wbu viewBox="0 0 120 9" preserveAspectRatio="none" aria-hidden="true"><path d="M2 5.5C22 1.5 40 8 62 4.5S100 2.5 118 6"/></svg>';
