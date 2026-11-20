@@ -379,6 +379,9 @@ async function getFamily() {
   const me = me_();
   let [prof, src, conf, shr, evs] = (await manyR_(['Profiles', 'Sources', 'Config', 'SharedEvents', 'Events'])).map(a => a.map(x => x.o));
   if (!prof.some(r => r.email === me)) { await ensureProfile_(me); prof = await rows_('Profiles'); }
+  // shortcut: one-off household rename (JackTheRedFox → Jack); only touches that exact old name, so a later change by Jack sticks; delete once applied
+  const rn = prof.find(r => r.email.toLowerCase() === 'jrjr6@hotmail.ca' && r.name === 'JackTheRedFox');
+  if (rn) { rn.name = 'Jack'; try { await locked_(async () => { const r = await findRow_('Profiles', 1, v => v[0].toLowerCase() === 'jrjr6@hotmail.ca'); if (r) await putRow_('Profiles', r, Object.assign({}, rn)); }); } catch (e) {} }
   const sel = new Set(src.filter(r => r.selected === 'Y').map(r => r.key)), names = Object.fromEntries(src.map(r => [r.key, r.name]));
   // Everyone sees everyone's selected calendars. These two maps tell the screen who is sharing what, and how fresh it is.
   const cv = k => (conf.find(r => r.key === k) || { value: '' }).value, sharing = {}, sync = {};
