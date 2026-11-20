@@ -426,7 +426,7 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
 #dog.on{opacity:1;transform:none}
 @media(max-width:720px){#dog{bottom:calc(90px + env(safe-area-inset-bottom))}}
 #dog .dgt{font-size:13px;font-weight:700;letter-spacing:.2px;color:var(--acc);margin-bottom:9px;white-space:nowrap}
-#dog .dgi{position:relative;width:101px;height:50px}
+#dog .dgi{position:relative;width:101px;height:50px;filter:drop-shadow(0 0 .8px color-mix(in srgb,var(--ink) 60%,transparent)) drop-shadow(0 0 3px color-mix(in srgb,var(--ink) 18%,transparent))} /* a faint rim in the text colour so it stands off any background */
 #dog .dgi i{position:absolute;inset:0;-webkit-mask:url(dog.png) 0 0/1515px 100px no-repeat;mask:url(dog.png) 0 0/1515px 100px no-repeat;animation:drun 1.2s steps(15) infinite}
 #dog .dgi i:first-child{background:var(--tan)}#dog .dgi i+i{background:var(--sad);-webkit-mask-position:0 -50px;mask-position:0 -50px;animation-name:drun2}
 @keyframes drun{to{-webkit-mask-position:-1515px 0;mask-position:-1515px 0}}@keyframes drun2{from{-webkit-mask-position:0 -50px;mask-position:0 -50px}to{-webkit-mask-position:-1515px -50px;mask-position:-1515px -50px}}
@@ -1214,14 +1214,14 @@ async function refresh(){
 }
 /* keep everyone's view fresh: re-read when the person comes back to the app, and top up their own calendars when they are old */
 let lastGet=Date.now(),auto=false;
-const setSyn=t=>{$('syn').textContent=t||'';const d=$('dog');clearTimeout(setSyn.h);
-  if(t){try{if(d.showPopover&&!d.matches(':popover-open'))d.showPopover()}catch(e){}void d.offsetWidth;d.classList.add('on')} // reflow, then fade in (no frame callback that could land late)
-  else{d.classList.remove('on');setSyn.h=setTimeout(()=>{if($('syn').textContent)return;try{if(d.hidePopover&&d.matches(':popover-open'))d.hidePopover()}catch(e){}},300)}};
+const setSyn=(t,show)=>{$('syn').textContent=t||'';const d=$('dog');clearTimeout(setSyn.h);
+  if(t&&show){try{if(d.showPopover&&!d.matches(':popover-open'))d.showPopover()}catch(e){}void d.offsetWidth;d.classList.add('on')} // reflow, then fade in (no frame callback that could land late)
+  else if(!t){d.classList.remove('on');setSyn.h=setTimeout(()=>{if($('syn').textContent)return;try{if(d.hidePopover&&d.matches(':popover-open'))d.hidePopover()}catch(e){}},300)}};
 async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
 function autoSync(force){
   if(auto)return;
   const t=(F.sync||{})[F.me],old=force||!t||Date.now()-new Date(t)>3*6e4; // Google Calendar is read again every few minutes while the app is open
-  if(F.hasSaved&&old){auto=true;setSyn('Syncing your calendars…');
+  if(F.hasSaved&&old){auto=true;setSyn('Syncing your calendars…',force);
     mut('syncMe').then(r=>{F.sync=F.sync||{};F.sync[F.me]=new Date().toISOString();if(!(r&&r.unchanged))return reloadF()}).catch(x=>toast('Could not sync your calendars: '+(x.message||x))).finally(()=>{auto=false;setSyn('')})}
   else if(F.sharedStale){auto=true;setSyn('Updating your Shared Events calendar…');
     mut('syncShared').then(()=>{F.sharedStale=false;cacheSave()}).catch(()=>{}).finally(()=>{auto=false;setSyn('')})}
