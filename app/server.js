@@ -392,6 +392,7 @@ async function getFamily() {
   const invited = conf.filter(r => r.key.indexOf('invite:') === 0 && !have.has(r.key.slice(7))).map(r => ({ email: r.key.slice(7), at: r.value }));
   let writable = null; try { writable = JSON.parse(ls_.get(mk('writable')) || 'null'); } catch (e) {}
   return { me, profiles: prof, invited, weather: placeOf_(cv(WX_KEY)), prefs: { theme: themePick_(cv('theme:' + me)), nav: cv('nav:' + me) },
+    workWords: cv('workWords'),
     places: (() => { try { return JSON.parse(cv('places') || '[]'); } catch (e) { return []; } })(),
     where: Object.fromEntries(conf.filter(r => r.key.indexOf('where:') === 0 && r.value).map(r => { try { return [r.key.slice(6), JSON.parse(r.value)]; } catch (e) { return [r.key.slice(6), null]; } })), hasSaved: src.some(r => r.owner === me), writable,
     sharing, sync, sharedColor: sharedColor_(conf), sharedStale: !!rev && rev !== mirrored,
@@ -784,7 +785,7 @@ function importMeals(p) { // p.items = [{container, loc}] so every container can
 // Every save stamps its part of the household in Rev row 2. Open phones read that one row every few seconds and re-read only what changed.
 const AREA = { saveSources: 'family', savePrefs: 'family', saveNav: 'family', saveProfile: 'family', syncMe: 'family', saveEvent: 'family', deleteEvent: 'family', setSharedColor: 'family',
   saveSharedEvent: 'family', deleteSharedEvent: 'family', syncShared: 'family', setWeatherPlace: 'family', inviteMember: 'family',
-  setWhere: 'family', savePlaces: 'family',
+  setWhere: 'family', savePlaces: 'family', saveWorkWords: 'family',
   listOp: 'lists', boardOp: 'board', saveConfig: 'meals', saveMeal: 'meals', removeMeal: 'meals', importMeals: 'meals', saveRecipe: 'rec', deleteRecipe: 'rec' };
 const REV = { seen: null, mine: {} };
 function bump_(area) {
@@ -813,6 +814,7 @@ async function setWhere(label) {
   await cfgSet_('where:' + me_(), l ? JSON.stringify({ label: l, at: new Date().toISOString() }) : '');
   return true;
 }
+async function saveWorkWords(v) { await cfgSet_('workWords', String(v || '').slice(0, 300)); return true; }
 async function savePlaces(list) {
   const out = (Array.isArray(list) ? list : []).slice(0, 30).map(p => ({ label: String(p.label || '').trim().slice(0, 40), addr: String(p.addr || '').trim().slice(0, 120), lat: +p.lat, lon: +p.lon }))
     .filter(p => p.label && isFinite(p.lat) && isFinite(p.lon) && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180);
@@ -822,7 +824,7 @@ async function savePlaces(list) {
 // ---------- the list of everything the page may ask for ----------
 const API = { getSources, saveSources, getFamily, getHousehold, savePrefs, saveProfile, googleProfile, syncMe, getRecipes, saveRecipe, deleteRecipe,
   saveEvent, deleteEvent, setSharedColor, saveSharedEvent, deleteSharedEvent, syncShared, searchPlaces, setWeatherPlace, getForecast, getInvite, inviteMember,
-  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, revChanges, saveNav, setWhere, savePlaces };
+  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, revChanges, saveNav, setWhere, savePlaces, saveWorkWords };
 window.AUTH = AUTH;
 window.SRV = { call(fn, args) {
   const f = API[fn];
