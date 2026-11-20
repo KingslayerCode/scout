@@ -1243,6 +1243,20 @@ function autoSync(o={}){ // o.show: let the dog run (app open, coming back, pull
 }
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend)(Date.now()-lastGet>6e4?reloadF():Promise.resolve()).then(()=>autoSync({show:true})).catch(()=>{})});
 setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4); // quiet top-up while the app is in use
+/* Quiet updates: GitHub and the iPhone both keep old copies of Scout for a while. On open, and when coming back to the app,
+   ask for the newest page; if it is newer than this one, refresh the cached files and reload once (never mid-edit). */
+async function updCheck(){
+  if(updCheck.busy)return;updCheck.busy=true;
+  try{const r=await fetch(location.pathname,{cache:'no-cache'}),fresh=Date.parse(r.headers.get('last-modified')||''),mine=Date.parse(document.lastModified);
+    let seen='';try{seen=sessionStorage.getItem('fw-upd')||''}catch(e){}
+    if(fresh&&mine&&fresh>mine+1e3&&seen!==String(fresh)&&!pend&&!document.querySelector('dialog[open]')){
+      try{sessionStorage.setItem('fw-upd',String(fresh))}catch(e){} // one try per new version, so a stubborn cache can't loop
+      await Promise.all([location.pathname,'server.js','dog.png'].map(u=>fetch(u,{cache:'reload'}).catch(()=>{})));
+      location.reload();return}
+  }catch(e){}
+  updCheck.busy=false;
+}
+setTimeout(updCheck,1500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(updCheck,800)});
 /* Pull down from the top of the calendar to read Google Calendar now. It takes a long, deliberate pull: past PULL_GO, then let go. */
 const PULL_GO=150;
 (()=>{const cal=$('sec-cal'),ind=$('pull');let y0=null,x0=0,d=0;
