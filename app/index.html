@@ -121,7 +121,7 @@ dialog h2{margin:0 0 4px;font-size:20px}
 dialog input,dialog select,dialog textarea{min-width:0;max-width:100%}
 dialog h3{font-size:13px;margin:16px 0 4px;color:var(--mut);font-weight:600}
 .pgrp{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:4px 14px 14px;margin-top:12px}
-.pgrp>h3{margin:10px 0 8px;font-size:12px;letter-spacing:.6px;text-transform:uppercase}
+.pgrp>h3{margin:10px 0 8px;font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:800}
 .pgrp h4{font-size:13px;margin:14px 0 6px;color:var(--mut);font-weight:600}
 .pgrp .plr{background:var(--card)}.pgrp .f:first-child{margin-top:0}
 dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:pointer}
@@ -703,21 +703,21 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="prow"><span id="pav"></span><div class="grp"><label class="btn" for="pf">Upload photo</label><input type="file" id="pf" accept="image/*" hidden><button class="btn" id="pg">Use Google photo</button></div></div>
   <label class="f ew">Display name<input type="text" id="pn" maxlength="40"><button type="button" class="emo" data-for="pn" aria-label="Add an emoji" title="Add an emoji"></button></label>
   <h4>My event colour</h4><div id="sw"></div></section>
-  <section class="pgrp"><h3>Calendars &amp; household</h3>
-  <button class="btn big prow2" id="cals" type="button"><span>📅 Calendars, sync &amp; household</span><span aria-hidden="true">›</span></button>
-  <p class="hint" style="margin:6px 2px 0">Pick your calendars, add people, the shared colour and the weather town.</p></section>
-  <section class="pgrp"><h3>Where we are</h3>
-  <label class="tgl"><input type="checkbox" id="wshare"> Share where I am from this phone</label>
-  <p class="hint" style="margin:2px 2px 8px">A calendar event happening now shows first. Otherwise this phone shares only a place name — Home, one of the places below, or Out — never your exact location.</p>
-  <h4>Places</h4>
-  <div id="plist" class="plist"></div>
-  <div class="padd"><input type="text" id="plab" maxlength="40" placeholder="Name, e.g. Home or Dane’s Parents"><input type="text" id="paddr" maxlength="120" placeholder="Address (optional)">
-    <div class="grp"><button class="btn" id="pfind" type="button">Find address</button><button class="btn" id="phere" type="button">Use where I am now</button></div></div>
-  <p class="hint" id="pmsg"></p></section>
   <section class="pgrp"><h3>Look &amp; menu</h3>
   <div class="seg w" id="thm"><button data-t="dark">Dark</button><button data-t="light">Light</button><button data-t="system">System</button></div>
-  <h4>Menu order <small class="hint">(Profile stays last)</small></h4>
+  <h4>Menu order</h4>
   <div id="navord" class="navord"></div></section>
+  <section class="pgrp"><h3>Calendars &amp; household</h3>
+  <button class="btn big prow2" id="cals" type="button"><span>📅 Manage calendars</span><span aria-hidden="true">›</span></button>
+  </section>
+  <section class="pgrp"><h3>Location</h3>
+  <label class="tgl"><input type="checkbox" id="wshare"> Share Location</label>
+  
+  <h4>Places</h4>
+  <div id="plist" class="plist"></div>
+  <div class="padd"><input type="text" id="plab" maxlength="40" placeholder="Location Label"><input type="text" id="paddr" maxlength="120" placeholder="Address">
+    <div class="grp"><button class="btn" id="pfind" type="button">Find address</button><button class="btn" id="phere" type="button">Use where I am now</button></div></div>
+  <p class="hint" id="pmsg"></p></section>
   <section class="pgrp"><h3>Account</h3>
   <div class="prow"><span class="hint" id="pacct" style="margin:0;flex:1;min-width:0;overflow-wrap:anywhere"></span><button class="btn d" id="pso" type="button">Sign out</button></div></section>
   <p id="pm" class="hint"></p>
