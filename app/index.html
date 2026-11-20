@@ -420,21 +420,21 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
 body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .syn{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* a little running German shepherd in the bottom-right corner while calendars sync */
-#dog{inset:auto;margin:0;padding:6px 10px 4px;border:1px solid var(--line);border-radius:18px;background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-  position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));z-index:9999;color:var(--acc);box-shadow:0 8px 22px rgba(0,0,0,.35);pointer-events:none;
-  opacity:0;transform:translateY(8px) scale(.96);transition:opacity .25s,transform .25s;overflow:hidden}
+#dog{inset:auto;margin:0;padding:0;border:0;background:none;position:fixed;right:max(12px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));z-index:9999;pointer-events:none;overflow:visible;
+  display:flex;align-items:flex-end;gap:2px;--tan:color-mix(in srgb,var(--acc) 72%,#fff3dc);--sad:color-mix(in srgb,var(--acc) 22%,#14181d);
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.45)) drop-shadow(0 0 1px rgba(0,0,0,.3));opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s}
 #dog.on{opacity:1;transform:none}
-@media(max-width:720px){#dog{bottom:calc(92px + env(safe-area-inset-bottom))}}
-#dog svg{display:block;width:66px;height:42px;overflow:visible}
-#dog .bd{animation:dbob .44s ease-in-out infinite;transform-box:view-box;transform-origin:32px 22px}
-#dog .lg{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;transform-box:view-box}
-#dog .fa{transform-origin:43px 22px;animation:dfr .44s linear infinite}#dog .fb{transform-origin:43px 22px;animation:dfr .44s linear infinite -.07s;opacity:.55}
-#dog .ba{transform-origin:19px 21px;animation:dbk .44s linear infinite}#dog .bb{transform-origin:19px 21px;animation:dbk .44s linear infinite -.07s;opacity:.55}
-#dog .gr{stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-dasharray:6 9;opacity:.35;animation:dgr .44s linear infinite}
+@media(max-width:720px){#dog{bottom:calc(90px + env(safe-area-inset-bottom))}}
+#dog .dgt{font-size:13px;font-weight:700;letter-spacing:.2px;color:var(--acc);margin-bottom:9px;white-space:nowrap}
+#dog svg{display:block;width:92px;height:46px;overflow:visible}
+#dog .tn{fill:var(--tan)}#dog .sd{fill:var(--sad)}#dog .ey{fill:var(--sad)}
+#dog .bd{animation:dbob .44s ease-in-out infinite;transform-box:view-box;transform-origin:50px 24px}
+#dog .lg{fill:none;stroke:var(--tan);stroke-width:4.2;stroke-linecap:round;stroke-linejoin:round;transform-box:view-box}#dog .far{stroke:color-mix(in srgb,var(--tan) 70%,var(--sad))}
+#dog .fa{transform-origin:66px 28px;animation:dfr .44s linear infinite}#dog .fb{transform-origin:64px 28px;animation:dfr .44s linear infinite -.08s}
+#dog .ba{transform-origin:27px 28px;animation:dbk .44s linear infinite}#dog .bb{transform-origin:29px 28px;animation:dbk .44s linear infinite -.08s}
 @keyframes dbob{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-1.6px) rotate(-2deg)}50%{transform:translateY(.4px) rotate(0)}75%{transform:translateY(-1px) rotate(2deg)}}
-@keyframes dfr{0%{transform:rotate(-38deg)}50%{transform:rotate(30deg)}100%{transform:rotate(-38deg)}}
-@keyframes dbk{0%{transform:rotate(34deg)}50%{transform:rotate(-34deg)}100%{transform:rotate(34deg)}}
-@keyframes dgr{to{stroke-dashoffset:15}}
+@keyframes dfr{0%{transform:rotate(-12deg)}50%{transform:rotate(52deg)}100%{transform:rotate(-12deg)}}
+@keyframes dbk{0%{transform:rotate(-40deg)}50%{transform:rotate(26deg)}100%{transform:rotate(-40deg)}}
 @media(prefers-reduced-motion:reduce){#dog *{animation:none!important}}
 .pi{width:12px;height:12px;display:inline-block;vertical-align:-2px;margin-right:4px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pic .pi{width:14px;height:14px;margin:0}
@@ -825,15 +825,19 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="emf"><span class="hint" style="flex:1;margin:0">Tap to add it</span><button class="btn p" id="emx" type="button" autofocus>Done</button></div>
 </dialog>
 <div id="toast" role="status" aria-live="polite" popover="manual"></div>
-<div id="dog" popover="manual" aria-hidden="true"><svg viewBox="0 -3 64 43">
-  <line class="gr" x1="2" y1="39" x2="62" y2="39"/>
-  <path class="lg bb" d="M19 21 L15.5 28.5 L18.5 36.5"/><path class="lg fb" d="M43 22 L44 30 L45.5 37"/>
-  <g class="bd" fill="currentColor">
-    <path d="M15.5 18C10 18 6.5 21 5 26C4 29.5 3 31 1.5 32C5 32.5 8.5 30 10.5 27C12 24.5 14 22.5 16 22Z"/>
-    <path d="M15 17C20 14 30 12 40 11.5C45 11.2 48 14 48.5 18C49 23 46 26.5 42 26.8C38 27 35 24 30 23.5C25 23 21 25 17 24.5C13.5 24 12.5 20 15 17Z"/>
-    <path d="M39 13C41 8 44 5.5 48 5L49 -1.5L51.6 4.2L53.6 -1L54.4 5.2C56.2 6 58.2 7.4 63 9.6C63.5 10.8 62.8 11.8 61.5 12C58 12.4 55 12.6 53 13.4C50.5 15.5 48 18 46 20Z"/>
+<div id="dog" popover="manual" aria-hidden="true"><span class="dgt">…Fetching Calendars</span><svg viewBox="0 -2 100 50">
+  <path class="lg far bb" d="M29 28 L33 37 L31 44"/><path class="lg far fb" d="M64 28 L64 37 L67 44"/>
+  <g class="bd">
+    <path class="tn" d="M22 21C16 18 10 13 5.5 6.5C5 11.5 7.5 17.5 11.5 21.5C14.5 24.5 18.5 26.5 22.5 26.5Z"/>
+    <path class="sd" d="M21 20C15.5 17.2 10.4 12.6 5.5 6.5C6.6 10.8 9.4 14.6 13.4 17.6C16 19.4 18.5 20.6 21 21.2Z"/>
+    <path class="tn" d="M22 22C30 16 50 14 64 15C70 15.5 74 18 75 22C76 28 72 32 66 32C60 32 56 29 50 29C42 29 34 32 27 31C22 30 19 26 22 22Z"/>
+    <path class="tn" d="M62 17C65 11 70 8 76 8L78 1.5L81 7.5L83 2.5L84.5 9C88 10 92 12.5 97 14.5C97.5 16 96.5 17.5 95 17.6C91 18 87 18.5 84 20C80 22.5 76 25 73 27Z"/>
+    <path class="sd" d="M24 21C30 16 48 13.5 63 14.6C67 15 70 16.5 71.5 19C66 21.5 60 22.5 52 22.5C44 22.5 36 24.5 28 25.5C25 25.5 23 24 24 21Z"/>
+    <path class="sd" d="M70.5 12.5C72.5 9.4 74.4 8.1 76 8L78 1.5L81 7.5L83 2.5L84.5 9C86.4 9.6 88.4 10.5 90.4 11.6C86.6 12.2 82.6 12.8 79.4 14.4C76.2 14.6 73 13.8 70.5 12.5Z"/>
+    <path class="sd" d="M92 13.6C94 14.2 95.6 14.6 97 14.5C97.5 16 96.5 17.5 95 17.6C93.6 17.7 92.4 17.4 91.4 16.8Z"/>
+    <circle class="ey" cx="84.6" cy="12.4" r=".9"/>
   </g>
-  <path class="lg ba" d="M19 21 L15.5 28.5 L18.5 36.5"/><path class="lg fa" d="M43 22 L44 30 L45.5 37"/>
+  <path class="lg ba" d="M27 28 L20 34 L12 36"/><path class="lg fa" d="M66 28 L72 36 L79 40"/>
 </svg></div>
 <script>
 const $=id=>document.getElementById(id);
