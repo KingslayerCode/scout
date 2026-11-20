@@ -53,7 +53,7 @@ nav .sp{flex:1}
 .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 h1.t{font-size:26px;font-weight:650;margin:0 auto 0 0;letter-spacing:-.2px}
 .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.bar2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.bar2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}#sec-cal .bar2{justify-content:center}
 #ppl{display:inline-flex;gap:4px;padding:4px;border-radius:24px;background:var(--card);border:1px solid var(--line);max-width:100%;overflow-x:auto;scrollbar-width:none}#ppl::-webkit-scrollbar{display:none}.bar2 .grp{margin-left:auto}
 #ppl .pp{flex:none;display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px 0 4px;border:0;border-radius:18px;background:none;color:var(--mut);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,opacity .15s}
 #ppl .pp .pic,#ppl .pp img{flex:none;box-shadow:0 0 0 2px var(--card),0 0 0 3.5px transparent;transition:box-shadow .15s,filter .15s}
@@ -248,6 +248,7 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .lrow{display:flex;align-items:center;gap:12px}.lsub{font-size:14px}.lrow .ltrip{flex:0 1 auto;min-width:0}.lrow .ltot{margin-left:auto}
 .ltot{flex:none;display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;margin-right:2px}.ltot small{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.7}.ltot b{font-size:22px;font-variant-numeric:tabular-nums}
 .li{transition:opacity .22s ease,transform .22s ease}.li.going{opacity:0;transform:translateX(30px) scale(.97)}.li.back{opacity:0;transform:translateX(-24px)}
+.lp{cursor:pointer}.lp.set{color:var(--ink)}
 .lall{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 4px;padding:18px;border-radius:16px;background:color-mix(in srgb,var(--lc) 14%,var(--card));color:var(--lc);font-weight:700;font-size:17px}.lall span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--lc);color:#fff;font-size:16px}
 .lem{padding:28px 12px}
 .lempty{text-align:center;padding:36px 20px!important}.lempty .lbig{margin:0 auto 12px;width:64px;height:64px;border-radius:20px}.lempty .lbig svg{width:34px;height:34px}.lempty h2{margin:0 0 6px;font-size:22px}
@@ -355,7 +356,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   h1.t{font-size:22px}
   .top{margin-bottom:8px}#sec-cal .top{flex-wrap:nowrap}
   #sec-cal .top .btn{min-height:38px;height:38px;padding:0 12px;border-radius:12px}#sec-cal .top .btn.sq{width:38px;padding:0}
-  #sec-cal .bar2{margin-bottom:8px}#ppl .pp{height:34px}
+  #sec-cal .bar2{margin-bottom:8px;justify-content:center}#ppl .pp{height:34px}
   #ppl{order:-1;flex:0 1 auto;min-width:0}.bar2{flex-wrap:nowrap}
   .bar2 .grp .seg{margin-right:auto}
   .btn{min-height:44px}.btn.sq{width:44px}
@@ -697,6 +698,10 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 
 <dialog id="edlg"><div id="edc"></div></dialog>
 
+<dialog id="prdlg"><form id="prf"><h2 id="prh"></h2><p class="hint" id="prs" style="margin:2px 0 10px"></p>
+  <label class="f">Price<span class="dt"><input type="text" id="prv" inputmode="decimal" autocomplete="off" enterkeyhint="done" aria-label="Price each"></span></label>
+  <p class="hint" id="prm"></p>
+  <p class="acts"><button class="btn p" type="submit">Save</button><button class="btn" type="button" id="prclr">Use Scout’s guess</button><button class="btn" type="button" id="prx">Cancel</button></p></form></dialog>
 <dialog id="pdlg">
   <h2>Settings</h2>
   <section class="pgrp"><h3>Me</h3>
@@ -883,7 +888,7 @@ let S={sources:[],loaded:0,dirty:false},F={events:[],profiles:[],me:'',writable:
 let pend=0;const mut=(fn,...a)=>{pend++;return run(fn,...a).finally(()=>{pend--})};
 /* last-known data is kept on the device so the app paints instantly, then refreshes quietly */
 const CK='fw-cache-1';let ct;
-function cacheSave(){clearTimeout(ct);ct=setTimeout(()=>{try{localStorage.setItem(CK,JSON.stringify({WX:{place:WX.place,days:WX.days,cur:WX.cur,t:WX.t},F,L:{lists:L.lists,items:L.items},M:{meals:M.meals,cfg:M.cfg},B:B.items.filter(i=>!i._tmp)}))}catch(e){}},500)}
+function cacheSave(){clearTimeout(ct);ct=setTimeout(()=>{try{localStorage.setItem(CK,JSON.stringify({WX:{place:WX.place,days:WX.days,cur:WX.cur,t:WX.t},F,L:{lists:L.lists,items:L.items,prices:L.prices},M:{meals:M.meals,cfg:M.cfg},B:B.items.filter(i=>!i._tmp)}))}catch(e){}},500)}
 function paintCache(){
   let c=null;try{c=JSON.parse(localStorage.getItem(CK)||'null')}catch(e){}
   if(!c||!c.F||!c.F.me)return false;
@@ -1563,7 +1568,7 @@ const byC=(a,b)=>String(a.created).localeCompare(String(b.created));
 const curList=()=>L.lists.find(l=>l.id===L.cur);
 const STORES=['Costco','Walmart','Co-op'],SCOL={costco:'#e5484d',walmart:'#3e63dd','co-op':'#30a46c'},OCOL=['#f76b15','#8e4ec6','#12a594','#d6409f'];
 const lcol=l=>SCOL[String(l.name).trim().toLowerCase()]||OCOL[hsh(String(l.name).toLowerCase())%OCOL.length];
-const setLists=r=>{const ls=r.lists.filter(l=>l.kind!=='todo');L.lists=ls.sort(tripOrder);L.items=r.items.filter(i=>ls.some(l=>l.id===i.list));L.loaded=true;L.t=Date.now();if(!curList())L.cur=L.lists[0]?L.lists[0].id:''};
+const setLists=r=>{if(r.prices)L.prices=r.prices;const ls=r.lists.filter(l=>l.kind!=='todo');L.lists=ls.sort(tripOrder);L.items=r.items.filter(i=>ls.some(l=>l.id===i.list));L.loaded=true;L.t=Date.now();if(!curList())L.cur=L.lists[0]?L.lists[0].id:''};
 function tripDays(l){return l.date?Math.round((pd8(l.date)-today0())/864e5):null}
 const tripRank=l=>{const n=tripDays(l);return n==null?1:n<0?2:0};
 const tripOrder=(a,b)=>tripRank(a)-tripRank(b)||(tripRank(a)===0?String(a.date).localeCompare(b.date):tripRank(a)===2?String(b.date).localeCompare(a.date):0)||byC(a,b);
@@ -1592,7 +1597,7 @@ function drawLists(){
   const its=L.items.filter(i=>i.list===l.id),op=its.filter(i=>i.done!=='Y').sort(byC),dn=its.filter(i=>i.done==='Y').sort(byC),pct=its.length?Math.round(dn.length/its.length*100):0,w=tripWhen(l),em=lead({title:l.name});
   const sub=!its.length?'Nothing on the list yet':op.length?`${op.length} to get${dn.length?` · ${dn.length} in the cart`:''}`:'Everything is in the cart';
   const row=i=>{const d=i.done==='Y';
-    return `<div class="li${d?' done':''}"><button class="ck${d?' on':''}" data-t="${esc(i.id)}" aria-label="${d?'Put back on the list':'Got it'}">${TICK}</button><button class=tx data-t="${esc(i.id)}"><span class=ln2>${esc(i.text)}${d&&qn(i)>1?`<span class=lqx> ×${qn(i)}</span>`:''}</span><span class=lp title="Estimated price">~${money(priceOf(i.text,l.name)*qn(i))}${qn(i)>1?` · ${money(priceOf(i.text,l.name))} each`:''}</span></button>${d?'':qn(i)>1?`<span class=lqs><button class=lqb data-qm="${esc(i.id)}" aria-label="One less">−</button><b>${qn(i)}</b><button class=lqb data-qp="${esc(i.id)}" aria-label="One more">+</button></span>`:`<button class="lqb one" data-qp="${esc(i.id)}" aria-label="Add one more ${esc(i.text)}">+</button>`}<button class=ib data-x="${esc(i.id)}" aria-label="Delete item">${CROSS}</button></div>`};
+    return `<div class="li${d?' done':''}"><button class="ck${d?' on':''}" data-t="${esc(i.id)}" aria-label="${d?'Put back on the list':'Got it'}">${TICK}</button><button class=tx data-t="${esc(i.id)}"><span class=ln2>${esc(i.text)}${d&&qn(i)>1?`<span class=lqx> ×${qn(i)}</span>`:''}</span><span class="lp${(L.prices||{})[pKey(i.text,l.name)]?' set':''}" data-pr="${esc(i.id)}" title="Tap to set the real price">${(L.prices||{})[pKey(i.text,l.name)]?'':'~'}${money(priceOf(i.text,l.name)*qn(i))}${qn(i)>1?` · ${money(priceOf(i.text,l.name))} each`:''}</span></button>${d?'':qn(i)>1?`<span class=lqs><button class=lqb data-qm="${esc(i.id)}" aria-label="One less">−</button><b>${qn(i)}</b><button class=lqb data-qp="${esc(i.id)}" aria-label="One more">+</button></span>`:`<button class="lqb one" data-qp="${esc(i.id)}" aria-label="Add one more ${esc(i.text)}">+</button>`}<button class=ib data-x="${esc(i.id)}" aria-label="Delete item">${CROSS}</button></div>`};
   const sg=suggest(l);
   $('lbody').innerHTML=`<div class="card lcard" style="--lc:${lcol(l)}"><div class=lhero><div class=lhd><span class=lbig>${em?em[1]:CART}</span><div class=lti><h2>${esc(em?l.name.slice(em[0].length)||l.name:l.name)}</h2><p class=lsub>${sub}</p></div><button class=lpen data-le aria-label="Change the store or date, or delete this list">${PEN}</button></div>`+
     `<div class=lrow><button class="ltrip${w?w.n<0?' past':w.n<2?' soon':'':' none'}" data-le>${CAL}<span>${w?esc(w.long):'Plan the trip date'}</span></button>${its.length?`<div class=ltot title="Estimated total for this trip"><small>Est. total</small><b>~${money(its.reduce((a,i)=>a+priceOf(i.text,l.name)*qn(i),0))}</b></div>`:''}</div>`+
@@ -1604,22 +1609,35 @@ function drawLists(){
   if(draft)$('lin').value=draft;if(had)$('lin').focus();
 }
 /* rough prices in CAD at Walmart, scaled for the store; items we don't know are about $5. Bulk sizes make Costco items cost more each. */
-const PRICE={"milk":6.2,"chocolate milk":4.5,"almond milk":4.3,"oat milk":4.8,"cream":4.3,"whipping cream":4.8,"half and half":3.5,"sour cream":3.6,"yogurt":5.5,"greek yogurt":6.5,"butter":6.8,"margarine":4.5,"cheese":8.0,"cheddar":8.0,"mozzarella":8.0,"parmesan":7.5,"cream cheese":4.3,"cottage cheese":5.2,"feta":5.5,"cheese strings":7.0,"eggs":4.6,"egg":4.6,"bread":3.3,"buns":3.8,"bagels":3.9,"tortillas":4.3,"wraps":4.3,"english muffins":3.5,"croissants":5.5,"pita":3.5,"naan":3.8,"muffins":5.5,"cake":14.0,"cookies":4.5,"chicken breast":17.0,"chicken breasts":17.0,"chicken thighs":14.0,"chicken":15.0,"rotisserie chicken":11.5,"chicken wings":14.0,"ground beef":9.5,"beef":14.0,"steak":18.0,"roast":20.0,"ground turkey":9.0,"turkey":12.0,"pork chops":11.0,"pork":10.0,"ribs":16.0,"bacon":6.5,"ham":7.0,"sausage":6.5,"sausages":6.5,"hot dogs":4.5,"deli meat":5.5,"pepperoni":5.5,"salmon":16.0,"shrimp":12.0,"tuna":2.2,"fish":12.0,"tilapia":10.0,"meatballs":9.0,"bananas":2.0,"banana":2.0,"apples":5.0,"apple":5.0,"oranges":5.0,"grapes":6.0,"strawberries":4.5,"blueberries":5.0,"raspberries":4.5,"berries":5.0,"frozen berries":9.0,"lemons":3.5,"lemon":1.0,"limes":3.0,"lime":0.7,"avocado":1.5,"avocados":4.5,"watermelon":6.0,"pineapple":4.0,"mango":1.8,"pears":4.5,"peaches":4.5,"kiwi":3.5,"potatoes":5.5,"sweet potatoes":4.5,"onions":3.5,"onion":1.2,"green onions":1.5,"garlic":2.0,"carrots":2.5,"celery":3.0,"broccoli":3.0,"cauliflower":4.0,"lettuce":3.0,"romaine":3.5,"spinach":4.0,"salad":5.0,"kale":3.5,"cucumber":1.8,"cucumbers":4.0,"tomatoes":4.5,"tomato":1.2,"peppers":4.5,"bell pepper":1.8,"mushrooms":3.5,"zucchini":2.5,"corn":3.5,"green beans":4.0,"asparagus":5.0,"cabbage":3.5,"herbs":2.5,"cilantro":1.5,"parsley":1.5,"basil":2.5,"ginger":2.0,"jalapeno":0.5,"rice":12.0,"white rice":12.0,"brown rice":8.0,"pasta":2.5,"spaghetti":2.5,"macaroni":2.5,"noodles":3.0,"ramen":4.0,"flour":6.0,"sugar":4.5,"brown sugar":4.0,"salt":2.0,"pepper":4.5,"black pepper":4.5,"olive oil":11.0,"oil":8.0,"vegetable oil":8.0,"vinegar":3.0,"soy sauce":3.5,"honey":8.0,"maple syrup":9.0,"syrup":5.0,"peanut butter":6.0,"jam":4.5,"nutella":6.5,"cereal":5.5,"oatmeal":5.0,"oats":5.0,"granola":5.5,"crackers":4.0,"chips":4.5,"popcorn":4.0,"nuts":8.0,"almonds":9.0,"chocolate":3.5,"candy":4.0,"canned tomatoes":2.0,"diced tomatoes":2.0,"tomato paste":1.3,"tomato sauce":2.0,"pasta sauce":3.5,"salsa":4.5,"beans":1.8,"black beans":1.8,"chickpeas":1.8,"soup":2.5,"broth":3.0,"chicken broth":3.0,"stock":3.0,"coconut milk":2.5,"ketchup":4.5,"mustard":2.5,"mayo":5.5,"mayonnaise":5.5,"relish":3.0,"bbq sauce":3.5,"hot sauce":4.0,"dressing":4.0,"gravy":2.0,"spices":3.5,"seasoning":4.0,"lemon pepper seasoning":4.0,"chili powder":3.5,"paprika":3.5,"cumin":3.5,"garlic powder":3.5,"onion powder":3.5,"oregano":3.0,"thyme":3.0,"rosemary":3.0,"cinnamon":3.5,"cornstarch":3.0,"baking soda":2.0,"baking powder":3.5,"vanilla":6.0,"yeast":3.0,"frozen pizza":6.5,"pizza":8.0,"ice cream":6.0,"frozen vegetables":3.5,"frozen fries":4.5,"fries":4.5,"nuggets":10.0,"chicken nuggets":10.0,"waffles":4.0,"perogies":5.0,"lasagna":10.0,"coffee":12.0,"coffee pods":15.0,"k-cups":15.0,"tea":5.0,"juice":4.0,"orange juice":4.5,"pop":8.0,"soda":8.0,"sparkling water":7.0,"water":4.5,"bottled water":4.5,"beer":25.0,"wine":16.0,"gatorade":8.0,"energy drinks":10.0,"paper towels":14.0,"paper towel":14.0,"toilet paper":16.0,"tissues":6.0,"kleenex":6.0,"napkins":4.0,"garbage bags":12.0,"trash bags":12.0,"ziploc":5.5,"zip bags":5.5,"foil":6.0,"tin foil":6.0,"plastic wrap":5.0,"dish soap":4.5,"dishwasher pods":16.0,"dishwasher tabs":16.0,"laundry detergent":15.0,"detergent":15.0,"dryer sheets":7.0,"fabric softener":8.0,"cleaner":5.0,"bleach":4.5,"sponges":4.0,"batteries":12.0,"light bulbs":10.0,"shampoo":7.0,"conditioner":7.0,"soap":5.0,"body wash":7.0,"toothpaste":4.0,"toothbrush":4.0,"deodorant":6.0,"razors":15.0,"lotion":8.0,"sunscreen":12.0,"vitamins":14.0,"tylenol":10.0,"advil":12.0,"band-aids":5.0,"dog food":35.0,"cat food":25.0,"cat litter":18.0,"litter":18.0,"dog treats":8.0},PKEYS=Object.keys(PRICE).sort((a,b)=>b.length-a.length);
+const PRICE={"protein milk":7.5,"fairlife":7.5,"lactose free milk":6.5,"protein shake":4.0,"protein shakes":12.0,"protein bars":9.0,"protein bar":2.5,"protein powder":45.0,"sparkling water":7.0,"energy drink":3.2,"milk":6.2,"chocolate milk":4.5,"almond milk":4.3,"oat milk":4.8,"cream":4.3,"whipping cream":4.8,"half and half":3.5,"sour cream":3.6,"yogurt":5.5,"greek yogurt":6.5,"butter":6.8,"margarine":4.5,"cheese":8.0,"cheddar":8.0,"mozzarella":8.0,"parmesan":7.5,"cream cheese":4.3,"cottage cheese":5.2,"feta":5.5,"cheese strings":7.0,"eggs":4.6,"egg":4.6,"bread":3.3,"buns":3.8,"bagels":3.9,"tortillas":4.3,"wraps":4.3,"english muffins":3.5,"croissants":5.5,"pita":3.5,"naan":3.8,"muffins":5.5,"cake":14.0,"cookies":4.5,"chicken breast":17.0,"chicken breasts":17.0,"chicken thighs":14.0,"chicken":15.0,"rotisserie chicken":11.5,"chicken wings":14.0,"ground beef":9.5,"beef":14.0,"steak":18.0,"roast":20.0,"ground turkey":9.0,"turkey":12.0,"pork chops":11.0,"pork":10.0,"ribs":16.0,"bacon":6.5,"ham":7.0,"sausage":6.5,"sausages":6.5,"hot dogs":4.5,"deli meat":5.5,"pepperoni":5.5,"salmon":16.0,"shrimp":12.0,"tuna":2.2,"fish":12.0,"tilapia":10.0,"meatballs":9.0,"bananas":2.0,"banana":2.0,"apples":5.0,"apple":5.0,"oranges":5.0,"grapes":6.0,"strawberries":4.5,"blueberries":5.0,"raspberries":4.5,"berries":5.0,"frozen berries":9.0,"lemons":3.5,"lemon":1.0,"limes":3.0,"lime":0.7,"avocado":1.5,"avocados":4.5,"watermelon":6.0,"pineapple":4.0,"mango":1.8,"pears":4.5,"peaches":4.5,"kiwi":3.5,"potatoes":5.5,"sweet potatoes":4.5,"onions":3.5,"onion":1.2,"green onions":1.5,"garlic":2.0,"carrots":2.5,"celery":3.0,"broccoli":3.0,"cauliflower":4.0,"lettuce":3.0,"romaine":3.5,"spinach":4.0,"salad":5.0,"kale":3.5,"cucumber":1.8,"cucumbers":4.0,"tomatoes":4.5,"tomato":1.2,"peppers":4.5,"bell pepper":1.8,"mushrooms":3.5,"zucchini":2.5,"corn":3.5,"green beans":4.0,"asparagus":5.0,"cabbage":3.5,"herbs":2.5,"cilantro":1.5,"parsley":1.5,"basil":2.5,"ginger":2.0,"jalapeno":0.5,"rice":12.0,"white rice":12.0,"brown rice":8.0,"pasta":2.5,"spaghetti":2.5,"macaroni":2.5,"noodles":3.0,"ramen":4.0,"flour":6.0,"sugar":4.5,"brown sugar":4.0,"salt":2.0,"pepper":4.5,"black pepper":4.5,"olive oil":11.0,"oil":8.0,"vegetable oil":8.0,"vinegar":3.0,"soy sauce":3.5,"honey":8.0,"maple syrup":9.0,"syrup":5.0,"peanut butter":6.0,"jam":4.5,"nutella":6.5,"cereal":5.5,"oatmeal":5.0,"oats":5.0,"granola":5.5,"crackers":4.0,"chips":4.5,"popcorn":4.0,"nuts":8.0,"almonds":9.0,"chocolate":3.5,"candy":4.0,"canned tomatoes":2.0,"diced tomatoes":2.0,"tomato paste":1.3,"tomato sauce":2.0,"pasta sauce":3.5,"salsa":4.5,"beans":1.8,"black beans":1.8,"chickpeas":1.8,"soup":2.5,"broth":3.0,"chicken broth":3.0,"stock":3.0,"coconut milk":2.5,"ketchup":4.5,"mustard":2.5,"mayo":5.5,"mayonnaise":5.5,"relish":3.0,"bbq sauce":3.5,"hot sauce":4.0,"dressing":4.0,"gravy":2.0,"spices":3.5,"seasoning":4.0,"lemon pepper seasoning":4.0,"chili powder":3.5,"paprika":3.5,"cumin":3.5,"garlic powder":3.5,"onion powder":3.5,"oregano":3.0,"thyme":3.0,"rosemary":3.0,"cinnamon":3.5,"cornstarch":3.0,"baking soda":2.0,"baking powder":3.5,"vanilla":6.0,"yeast":3.0,"frozen pizza":6.5,"pizza":8.0,"ice cream":6.0,"frozen vegetables":3.5,"frozen fries":4.5,"fries":4.5,"nuggets":10.0,"chicken nuggets":10.0,"waffles":4.0,"perogies":5.0,"lasagna":10.0,"coffee":12.0,"coffee pods":15.0,"k-cups":15.0,"tea":5.0,"juice":4.0,"orange juice":4.5,"pop":8.0,"soda":8.0,"sparkling water":7.0,"water":4.5,"bottled water":4.5,"beer":25.0,"wine":16.0,"gatorade":8.0,"energy drinks":10.0,"paper towels":14.0,"paper towel":14.0,"toilet paper":16.0,"tissues":6.0,"kleenex":6.0,"napkins":4.0,"garbage bags":12.0,"trash bags":12.0,"ziploc":5.5,"zip bags":5.5,"foil":6.0,"tin foil":6.0,"plastic wrap":5.0,"dish soap":4.5,"dishwasher pods":16.0,"dishwasher tabs":16.0,"laundry detergent":15.0,"detergent":15.0,"dryer sheets":7.0,"fabric softener":8.0,"cleaner":5.0,"bleach":4.5,"sponges":4.0,"batteries":12.0,"light bulbs":10.0,"shampoo":7.0,"conditioner":7.0,"soap":5.0,"body wash":7.0,"toothpaste":4.0,"toothbrush":4.0,"deodorant":6.0,"razors":15.0,"lotion":8.0,"sunscreen":12.0,"vitamins":14.0,"tylenol":10.0,"advil":12.0,"band-aids":5.0,"dog food":35.0,"cat food":25.0,"cat litter":18.0,"litter":18.0,"dog treats":8.0},PKEYS=Object.keys(PRICE).sort((a,b)=>b.length-a.length);
 const STOREX={costco:1.9,walmart:1,'co-op':1.18,coop:1.18,superstore:1,'real canadian superstore':1,'no frills':.95,safeway:1.22,sobeys:1.22,'save-on':1.2,'save-on-foods':1.2,sunterra:1.35,'shoppers':1.3,'shoppers drug mart':1.3};
-function priceOf(text,store){ // shortcut: a fixed price table, not live prices; good enough for a ballpark
+const pKey=(text,store)=>String(text).toLowerCase().replace(/^\s*\d{1,2}\s*x?\s+/,'').replace(/\s+/g,' ').trim()+'|'+String(store).trim().toLowerCase();
+const PACK=/(^|\s)(case|cases|flat|flats|crate|carton of|box of|bulk)(\s|$)/; // a case of drinks is about 6 of the single size
+function priceOf(text,store,raw){ // a price someone typed in wins; otherwise a fixed table (shortcut: not live prices, a ballpark only)
+  const mine=(L.prices||{})[pKey(text,store)];if(mine&&!raw)return mine;
   const t=String(text).toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu,' '),k=PKEYS.find(k=>new RegExp('(^|\\s)'+k.replace(/[-]/g,'\\-')+'(s|es)?(\\s|$)').test(t)),
     q=Math.min(24,+((t.match(/^\s*(\d{1,2})\s*x?\s/)||t.match(/\sx\s*(\d{1,2})\s*$/)||[])[1]||1)),
-    f=STOREX[String(store).trim().toLowerCase()]??1.1;
-  const c=/^costco/.test(String(store).trim().toLowerCase())&&COSTCO[k];
-  return Math.round((c||(k?PRICE[k]:5)*f)*q*2)/2; // to the nearest 50 cents
+    st=String(store).trim().toLowerCase(),pack=PACK.test(t),costco=/^costco/.test(st),
+    f=pack?(costco?.85:1):(STOREX[st]??1.1); // a case is already bulk, so Costco's bulk bump doesn't apply twice
+  const c=costco&&!pack&&COSTCO[k];
+  return Math.round((c||(k?PRICE[k]:5)*f*(pack?6:1))*q*2)/2; // to the nearest 50 cents
 }
-const COSTCO={'rotisserie chicken':8,'eggs':8.5,'egg':8.5,'bananas':2.5,'banana':2.5,'milk':11.5};
+const COSTCO={'rotisserie chicken':8,'eggs':8.5,'egg':8.5,'bananas':2.5,'banana':2.5,'milk':7,'protein shakes':38,'protein bars':30};
 const money=v=>'$'+(v%1?v.toFixed(2):v.toFixed(0));
 const lop=(op,a)=>mut('listOp',op,a);
 async function newList(name,date){
   try{const l=await lop('addList',{name,date:date||''});L.lists.push(l);L.lists.sort(tripOrder);L.cur=l.id;drawLists();cacheSave();if(l.date)reloadF().catch(()=>{});return l}catch(e){toast(e.message||'Could not create the list')}
 }
 const qn=i=>Math.max(1,+i.qty||1);
+/* the price window: type what it really costs (each); Scout remembers it for that item at that store, for everyone */
+let PR=null;
+function openPrice(i){const l=curList();if(!l)return;PR={k:pKey(i.text,l.name),est:priceOf(i.text,l.name,true)};
+  $('prh').textContent=i.text;$('prs').textContent=`Each, at ${l.name}`;const v=(L.prices||{})[PR.k];$('prv').value=v!=null?v:'';$('prv').placeholder=PR.est.toFixed(2);
+  $('prm').textContent=v!=null?`Scout’s guess was $${PR.est.toFixed(2)}.`:`Scout’s guess: $${PR.est.toFixed(2)}`;$('prclr').hidden=v==null;openD($('prdlg'));setTimeout(()=>$('prv').focus(),50)}
+async function putPrice(v){const k=PR.k,old=(L.prices||{})[k];L.prices=Object.assign({},L.prices);if(v==null)delete L.prices[k];else L.prices[k]=v;$('prdlg').close();drawLists();cacheSave();
+  try{L.prices=await mut('savePrice',k,v);drawLists();cacheSave()}catch(e){if(old==null)delete L.prices[k];else L.prices[k]=old;drawLists();toast(e.message||'Could not save the price')}}
+$('prf').onsubmit=e=>{e.preventDefault();const v=parseFloat(String($('prv').value).replace(/[$,\s]/g,''));if(!(v>0)){$('prm').textContent='Enter a price, like 47.99';return}putPrice(Math.round(v*100)/100)};
+$('prclr').onclick=()=>putPrice(null);$('prx').onclick=()=>$('prdlg').close();
 async function addItems(listId,texts){ // "Chicken thighs x3" sets 3; adding something already on the list adds to its count instead of a second line
   const want=[];
   texts.forEach(t=>{t=String(t).trim();const m=t.match(/^(.*?\S)\s*[x×]\s*(\d{1,2})$/i);let q=1;if(m){t=m[1];q=+m[2]}if(!t)return;t=t[0].toLocaleUpperCase()+t.slice(1);
@@ -1631,7 +1649,7 @@ async function addItems(listId,texts){ // "Chicken thighs x3" sets 3; adding som
   const made=fresh.map(w=>({id:'tmp'+(++tmpN),list:listId,text:w.t,qty:w.q>1?String(w.q):'',done:'N',assignee:'',addedBy:F.me,created:new Date().toISOString()}));
   L.items.push(...made);if(listId===L.cur)drawLists();
   try{const r=await lop('addItems',{list:listId,texts:fresh.map(w=>w.t),qtys:fresh.map(w=>w.q)});
-    made.forEach((m,i)=>{const old=m.id;if(r[i]){m.id=r[i].id;document.querySelectorAll('[data-t],[data-x],[data-qp],[data-qm]').forEach(el=>{for(const a of['t','x','qp','qm'])if(el.dataset[a]===old)el.dataset[a]=m.id})}});cacheSave();return r.length+bump.length}
+    made.forEach((m,i)=>{const old=m.id;if(r[i]){m.id=r[i].id;document.querySelectorAll('[data-t],[data-x],[data-qp],[data-qm],[data-pr]').forEach(el=>{for(const a of['t','x','qp','qm','pr'])if(el.dataset[a]===old)el.dataset[a]=m.id})}});cacheSave();return r.length+bump.length}
   catch(e){L.items=L.items.filter(i=>!made.includes(i));drawLists();toast(e.message||'Could not add that');return 0}
 }
 let qT={};
@@ -1651,6 +1669,7 @@ async function setItem(it,patch){
 $('ltabs').onclick=e=>{const b=e.target.closest('[data-l]');if(b){L.cur=b.dataset.l;drawLists()}};
 $('lbody').onclick=async e=>{
   const b=e.target.closest('button');if(!b)return;const it=id=>L.items.find(i=>i.id===id);
+  const pr=e.target.closest('[data-pr]');if(pr){const i=it(pr.dataset.pr);if(i)openPrice(i);return}
   if(b.dataset.q)newList(b.dataset.q);
   else if(b.dataset.other!==undefined)editList(null,true);
   else if(b.dataset.s){addItems(L.cur,[b.dataset.s])}

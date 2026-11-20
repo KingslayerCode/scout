@@ -399,7 +399,7 @@ async function getFamily() {
     events: evs.filter(e => sel.has(e.sourceKey)).map(e => Object.assign(e, { cal: names[e.sourceKey] || '' })).concat(shr.map(sharedOut_)) };
 }
 // Lists + meals in one round trip, loaded quietly after the calendar appears so those tabs open instantly.
-async function getHousehold() { const [l, i, m, c, b] = (await manyR_(['Lists', 'ListItems', 'Meals', 'Config', 'Board'])).map(a => a.map(x => x.o)); return { lists: l, items: i, meals: m, config: cfg_(c), board: b }; }
+async function getHousehold() { const [l, i, m, c, b] = (await manyR_(['Lists', 'ListItems', 'Meals', 'Config', 'Board'])).map(a => a.map(x => x.o)); return { lists: l, items: i, meals: m, config: cfg_(c), board: b, prices: prices_((c.find(x => x.key === 'prices') || {}).value) }; }
 async function savePrefs(p) {
   if (THEMES.indexOf(p && p.theme) < 0) throw new Error('Unknown theme.');
   ls_.set('fw-theme', p.theme); await cfgSet_('theme:' + me_(), p.theme); return true;
@@ -622,7 +622,7 @@ async function inviteMember(email) {
 
 // ---------- shopping lists: one per trip, named for the store, with an optional planned date ----------
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
-async function getLists() { const [l, i] = (await manyR_(['Lists', 'ListItems'])).map(a => a.map(x => x.o)); return { lists: l.filter(x => x.kind !== 'todo'), items: i }; } // old to-do lists stay in the sheet but are not shown
+async function getLists() { const [l, i] = (await manyR_(['Lists', 'ListItems'])).map(a => a.map(x => x.o)); return { lists: l.filter(x => x.kind !== 'todo'), items: i, prices: prices_(await cfgGet_('prices')) }; } // old to-do lists stay in the sheet but are not shown
 function listOp_(op, a) {
   const me = me_(), now = new Date().toISOString(), nid = () => uuid_().slice(0, 8), t = (v, n) => clip_(v, n);
   return locked_(async () => {
@@ -787,7 +787,7 @@ function importMeals(p) { // p.items = [{container, loc}] so every container can
 const AREA = { saveSources: 'family', savePrefs: 'family', saveNav: 'family', saveProfile: 'family', syncMe: 'family', saveEvent: 'family', deleteEvent: 'family', setSharedColor: 'family',
   saveSharedEvent: 'family', deleteSharedEvent: 'family', syncShared: 'family', setWeatherPlace: 'family', inviteMember: 'family',
   setWhere: 'family', savePlaces: 'family', saveWorkWords: 'family',
-  listOp: 'lists', boardOp: 'board', saveConfig: 'meals', saveMeal: 'meals', removeMeal: 'meals', importMeals: 'meals', saveRecipe: 'rec', deleteRecipe: 'rec' };
+  listOp: 'lists', savePrice: 'lists', boardOp: 'board', saveConfig: 'meals', saveMeal: 'meals', removeMeal: 'meals', importMeals: 'meals', saveRecipe: 'rec', deleteRecipe: 'rec' };
 const REV = { seen: null, mine: {} };
 function bump_(area) {
   const v = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -816,6 +816,15 @@ async function setWhere(label) {
   return true;
 }
 async function saveWorkWords(v) { await cfgSet_('workWords', String(v || '').slice(0, 300)); return true; }
+const prices_ = v => { try { const o = JSON.parse(v || '{}'); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch (e) { return {}; } };
+async function savePrice(key, price) { // prices the household typed in: 'item|store' -> dollars each; null forgets it
+  key = String(key || '').trim().toLowerCase().slice(0, 120); if (!key || key.indexOf('|') < 0) throw new Error('Which item?');
+  const v = price == null || price === '' ? null : Math.round(+price * 100) / 100;
+  if (v != null && !(v > 0 && v <= 5000)) throw new Error('Enter a price between $0.01 and $5,000.');
+  return locked_(async () => { const all = prices_(await cfgGet_('prices')); if (v == null) delete all[key]; else all[key] = v;
+    const keys = Object.keys(all); if (keys.length > 800) keys.slice(0, keys.length - 800).forEach(k => delete all[k]); // oldest first
+    await cfgPut_('prices', JSON.stringify(all)); return all; });
+}
 async function savePlaces(list) {
   const out = (Array.isArray(list) ? list : []).slice(0, 30).map(p => ({ label: String(p.label || '').trim().slice(0, 40), addr: String(p.addr || '').trim().slice(0, 120), lat: +p.lat, lon: +p.lon }))
     .filter(p => p.label && isFinite(p.lat) && isFinite(p.lon) && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180);
@@ -825,7 +834,7 @@ async function savePlaces(list) {
 // ---------- the list of everything the page may ask for ----------
 const API = { getSources, saveSources, getFamily, getHousehold, savePrefs, saveProfile, googleProfile, syncMe, getRecipes, saveRecipe, deleteRecipe,
   saveEvent, deleteEvent, setSharedColor, saveSharedEvent, deleteSharedEvent, syncShared, searchPlaces, setWeatherPlace, getForecast, getInvite, inviteMember,
-  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, revChanges, saveNav, setWhere, savePlaces, saveWorkWords };
+  getLists, listOp, savePrice, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, revChanges, saveNav, setWhere, savePlaces, saveWorkWords };
 window.AUTH = AUTH;
 window.SRV = { call(fn, args) {
   const f = API[fn];
