@@ -592,17 +592,18 @@ async function setWeatherPlace(p) {
   if (!name || !(Math.abs(lat) <= 90) || !(Math.abs(lon) <= 180)) throw new Error('Pick a place from the list.');
   const v = { name, lat, lon }; await cfgSet_(WX_KEY, JSON.stringify(v)); return v;
 }
-async function getForecast() { // seven days, kept on this device for half an hour
+async function getForecast(fresh) { // right now plus seven days; kept on this device for half an hour unless fresh (a calendar sync)
   me_(); const p = placeOf_(await cfgGet_(WX_KEY));
   if (!p) return { place: null, days: [] };
   const key = 'scout-wx:' + p.lat + ':' + p.lon;
-  try { const c = JSON.parse(ls_.get(key) || 'null'); if (c && Date.now() - c.t < 18e5) return { place: p, days: c.days }; } catch (e) {}
-  let r; try { r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7'); } catch (e) { r = null; }
+  try { const c = JSON.parse(ls_.get(key) || 'null'); if (!fresh && c && c.cur && Date.now() - c.t < 18e5) return { place: p, days: c.days, cur: c.cur }; } catch (e) {}
+  let r; try { r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7'); } catch (e) { r = null; }
   if (!r || !r.ok) throw new Error('The forecast service is not answering right now.');
-  const d = (await r.json()).daily || {}, pop = d.precipitation_probability_max || [];
+  const j = await r.json(), d = j.daily || {}, cu = j.current || {}, pop = d.precipitation_probability_max || [];
   const days = (d.time || []).map((t, i) => ({ date: t, code: d.weather_code[i], hi: Math.round(d.temperature_2m_max[i]), lo: Math.round(d.temperature_2m_min[i]), pop: pop[i] == null ? null : pop[i] }));
-  ls_.set(key, JSON.stringify({ t: Date.now(), days }));
-  return { place: p, days };
+  const cur = cu.temperature_2m == null ? null : { temp: Math.round(cu.temperature_2m), code: cu.weather_code };
+  ls_.set(key, JSON.stringify({ t: Date.now(), days, cur }));
+  return { place: p, days, cur };
 }
 
 // ---------- adding people to the household ----------

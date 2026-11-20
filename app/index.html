@@ -104,7 +104,7 @@ textarea{resize:vertical}
 
 /* dialogs: centred card on desktop, bottom sheet on phones */
 dialog{border:0;border-radius:20px;padding:20px;width:min(480px,94vw);max-height:90vh;max-height:90dvh;overflow:auto;overflow-x:hidden;touch-action:pan-y pinch-zoom;overscroll-behavior:contain;background:var(--card);color:var(--ink);box-shadow:var(--sh)}
-html{overscroll-behavior:none}
+html{overscroll-behavior-x:none}
 dialog::backdrop{background:rgba(6,12,18,.55)}
 dialog[open]{animation:up .18s ease-out}
 @keyframes up{from{transform:translateY(24px);opacity:0}}
@@ -877,7 +877,7 @@ let S={sources:[],loaded:0,dirty:false},F={events:[],profiles:[],me:'',writable:
 let pend=0;const mut=(fn,...a)=>{pend++;return run(fn,...a).finally(()=>{pend--})};
 /* last-known data is kept on the device so the app paints instantly, then refreshes quietly */
 const CK='fw-cache-1';let ct;
-function cacheSave(){clearTimeout(ct);ct=setTimeout(()=>{try{localStorage.setItem(CK,JSON.stringify({F,L:{lists:L.lists,items:L.items},M:{meals:M.meals,cfg:M.cfg},B:B.items.filter(i=>!i._tmp)}))}catch(e){}},500)}
+function cacheSave(){clearTimeout(ct);ct=setTimeout(()=>{try{localStorage.setItem(CK,JSON.stringify({WX:{place:WX.place,days:WX.days,cur:WX.cur,t:WX.t},F,L:{lists:L.lists,items:L.items},M:{meals:M.meals,cfg:M.cfg},B:B.items.filter(i=>!i._tmp)}))}catch(e){}},500)}
 function paintCache(){
   let c=null;try{c=JSON.parse(localStorage.getItem(CK)||'null')}catch(e){}
   if(!c||!c.F||!c.F.me)return false;
@@ -885,7 +885,8 @@ function paintCache(){
   if(c.L&&c.L.lists){setLists(c.L);L.t=0}
   if(Array.isArray(c.B)){B.items=c.B;B.loaded=true;B.t=0;wbBadge()}
   if(c.M&&c.M.meals){M.meals=c.M.meals;M.cfg=c.M.cfg;M.loaded=true;M.t=0}
-  render();return true;
+  if(c.WX&&c.WX.days){Object.assign(WX,c.WX);WX.by={};WX.days.forEach(d=>WX.by[d.date]=d)}
+  render();drawWx();return true;
 }
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const SC=()=>F.sharedColor||'#f2a900';
@@ -899,7 +900,7 @@ const avp=(p,z)=>p.photo?`<img class=pic src="${esc(p.photo)}" referrerpolicy=no
 const av=(o,z)=>avp(prof(o),z);
 
 /* ---------- weather: today in the month grid, seven days behind the strip ---------- */
-let WX={place:null,days:[],by:{},t:0,err:'',busy:false};
+let WX={place:null,days:[],by:{},cur:null,t:0,err:'',busy:false};
 const WCODE=[[[0],'☀️','Clear'],[[1],'🌤️','Mainly clear'],[[2],'⛅','Partly cloudy'],[[3],'☁️','Cloudy'],[[45,48],'🌫️','Fog'],
   [[51,53,55,56,57],'🌦️','Drizzle'],[[61,63,65,66,67,80,81,82],'🌧️','Rain'],[[71,73,75,77,85,86],'🌨️','Snow'],[[95,96,99],'⛈️','Thunderstorm']];
 const wmo=c=>WCODE.find(x=>x[0].includes(c))||['','🌡️','—'];
@@ -972,25 +973,26 @@ function drawWx(){
   if(!pl){el.innerHTML=`<button class="wxs add" id=wxset type=button>＋ Add today’s weather to the calendar</button>`;return}
   const d=WX.days[0];
   if(!d){el.innerHTML=`<button class="wxs off" id=wxretry type=button>${esc(WX.err?WX.err+' Tap to retry.':'Loading the forecast…')}</button>`;return}
-  const w=wmo(d.code);
-  el.innerHTML=`<button class="wxs sky-${sky(d.code)}" id=wxopen type=button><canvas class=fx data-fx="${sky(d.code)}" aria-hidden=true></canvas>${/^(cloud|pday)$/.test(sky(d.code))?`<span class=wi>${w[1]}</span>`:''}<span class=wt>${esc(w[2])} in ${esc(pl.name.split(',')[0])} <i>· today</i></span><span class=wm>${deg(d.hi)} / ${deg(d.lo)}${d.pop!=null?' · '+d.pop+'%':''}</span></button>`;
+  const c=WX.cur,code=c?c.code:d.code,w=wmo(code),k=sky(code); // right now on the strip; highs and lows are in the popup
+  el.innerHTML=`<button class="wxs sky-${k}" id=wxopen type=button><canvas class=fx data-fx="${k}" aria-hidden=true></canvas>${/^(cloud|pday)$/.test(k)?`<span class=wi>${w[1]}</span>`:''}<span class=wt>${esc(w[2])} in ${esc(pl.name.split(',')[0])} <i>· ${c?'now':'today'}</i></span><span class=wm>${c?deg(c.temp):deg(d.hi)+' / '+deg(d.lo)}${d.pop!=null?' · '+d.pop+'%':''}</span></button>`;
   fxKick();
 }
 async function loadWx(force){
-  if(WX.busy||!F.me)return;
+  if(!F.me||!WX.place&&!F.weather)return;if(WX.busy){if(force)WX.again=true;return}
   if(!force&&WX.days.length&&Date.now()-WX.t<18e5)return;
   WX.busy=true;
-  try{const r=await run('getForecast');WX.place=r.place;WX.days=r.days||[];WX.by={};WX.days.forEach(d=>WX.by[d.date]=d);WX.err='';WX.t=Date.now()}
+  try{const r=await run('getForecast',!!force);WX.place=r.place;WX.days=r.days||[];WX.cur=r.cur||null;WX.by={};WX.days.forEach(d=>WX.by[d.date]=d);WX.err='';WX.t=Date.now()}
   catch(e){WX.err=e.message||String(e)}
-  WX.busy=false;drawWx();if(view==='month')render()
+  WX.busy=false;drawWx();if(view==='month')render();cacheSave();
+  if(WX.again){WX.again=false;loadWx(true)}
 }
 /* the town is shared by the household: follow whatever the server says, and fetch the forecast when it changed or is old */
 function syncWx(){const w=F.weather||null;if(JSON.stringify(w)!==JSON.stringify(WX.place)){WX.place=w;WX.days=[];WX.by={};WX.t=0}if(WX.place)loadWx()}
 function openWxDlg(){
-  const D=WX.days,t=D[0],k=t?sky(t.code):'cloud',dl=$('wxdlg');
+  const D=WX.days,t=D[0],c=WX.cur,k=c?sky(c.code):t?sky(t.code):'cloud',dl=$('wxdlg');
   dl.className='wxp sky-'+k;$('wxfx').dataset.fx=k;
   $('wxh').textContent=WX.place?WX.place.name.split(',')[0]:'Forecast';
-  $('wxbig').textContent=t?deg(t.hi):'';$('wxcond').textContent=t?wmo(t.code)[2]:'';
+  $('wxbig').textContent=c?deg(c.temp):t?deg(t.hi):'';$('wxcond').textContent=c?wmo(c.code)[2]:t?wmo(t.code)[2]:'';
   $('wxhl').textContent=t?`H:${deg(t.hi)}  L:${deg(t.lo)}${t.pop!=null?'  ·  '+t.pop+'% chance of rain or snow':''}`:'';
   const lo=Math.min(...D.map(d=>d.lo)),hi=Math.max(...D.map(d=>d.hi)),sp=Math.max(1,hi-lo),pc=v=>((v-lo)/sp*100).toFixed(1),
     tc=v=>v<=-10?'#7cc4ff':v<=0?'#8fd3ff':v<=10?'#9be7b4':v<=20?'#ffd166':'#ff9f43';
@@ -1227,6 +1229,7 @@ async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastG
 function autoSync(o={}){ // o.show: let the dog run (app open, coming back, pull to refresh); o.force: sync even if recent
   if(auto){if(o.show&&$('syn').textContent)setSyn($('syn').textContent,true);return}
   const t=(F.sync||{})[F.me],old=o.force||!t||Date.now()-new Date(t)>3*6e4; // Google Calendar is read again every few minutes while the app is open
+  if(old&&WX.place)loadWx(true);
   if(F.hasSaved&&old){auto=true;setSyn('Syncing your calendars…',o.show);
     mut('syncMe').then(r=>{F.sync=F.sync||{};F.sync[F.me]=new Date().toISOString();if(o.force||!(r&&r.unchanged))return reloadF()}).catch(x=>toast('Could not sync your calendars: '+(x.message||x))).finally(()=>{auto=false;setSyn('')})}
   else if(F.sharedStale){auto=true;setSyn('Updating your Shared Events calendar…');
@@ -1238,7 +1241,7 @@ setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4); // quiet top
 const PULL_GO=150;
 (()=>{const cal=$('sec-cal'),ind=$('pull');let y0=null,x0=0,d=0;
   const set=v=>{d=v;const k=Math.min(1,v/PULL_GO);ind.style.transform=`translate(-50%,${Math.min(v*.45,78)-50}px)`;ind.style.opacity=Math.min(1,v/50);ind.classList.toggle('go',v>=PULL_GO);ind.style.setProperty('--k',k)};
-  const end=()=>{if(y0==null)return;y0=null;ind.classList.add('back');if(d>=PULL_GO&&F.me)setTimeout(()=>autoSync({force:true,show:true}),250);/* after the page settles, so the dog lands in its corner */set(0)};
+  const end=()=>{if(y0==null)return;y0=null;ind.classList.add('back');if(d>=PULL_GO&&F.me){let n=0,ok=0;const w=()=>{ok=scrollY>=0?ok+1:0;if(ok>=3||++n>90)autoSync({force:true,show:true});else requestAnimationFrame(w)};setTimeout(w,120)}/* wait out the bounce, or iPhone pins the dog where the page was mid-bounce */set(0)};
   cal.addEventListener('touchstart',e=>{if(e.touches.length!==1||scrollY>0||document.querySelector('dialog[open]')||e.target.closest('dialog'))return;
     y0=e.touches[0].clientY;x0=e.touches[0].clientX;ind.classList.remove('back')},{passive:true});
   cal.addEventListener('touchmove',e=>{if(y0==null)return;const dy=e.touches[0].clientY-y0,dx=Math.abs(e.touches[0].clientX-x0);
