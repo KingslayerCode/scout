@@ -1210,7 +1210,7 @@ async function refresh(){
   F=await run('getFamily');lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();
   if(!F.hasSaved&&!asked){asked=true;openCals()}
   else if(F.writable==null&&!S.loaded)loadSources(false).catch(()=>{});
-  autoSync();
+  autoSync(true); // every app open reads Google Calendar fresh
 }
 /* keep everyone's view fresh: re-read when the person comes back to the app, and top up their own calendars when they are old */
 let lastGet=Date.now(),auto=false;
@@ -1218,15 +1218,15 @@ const setSyn=t=>{$('syn').textContent=t||'';const d=$('dog');clearTimeout(setSyn
   if(t){try{if(d.showPopover&&!d.matches(':popover-open'))d.showPopover()}catch(e){}void d.offsetWidth;d.classList.add('on')} // reflow, then fade in (no frame callback that could land late)
   else{d.classList.remove('on');setSyn.h=setTimeout(()=>{if($('syn').textContent)return;try{if(d.hidePopover&&d.matches(':popover-open'))d.hidePopover()}catch(e){}},300)}};
 async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
-function autoSync(){
+function autoSync(force){
   if(auto)return;
-  const t=(F.sync||{})[F.me],old=!t||Date.now()-new Date(t)>3*6e4; // Google Calendar is read again every few minutes while the app is open
+  const t=(F.sync||{})[F.me],old=force||!t||Date.now()-new Date(t)>3*6e4; // Google Calendar is read again every few minutes while the app is open
   if(F.hasSaved&&old){auto=true;setSyn('Syncing your calendars…');
     mut('syncMe').then(r=>{F.sync=F.sync||{};F.sync[F.me]=new Date().toISOString();if(!(r&&r.unchanged))return reloadF()}).catch(x=>toast('Could not sync your calendars: '+(x.message||x))).finally(()=>{auto=false;setSyn('')})}
   else if(F.sharedStale){auto=true;setSyn('Updating your Shared Events calendar…');
     mut('syncShared').then(()=>{F.sharedStale=false;cacheSave()}).catch(()=>{}).finally(()=>{auto=false;setSyn('')})}
 }
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend)(Date.now()-lastGet>6e4?reloadF():Promise.resolve()).then(autoSync).catch(()=>{})});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend)(a=>(a?reloadF():Promise.resolve()).then(()=>autoSync(a)))(Date.now()-lastGet>6e4).catch(()=>{})});
 setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4);
 const agoIso=iso=>{const m=Math.round((Date.now()-new Date(iso))/6e4);return m<1?'just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' days ago'};
 /* where someone is: a calendar event happening now wins; otherwise the label their phone last shared (if recent) */
