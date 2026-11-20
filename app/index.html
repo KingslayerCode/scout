@@ -418,7 +418,24 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
 
 /* shared events, household, emoji */
 body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
-.syn{font-size:12px;color:var(--mut)}.syn:empty{display:none}
+.syn{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* a little running German shepherd in the bottom-right corner while calendars sync */
+#dog{inset:auto;margin:0;padding:6px 10px 4px;border:1px solid var(--line);border-radius:18px;background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));z-index:9999;color:var(--acc);box-shadow:0 8px 22px rgba(0,0,0,.35);pointer-events:none;
+  opacity:0;transform:translateY(8px) scale(.96);transition:opacity .25s,transform .25s;overflow:hidden}
+#dog.on{opacity:1;transform:none}
+@media(max-width:720px){#dog{bottom:calc(92px + env(safe-area-inset-bottom))}}
+#dog svg{display:block;width:66px;height:42px;overflow:visible}
+#dog .bd{animation:dbob .44s ease-in-out infinite;transform-box:view-box;transform-origin:32px 22px}
+#dog .lg{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;transform-box:view-box}
+#dog .fa{transform-origin:43px 22px;animation:dfr .44s linear infinite}#dog .fb{transform-origin:43px 22px;animation:dfr .44s linear infinite -.07s;opacity:.55}
+#dog .ba{transform-origin:19px 21px;animation:dbk .44s linear infinite}#dog .bb{transform-origin:19px 21px;animation:dbk .44s linear infinite -.07s;opacity:.55}
+#dog .gr{stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-dasharray:6 9;opacity:.35;animation:dgr .44s linear infinite}
+@keyframes dbob{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-1.6px) rotate(-2deg)}50%{transform:translateY(.4px) rotate(0)}75%{transform:translateY(-1px) rotate(2deg)}}
+@keyframes dfr{0%{transform:rotate(-38deg)}50%{transform:rotate(30deg)}100%{transform:rotate(-38deg)}}
+@keyframes dbk{0%{transform:rotate(34deg)}50%{transform:rotate(-34deg)}100%{transform:rotate(34deg)}}
+@keyframes dgr{to{stroke-dashoffset:15}}
+@media(prefers-reduced-motion:reduce){#dog *{animation:none!important}}
 .pi{width:12px;height:12px;display:inline-block;vertical-align:-2px;margin-right:4px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pic .pi{width:14px;height:14px;margin:0}
 .stk{display:inline-flex;align-items:center}.stk .pic{box-shadow:0 0 0 2px var(--card)}.stk .pic+.pic{margin-left:-8px}
@@ -808,6 +825,16 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="emf"><span class="hint" style="flex:1;margin:0">Tap to add it</span><button class="btn p" id="emx" type="button" autofocus>Done</button></div>
 </dialog>
 <div id="toast" role="status" aria-live="polite" popover="manual"></div>
+<div id="dog" popover="manual" aria-hidden="true"><svg viewBox="0 -3 64 43">
+  <line class="gr" x1="2" y1="39" x2="62" y2="39"/>
+  <path class="lg bb" d="M19 21 L15.5 28.5 L18.5 36.5"/><path class="lg fb" d="M43 22 L44 30 L45.5 37"/>
+  <g class="bd" fill="currentColor">
+    <path d="M15.5 18C10 18 6.5 21 5 26C4 29.5 3 31 1.5 32C5 32.5 8.5 30 10.5 27C12 24.5 14 22.5 16 22Z"/>
+    <path d="M15 17C20 14 30 12 40 11.5C45 11.2 48 14 48.5 18C49 23 46 26.5 42 26.8C38 27 35 24 30 23.5C25 23 21 25 17 24.5C13.5 24 12.5 20 15 17Z"/>
+    <path d="M39 13C41 8 44 5.5 48 5L49 -1.5L51.6 4.2L53.6 -1L54.4 5.2C56.2 6 58.2 7.4 63 9.6C63.5 10.8 62.8 11.8 61.5 12C58 12.4 55 12.6 53 13.4C50.5 15.5 48 18 46 20Z"/>
+  </g>
+  <path class="lg ba" d="M19 21 L15.5 28.5 L18.5 36.5"/><path class="lg fa" d="M43 22 L44 30 L45.5 37"/>
+</svg></div>
 <script>
 const $=id=>document.getElementById(id);
 const run=(fn,...a)=>SRV.call(fn,a);
@@ -1201,7 +1228,9 @@ async function refresh(){
 }
 /* keep everyone's view fresh: re-read when the person comes back to the app, and top up their own calendars when they are old */
 let lastGet=Date.now(),auto=false;
-const setSyn=t=>{$('syn').textContent=t||''};
+const setSyn=t=>{$('syn').textContent=t||'';const d=$('dog');clearTimeout(setSyn.h);
+  if(t){try{if(d.showPopover&&!d.matches(':popover-open'))d.showPopover()}catch(e){}requestAnimationFrame(()=>d.classList.add('on'))}
+  else{d.classList.remove('on');setSyn.h=setTimeout(()=>{try{if(d.hidePopover&&d.matches(':popover-open'))d.hidePopover()}catch(e){}},300)}};
 async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
 function autoSync(){
   if(auto)return;
