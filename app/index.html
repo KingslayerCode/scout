@@ -715,7 +715,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <section class="pgrp"><h3>Calendars &amp; household</h3>
   <button class="btn big prow2" id="cals" type="button"><span>📅 Manage calendars</span><span aria-hidden="true">›</span></button>
   </section>
-  <section class="pgrp"><h3>Location</h3>
+  <section class="pgrp" id="locsec"><h3>Location</h3>
   <label class="tgl"><input type="checkbox" id="wshare"> Share Location</label>
   
   <h4>Places</h4>
@@ -1284,9 +1284,11 @@ const agoIso=iso=>{const m=Math.round((Date.now()-new Date(iso))/6e4);return m<1
 const WORKDEF='shift, CPO, PChAD, work, mobile unit';
 const workWords=()=>String(F.workWords||WORKDEF).split(',').map(w=>w.trim().toLowerCase()).filter(Boolean);
 const isWork=ev=>{const t=(ev.title+' '+(ev.cal||'')).toLowerCase();return workWords().some(w=>new RegExp('(^|[^\\p{L}])'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'s?($|[^\\p{L}])','u').test(t))};
+const LIVE_WHERE=false; // live location (Home, places, Out) is switched off for now: only a work shift on the calendar sets a status. true brings it all back.
 function whereOf(email){
-  const now=Date.now(),ev=(F.events||[]).filter(e=>e.owner===email&&e.allDay!=='Y'&&new Date(e.start)<=now&&new Date(e.end)>now).sort((a,b)=>new Date(a.end)-new Date(b.end))[0];
+  const now=Date.now(),evs=(F.events||[]).filter(e=>e.owner===email&&e.allDay!=='Y'&&new Date(e.start)<=now&&new Date(e.end)>now).sort((a,b)=>new Date(a.end)-new Date(b.end)),ev=LIVE_WHERE?evs[0]:evs.find(isWork);
   if(ev)return isWork(ev)?{k:'work',t:'At Work',until:ev.end}:{k:'cal',t:ev.title.replace(/^\p{Extended_Pictographic}\s*/u,''),until:ev.end};
+  if(!LIVE_WHERE)return null;
   const w=(F.where||{})[email];
   if(w&&w.label&&now-new Date(w.at)<45*6e4)return{k:w.label==='Home'?'home':w.label==='Out'?'out':'place',t:w.label};
   return null;
@@ -1388,7 +1390,7 @@ function drawProfile(){
   $('pav').innerHTML=avp(P,64);
   $('sw').innerHTML=PAL.map(c=>`<button class=sw style="background:${c}" data-c="${c}" aria-pressed="${P.color===c}" aria-label="${c}"></button>`).join('')+`<label class="sw swc" aria-pressed="${!PAL.includes(P.color)}" title="Custom colour" style="${PAL.includes(P.color)?'':'background:'+esc(P.color)}"><input type=color id=pcol value="${esc(P.color)}" aria-label="Custom colour"></label>`;
 }
-$('meb').onclick=()=>{P={...prof(F.me)};drawNavOrd();drawPlaces();$('pmsg').textContent='';$('pn').value=P.name;$('pm').textContent='';$('pacct').textContent='Signed in as '+F.me;$('pso').textContent='Sign out';delete $('pso').dataset.sure;drawProfile();applyTheme(document.documentElement.dataset.theme);openD($('pdlg'))};
+$('meb').onclick=()=>{$('locsec').hidden=!LIVE_WHERE;P={...prof(F.me)};drawNavOrd();drawPlaces();$('pmsg').textContent='';$('pn').value=P.name;$('pm').textContent='';$('pacct').textContent='Signed in as '+F.me;$('pso').textContent='Sign out';delete $('pso').dataset.sure;drawProfile();applyTheme(document.documentElement.dataset.theme);openD($('pdlg'))};
 $('sw').onclick=e=>{if(e.target.dataset.c){P.color=e.target.dataset.c;drawProfile()}};
 $('sw').oninput=e=>{if(e.target.id==='pcol'){P.color=e.target.value;$('pav').innerHTML=avp(P,64)}};
 const NAVNM={cal:'Calendar',board:'Board',meals:'Meals',lists:'Shopping',rec:'Recipes'};
@@ -1431,7 +1433,7 @@ $('wshare').onchange=()=>{const on=$('wshare').checked;try{localStorage.setItem(
 let whereSent={l:'',t:0},whereBusy=false;
 function whereTick(force){ // runs on this phone only, while Scout is open
   let on=false;try{on=localStorage.getItem('fw-where')==='1'}catch(e){}
-  if(!on||!F.me||document.hidden||whereBusy||!navigator.geolocation)return;
+  if(!LIVE_WHERE||!on||!F.me||document.hidden||whereBusy||!navigator.geolocation)return;
   const mine=whereOf(F.me);if(mine&&mine.k==='cal'&&!force)return; // the calendar already says where I am
   whereBusy=true;
   navigator.geolocation.getCurrentPosition(p=>{whereBusy=false;
