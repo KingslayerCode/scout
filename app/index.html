@@ -424,6 +424,11 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
   display:flex;align-items:flex-end;gap:2px;--tan:color-mix(in srgb,var(--acc) 72%,#fff3dc);--sad:color-mix(in srgb,var(--acc) 22%,#14181d);
   filter:drop-shadow(0 3px 5px rgba(0,0,0,.45)) drop-shadow(0 0 1px rgba(0,0,0,.3));opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s}
 #dog.on{opacity:1;transform:none}
+#pull{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 6px);z-index:60;width:38px;height:38px;border-radius:50%;background:var(--card);box-shadow:var(--sh);border:1px solid var(--line);opacity:0;pointer-events:none;transform:translate(-50%,-50px);display:grid;place-items:center}
+#pull.back{transition:transform .25s,opacity .25s}
+#pull svg{width:26px;height:26px;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#pull circle{stroke:var(--acc);stroke-width:2.2;stroke-dasharray:var(--k,0) 1;transform:rotate(-90deg);transform-origin:center;opacity:.9}
+#pull path{stroke:var(--mut);stroke-width:2.2}#pull.go path{stroke:var(--acc)}#pull.go{border-color:var(--acc)}
 @media(max-width:720px){#dog{bottom:calc(90px + env(safe-area-inset-bottom))}}
 #dog .dgt{font-size:13px;font-weight:700;letter-spacing:.2px;color:var(--acc);margin-bottom:9px;white-space:nowrap}
 #dog .dgi{position:relative;width:101px;height:50px;filter:drop-shadow(0 0 .8px color-mix(in srgb,var(--ink) 60%,transparent)) drop-shadow(0 0 3px color-mix(in srgb,var(--ink) 18%,transparent))} /* a faint rim in the text colour so it stands off any background */
@@ -820,6 +825,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="emf"><span class="hint" style="flex:1;margin:0">Tap to add it</span><button class="btn p" id="emx" type="button" autofocus>Done</button></div>
 </dialog>
 <div id="toast" role="status" aria-live="polite" popover="manual"></div>
+<div id="pull" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" pathLength="1"/><path d="M12 7v8m-3.5-3.5L12 15l3.5-3.5"/></svg></div>
 <div id="dog" popover="manual" aria-hidden="true"><span class="dgt">…Fetching Calendars</span><span class="dgi"><i></i><i></i></span></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -1210,7 +1216,7 @@ async function refresh(){
   F=await run('getFamily');lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();
   if(!F.hasSaved&&!asked){asked=true;openCals()}
   else if(F.writable==null&&!S.loaded)loadSources(false).catch(()=>{});
-  autoSync(true); // every app open reads Google Calendar fresh
+  autoSync({show:true}); // opening the app: the dog runs if this actually syncs
 }
 /* keep everyone's view fresh: re-read when the person comes back to the app, and top up their own calendars when they are old */
 let lastGet=Date.now(),auto=false;
@@ -1218,16 +1224,28 @@ const setSyn=(t,show)=>{$('syn').textContent=t||'';const d=$('dog');clearTimeout
   if(t&&show){try{if(d.showPopover&&!d.matches(':popover-open'))d.showPopover()}catch(e){}void d.offsetWidth;d.classList.add('on')} // reflow, then fade in (no frame callback that could land late)
   else if(!t){d.classList.remove('on');setSyn.h=setTimeout(()=>{if($('syn').textContent)return;try{if(d.hidePopover&&d.matches(':popover-open'))d.hidePopover()}catch(e){}},300)}};
 async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
-function autoSync(force){
-  if(auto)return;
-  const t=(F.sync||{})[F.me],old=force||!t||Date.now()-new Date(t)>3*6e4; // Google Calendar is read again every few minutes while the app is open
-  if(F.hasSaved&&old){auto=true;setSyn('Syncing your calendars…',force);
-    mut('syncMe').then(r=>{F.sync=F.sync||{};F.sync[F.me]=new Date().toISOString();if(!(r&&r.unchanged))return reloadF()}).catch(x=>toast('Could not sync your calendars: '+(x.message||x))).finally(()=>{auto=false;setSyn('')})}
+function autoSync(o={}){ // o.show: let the dog run (app open, coming back, pull to refresh); o.force: sync even if recent
+  if(auto){if(o.show&&$('syn').textContent)setSyn($('syn').textContent,true);return}
+  const t=(F.sync||{})[F.me],old=o.force||!t||Date.now()-new Date(t)>3*6e4; // Google Calendar is read again every few minutes while the app is open
+  if(F.hasSaved&&old){auto=true;setSyn('Syncing your calendars…',o.show);
+    mut('syncMe').then(r=>{F.sync=F.sync||{};F.sync[F.me]=new Date().toISOString();if(o.force||!(r&&r.unchanged))return reloadF()}).catch(x=>toast('Could not sync your calendars: '+(x.message||x))).finally(()=>{auto=false;setSyn('')})}
   else if(F.sharedStale){auto=true;setSyn('Updating your Shared Events calendar…');
     mut('syncShared').then(()=>{F.sharedStale=false;cacheSave()}).catch(()=>{}).finally(()=>{auto=false;setSyn('')})}
 }
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend)(a=>(a?reloadF():Promise.resolve()).then(()=>autoSync(a)))(Date.now()-lastGet>6e4).catch(()=>{})});
-setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend)(Date.now()-lastGet>6e4?reloadF():Promise.resolve()).then(()=>autoSync({show:true})).catch(()=>{})});
+setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4); // quiet top-up while the app is in use
+/* Pull down from the top of the calendar to read Google Calendar now. It takes a long, deliberate pull: past PULL_GO, then let go. */
+const PULL_GO=150;
+(()=>{const cal=$('sec-cal'),ind=$('pull');let y0=null,x0=0,d=0;
+  const set=v=>{d=v;const k=Math.min(1,v/PULL_GO);ind.style.transform=`translate(-50%,${Math.min(v*.45,78)-50}px)`;ind.style.opacity=Math.min(1,v/50);ind.classList.toggle('go',v>=PULL_GO);ind.style.setProperty('--k',k)};
+  const end=()=>{if(y0==null)return;y0=null;ind.classList.add('back');if(d>=PULL_GO&&F.me){autoSync({force:true,show:true})}set(0)};
+  cal.addEventListener('touchstart',e=>{if(e.touches.length!==1||scrollY>0||document.querySelector('dialog[open]')||e.target.closest('dialog'))return;
+    y0=e.touches[0].clientY;x0=e.touches[0].clientX;ind.classList.remove('back')},{passive:true});
+  cal.addEventListener('touchmove',e=>{if(y0==null)return;const dy=e.touches[0].clientY-y0,dx=Math.abs(e.touches[0].clientX-x0);
+    if(scrollY>0||dy<0||(d===0&&dx>dy)){y0=null;set(0);return} // scrolling or a sideways swipe, not a pull
+    set(Math.max(0,dy-20))},{passive:true});
+  cal.addEventListener('touchend',end,{passive:true});cal.addEventListener('touchcancel',()=>{y0=null;ind.classList.add('back');set(0)},{passive:true});
+})();
 const agoIso=iso=>{const m=Math.round((Date.now()-new Date(iso))/6e4);return m<1?'just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' days ago'};
 /* where someone is: a calendar event happening now wins; otherwise the label their phone last shared (if recent) */
 /* a shift is "At Work": its calendar's name or its title has one of the work words (editable in Profile) */
