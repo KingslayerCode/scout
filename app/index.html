@@ -13,7 +13,7 @@
 <script src="server.js"></script>
 <script>try{var t=localStorage.getItem('fw-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}var m=new Date().getMonth();document.documentElement.dataset.season=m===11||m<2?'winter':m<5?'spring':m<8?'summer':'fall'</script>
 <style>
-:root{--bg:#0f151b;--card:#17202a;--ink:#e8eef4;--mut:#93a3b4;--line:#263442;--soft:#1f2b37;--acc:#2cc4d4;--onacc:#06232a;--rail:#0a1016;--bad:#ff6b6b;--warn:#ffd23f;--sh:0 12px 40px rgba(0,0,0,.5);color-scheme:dark}
+:root{--bg:#0b1015;--card:#1b2531;--ink:#e8eef4;--mut:#93a3b4;--line:#2e3d4c;--soft:#223040;--acc:#2cc4d4;--onacc:#06232a;--rail:#0a1016;--bad:#ff6b6b;--warn:#ffd23f;--sh:0 12px 40px rgba(0,0,0,.5);color-scheme:dark}
 :root[data-theme=light]{--bg:#f1f5f9;--card:#fff;--ink:#1c2733;--mut:#62758a;--line:#e1e7ed;--soft:#eef2f6;--acc:#0e9aa9;--onacc:#fff;--rail:#16324a;--bad:#d63636;--warn:#b7791f;--sh:0 12px 40px rgba(20,40,60,.2);color-scheme:light}
 @media(prefers-color-scheme:light){:root[data-theme=system]{--bg:#f1f5f9;--card:#fff;--ink:#1c2733;--mut:#62758a;--line:#e1e7ed;--soft:#eef2f6;--acc:#0e9aa9;--onacc:#fff;--rail:#16324a;--bad:#d63636;--warn:#b7791f;--sh:0 12px 40px rgba(20,40,60,.2);color-scheme:light}}
 :root{--hol:#3dbd7d}:root[data-theme=light]{--hol:#1f9a58}@media(prefers-color-scheme:light){:root[data-theme=system]{--hol:#1f9a58}}
@@ -28,7 +28,7 @@ body:has(dialog[open]){overflow:hidden}
 /* the season (from today's date) tints the whole app by a few percent and sets the accent; --sa is for dark, --sl for light */
 html[data-season=winter]{--sa:#6cb6ff;--sl:#2f7fd8}html[data-season=spring]{--sa:#5fd39a;--sl:#1f9d6a}
 html[data-season=summer]{--sa:#ffb347;--sl:#cf7a00}html[data-season=fall]{--sa:#ff8a4c;--sl:#d9531e}
-html[data-season]{--acc:var(--sa);--bg:color-mix(in srgb,var(--sa) 5%,#0f151b);--card:color-mix(in srgb,var(--sa) 3.5%,#17202a);--soft:color-mix(in srgb,var(--sa) 5%,#1f2b37);--line:color-mix(in srgb,var(--sa) 6%,#263442);--rail:color-mix(in srgb,var(--sa) 6%,#0a1016);--wash:color-mix(in srgb,var(--sa) 15%,transparent)}
+html[data-season]{--acc:var(--sa);--bg:color-mix(in srgb,var(--sa) 5%,#0b1015);--card:color-mix(in srgb,var(--sa) 3.5%,#1b2531);--soft:color-mix(in srgb,var(--sa) 5%,#223040);--line:color-mix(in srgb,var(--sa) 6%,#2e3d4c);--rail:color-mix(in srgb,var(--sa) 6%,#0a1016);--wash:color-mix(in srgb,var(--sa) 15%,transparent)}
 html[data-season][data-theme=light]{--acc:var(--sl);--bg:color-mix(in srgb,var(--sl) 5%,#f1f5f9);--card:color-mix(in srgb,var(--sl) 2%,#fff);--soft:color-mix(in srgb,var(--sl) 8%,#eef2f6);--line:color-mix(in srgb,var(--sl) 10%,#e1e7ed);--rail:color-mix(in srgb,var(--sl) 12%,#16324a);--wash:color-mix(in srgb,var(--sl) 12%,transparent)}
 @media(prefers-color-scheme:light){html[data-season][data-theme=system]{--acc:var(--sl);--bg:color-mix(in srgb,var(--sl) 5%,#f1f5f9);--card:color-mix(in srgb,var(--sl) 2%,#fff);--soft:color-mix(in srgb,var(--sl) 8%,#eef2f6);--line:color-mix(in srgb,var(--sl) 10%,#e1e7ed);--rail:color-mix(in srgb,var(--sl) 12%,#16324a);--wash:color-mix(in srgb,var(--sl) 12%,transparent)}}
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 520px at 100% -10%,var(--wash,transparent),transparent 70%),radial-gradient(760px 480px at -12% 112%,var(--wash,transparent),transparent 70%)}
@@ -42,8 +42,8 @@ input[type=checkbox]{accent-color:var(--acc)}
 #shell{display:flex;min-height:100vh;min-height:100dvh}
 nav{position:sticky;top:0;align-self:flex-start;height:100vh;height:100dvh;width:80px;flex:none;background:var(--rail);display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 0}
 nav .sp{flex:1}
-.nb{width:66px;border:0;background:none;color:#a9bccd;border-radius:14px;padding:8px 0 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px}
-.nb svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nb{width:66px;border:0;background:none;color:#a9bccd;border-radius:14px;padding:9px 0 7px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:550}
+.nb svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nb:hover{background:rgba(255,255,255,.08)}
 .nb.on{background:var(--acc);color:var(--onacc)}
 #meav{display:block;height:28px}
@@ -124,7 +124,8 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .dows div{text-align:center;font-size:12px;color:var(--mut);padding:4px}
 .mg{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .wk{grid-template-rows:30px repeat(4,22px) 18px;border-top:1px solid var(--line)}
-.dc{grid-row:1/-1;border-left:1px solid var(--line);cursor:pointer}.dc.today{background:color-mix(in srgb,var(--acc) 8%,transparent)}.dc:first-child{border-left:0}
+.dc{grid-row:1/-1;border-left:1px solid var(--line);cursor:pointer}.dc.tcol{background:color-mix(in srgb,var(--acc) 4%,transparent)}.dc.today{background:color-mix(in srgb,var(--acc) 13%,transparent);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--acc) 55%,transparent)}
+.dows div.tdw{color:var(--acc);font-weight:700}.dc:first-child{border-left:0}
 .dc.out{background:color-mix(in srgb,var(--bg) 55%,var(--card))}.dc.out .dn{color:var(--mut)}
 .dn{border:0;background:none;width:26px;height:26px;border-radius:50%;margin:3px 0 0 5px;font-size:12px;cursor:pointer}
 .today .dn{background:var(--acc);color:var(--onacc);font-weight:700}
@@ -201,19 +202,19 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .ln:hover{background:var(--soft)}
 .ln.on{border-color:var(--lc);background:color-mix(in srgb,var(--lc) 13%,var(--card));font-weight:600}.ln.on b{background:var(--lc);color:#fff}
 .lcard{--lc:var(--acc);padding:0;max-width:780px;overflow:hidden}
-.lhero{padding:20px 22px 16px;background:linear-gradient(135deg,color-mix(in srgb,var(--lc) 30%,var(--card)),color-mix(in srgb,var(--lc) 9%,var(--card)) 78%);border-bottom:1px solid color-mix(in srgb,var(--lc) 22%,var(--line))}
+.lhero{position:relative;padding:16px 20px 14px;background:linear-gradient(135deg,color-mix(in srgb,var(--lc) 30%,var(--card)),color-mix(in srgb,var(--lc) 9%,var(--card)) 78%);border-bottom:1px solid color-mix(in srgb,var(--lc) 22%,var(--line))}
 .lin{padding:6px 22px 22px}
 .lhd{display:flex;align-items:center;gap:14px}.lti{flex:1;min-width:0}
-.lbig{flex:none;width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:30px;line-height:1;background:var(--lc);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--lc) 45%,transparent)}
+.lbig{flex:none;width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:30px;line-height:1;background:var(--lc);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--lc) 45%,transparent)}
 .lbig svg,.ltrip svg,.lpen svg,.lfold svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.lbig svg{width:30px;height:30px}
-.lhd h2{margin:0;font-size:28px;line-height:1.1;letter-spacing:-.3px;overflow-wrap:anywhere}.lsub{margin:3px 0 0;color:var(--ink);opacity:.72;font-size:15px}
+.lhd h2{margin:0;font-size:25px;line-height:1.1;letter-spacing:-.3px;overflow-wrap:anywhere}.lsub{margin:3px 0 0;color:var(--ink);opacity:.72;font-size:15px}
 .lpen{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:color-mix(in srgb,var(--card) 70%,transparent);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}.lpen svg{width:22px;height:22px}
-.ltrip{display:inline-flex;align-items:center;gap:8px;margin-top:16px;min-height:44px;padding:0 16px 0 13px;border-radius:22px;border:0;background:color-mix(in srgb,var(--card) 72%,transparent);color:var(--ink);font-size:15px;font-weight:600;cursor:pointer;max-width:100%}
+.ltrip{display:inline-flex;align-items:center;gap:8px;margin-top:12px;min-height:40px;padding:0 16px 0 13px;border-radius:22px;border:0;background:color-mix(in srgb,var(--card) 72%,transparent);color:var(--ink);font-size:15px;font-weight:600;cursor:pointer;max-width:100%}
 .ltrip svg{width:19px;height:19px;flex:none;color:var(--lc)}.ltrip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ltrip.soon{background:var(--lc);color:#fff}.ltrip.soon svg{color:#fff}
 .ltrip.none{font-weight:500;color:var(--mut);background:none;border:1.5px dashed color-mix(in srgb,var(--lc) 45%,var(--line))}.ltrip.past{color:var(--mut);font-weight:500}
-.lprog{display:flex;align-items:center;gap:12px;margin-top:14px}.lprog small{flex:none;font-size:13px;font-weight:700;opacity:.75;min-width:34px;text-align:right}
-.prog{flex:1;height:10px;border-radius:5px;background:color-mix(in srgb,var(--card) 65%,transparent);overflow:hidden}.prog i{display:block;height:100%;background:var(--lc);border-radius:5px;transition:width .3s ease}
+.lprog{position:absolute;left:0;right:0;bottom:0;margin:0}.lprog small{display:none}.lprog small{flex:none;font-size:13px;font-weight:700;opacity:.75;min-width:34px;text-align:right}
+.prog{height:5px;background:color-mix(in srgb,var(--card) 55%,transparent);overflow:hidden}.prog i{display:block;height:100%;background:var(--lc);border-radius:0 3px 3px 0;transition:width .35s ease}
 #ladd{display:flex;gap:8px;margin:16px 0 8px}#ladd input{margin:0;flex:1;min-height:52px;border-radius:16px;font-size:17px}#ladd .btn{min-height:52px;border-radius:16px;padding:0 22px;background:var(--lc);border-color:var(--lc);color:#fff;font-weight:700}
 .lsg{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.lsg::-webkit-scrollbar{display:none}.lsg span{flex:none;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mut)}.lsg .chip{min-height:36px;font-size:14px}
 .lsec{margin-top:8px}.lsec h3{display:flex;align-items:center;gap:8px;margin:16px 2px 6px;font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:var(--mut);font-weight:700}
@@ -235,8 +236,9 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .lqb{width:34px;height:34px;border:0;background:none;color:var(--ink);font-size:20px;line-height:1;cursor:pointer;border-radius:50%;display:grid;place-items:center;padding:0}
 .lqb.one{flex:none;width:34px;height:34px;border:1px dashed color-mix(in srgb,var(--mut) 50%,transparent);color:var(--mut);font-size:19px}.lqb:active{transform:scale(.9)}
 .li .tx{display:flex;flex-direction:column;gap:2px;padding:12px 0}.ln2{display:block}.lp{display:block;color:var(--mut);opacity:.8;font-size:13px;font-variant-numeric:tabular-nums;text-decoration:none}.li.done .lp{opacity:.5}
-.lrow{display:flex;align-items:flex-end;gap:12px}.lrow .ltrip{flex:0 1 auto;min-width:0}.lrow .ltot{margin-left:auto}
+.lrow{display:flex;align-items:center;gap:12px}.lsub{font-size:14px}.lrow .ltrip{flex:0 1 auto;min-width:0}.lrow .ltot{margin-left:auto}
 .ltot{flex:none;display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;margin-right:2px}.ltot small{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.7}.ltot b{font-size:22px;font-variant-numeric:tabular-nums}
+.li{transition:opacity .22s ease,transform .22s ease}.li.going{opacity:0;transform:translateX(30px) scale(.97)}.li.back{opacity:0;transform:translateX(-24px)}
 .lall{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 4px;padding:18px;border-radius:16px;background:color-mix(in srgb,var(--lc) 14%,var(--card));color:var(--lc);font-weight:700;font-size:17px}.lall span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--lc);color:#fff;font-size:16px}
 .lem{padding:28px 12px}
 .lempty{text-align:center;padding:36px 20px!important}.lempty .lbig{margin:0 auto 12px;width:64px;height:64px;border-radius:20px}.lempty .lbig svg{width:34px;height:34px}.lempty h2{margin:0 0 6px;font-size:22px}
@@ -266,7 +268,7 @@ dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:poi
 .drawer::after{content:"";position:absolute;left:50%;top:13px;width:84px;height:9px;margin-left:-42px;border-radius:6px;background:color-mix(in srgb,#7cc0ff 30%,var(--ink) 14%);opacity:.55}
 .shelf{display:grid;grid-template-columns:repeat(var(--per),minmax(0,1fr));gap:4px 12px;padding:12px 4px 0;min-height:120px;position:relative;align-items:end}
 .shelf::after{content:"";position:absolute;left:-8px;right:-8px;bottom:0;height:9px;border-radius:5px;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.05));box-shadow:0 3px 8px rgba(0,0,0,.2)}
-.shelf .none{grid-column:1/-1;text-align:center;color:var(--mut);font-size:13px;align-self:center;padding-bottom:18px}
+.shelf .none{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--mut);font-size:13px;align-self:center;padding-bottom:16px;opacity:.7}.shelf .none svg{width:58px;height:auto;opacity:.55}
 .cont{border:0;background:none;padding:0 0 13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;transition:transform .16s ease,filter .16s ease}
 .cont svg{width:100%;max-width:132px;height:auto;display:block;overflow:visible}
 .cont small{font-size:11px;color:var(--mut);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
@@ -337,12 +339,14 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   #shell{display:block}
   nav{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;height:auto;flex-direction:row;justify-content:space-around;gap:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:40;box-shadow:0 -6px 24px rgba(0,0,0,.25)}
   nav .sp{display:none}
-  .nb{flex:1;width:auto;max-width:96px;padding:6px 0 4px}
+  .nb{flex:1;width:auto;max-width:96px;padding:8px 0 6px}
   #meb{order:9}
-  #app{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  #app{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .sec{padding:12px 14px 24px}
   h1.t{font-size:22px}
-  .top{margin-bottom:8px}
+  .top{margin-bottom:8px}#sec-cal .top{flex-wrap:nowrap}
+  #sec-cal .top .btn{min-height:38px;height:38px;padding:0 12px;border-radius:12px}#sec-cal .top .btn.sq{width:38px;padding:0}
+  #sec-cal .bar2{margin-bottom:8px}#sec-cal .bar2 .btn.sq{width:38px;height:38px;min-height:38px}#ppl .pp{height:32px}
   #ppl{order:-1;flex:0 1 auto;min-width:0}.bar2{flex-wrap:nowrap}
   .bar2 .grp .seg{margin-right:auto}
   .btn{min-height:44px}.btn.sq{width:44px}
@@ -366,7 +370,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   .lwrap{grid-template-columns:minmax(0,1fr);gap:10px}
   .lnav{flex-direction:row;overflow-x:auto;position:static;gap:8px;padding:2px 2px 8px;scrollbar-width:none}.lnav::-webkit-scrollbar{display:none}
   .ln{width:auto;flex:none;border-radius:21px;padding:8px 14px;min-height:44px}
-  .lhero{padding:16px 16px 14px}.lin{padding:4px 14px 18px}.lhd h2{font-size:25px}.lbig{width:52px;height:52px}
+  .lhero{padding:14px 14px 14px}.lin{padding:4px 14px 18px}.lhd h2{font-size:25px}.lbig{width:52px;height:52px}
   .li{min-height:62px}
   .dg{grid-template-columns:minmax(0,1fr)}.dg .f{min-width:0}
   .hero .h1{font-size:24px}
@@ -400,7 +404,8 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
 
 
 .f i{font-style:normal;opacity:.7}
-@media(max-width:380px){.nb{font-size:10px}}
+@media(max-width:380px){.nb{font-size:11px}}
+@media(max-width:430px){#ppl .pp .nm{display:none}#ppl .pp{padding:0 3px}#ppl{gap:6px}}
 
 .btn:disabled{opacity:.5;cursor:default}
 
@@ -547,6 +552,9 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 .navord{display:flex;flex-direction:column;gap:6px}.nvr{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:12px;padding:4px 6px 4px 12px;min-height:48px}
 .nvi svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}.nvn{flex:1;font-weight:600}
 .nvb{width:44px;height:40px;border:0;border-radius:10px;background:var(--card);color:var(--ink);font-size:14px;cursor:pointer}.nvb:disabled{opacity:.3;cursor:default}.nvreset{align-self:flex-start;margin-top:4px}
+.skel{border-radius:22px;background:linear-gradient(100deg,var(--card) 30%,var(--soft) 50%,var(--card) 70%);background-size:220% 100%;animation:skel 1.4s ease-in-out infinite;border:1px solid var(--line)}
+.skcal{height:min(70vh,560px)}.skcard{height:360px;max-width:780px}.skunit{height:260px;max-width:900px}.skunit+.skunit{margin-top:16px}.skrc{height:220px;border-radius:18px}.skwb{height:calc(100dvh - 200px);border-radius:24px}
+@keyframes skel{from{background-position:120% 0}to{background-position:-120% 0}}@media(prefers-reduced-motion:reduce){.skel{animation:none}}
 .bdg.dot{min-width:0;width:11px;height:11px;padding:0;top:5px;left:calc(50% + 8px)}
 .nb{position:relative}.bdg{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center;pointer-events:none}.bdg[hidden]{display:none}
 .nb.flash svg{animation:wbflash 2.6s ease-in-out infinite}
@@ -577,7 +585,8 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 .wbadd input::placeholder{color:var(--wb-mut);opacity:.8}
 .wbadd input:focus{border-bottom-color:var(--blk)}
 .wbadd button{flex:none;width:46px;height:46px;border:0;border-radius:50%;background:var(--blk);color:var(--wb-face);font-size:30px;line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 5px rgba(0,0,0,.25)}
-.wbn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px;padding:14px 4px 6px}
+.wbn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px;padding:14px 4px 6px;grid-auto-flow:row dense;align-items:start}
+.note.sm{min-height:98px}.note.sm .nt{font-size:31px}.note.lg{grid-column:span 2}.note.lg .nt{-webkit-line-clamp:9}
 .note{position:relative;display:flex;flex-direction:column;gap:8px;min-height:136px;padding:20px 13px 11px;border:0;text-align:left;cursor:pointer;color:#2b2b2b;transform:rotate(var(--r,0deg));animation:wbpop .3s ease-out;
   background:linear-gradient(165deg,color-mix(in srgb,var(--nc) 88%,#fff),var(--nc) 55%,color-mix(in srgb,var(--nc) 90%,#000 10%));
   box-shadow:0 9px 14px -4px rgba(0,0,0,.28),0 2px 3px rgba(0,0,0,.14);border-radius:2px 2px 4px 14px/2px 2px 4px 14px}
@@ -623,32 +632,32 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
     <div class="grp"><button class="btn sq" id="cals" aria-label="Choose calendars">⚙</button></div></div>
   <div id="wx"></div>
   <div id="nudge"></div>
-  <div id="main"></div>
+  <div id="main"><div class="skel skcal"></div></div>
   <button class="fab" id="addev" aria-label="Add an event" title="Add an event"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
 </section>
 
 <section class="sec" id="sec-lists">
   <div class="top"><h1 class="t">Shopping</h1><button class="btn p" id="lnew">+ New list</button></div>
-  <div class="lwrap"><div class="lnav" id="ltabs" role="group" aria-label="Your lists"></div><div id="lbody"></div></div>
+  <div class="lwrap"><div class="lnav" id="ltabs" role="group" aria-label="Your lists"></div><div id="lbody"><div class="skel skcard"></div></div></div>
 </section>
 
 <section class="sec" id="sec-board">
   <div class="top"><h1 class="t">Whiteboard</h1></div>
-  <div id="wb"></div>
+  <div id="wb"><div class="skel skwb"></div></div>
 </section>
 
 <section class="sec" id="sec-meals">
   <div class="top"><h1 class="t">Meals</h1><button class="btn sq" id="mset" aria-label="Meal settings">⚙</button></div>
   <div class="mfoot"><button class="btn p big" id="mimp">+ Import meals</button></div>
   <div class="mstat" id="mstat"></div>
-  <div id="units"></div>
+  <div id="units"><div class="skel skunit"></div><div class="skel skunit"></div></div>
 </section>
 
 <section class="sec" id="sec-rec">
-  <div class="top"><h1 class="t">Recipe box</h1><button class="btn p" id="radd">+ Add recipe</button><button class="btn" id="rfw" hidden>Import FamilyWall recipes</button></div>
+  <div class="top"><h1 class="t">Recipe box</h1><button class="btn p" id="radd">+ Add recipe</button></div>
   <div class="rbar"><label class="srch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" id="rq" placeholder="Search recipes or ingredients" aria-label="Search recipes" autocomplete="off"></label>
     <div class="chips" id="rtags"></div></div>
-  <div id="rgrid"></div>
+  <div id="rgrid"><div class="skel skrc"></div><div class="skel skrc"></div><div class="skel skrc"></div></div>
 </section>
 
 
@@ -1001,7 +1010,7 @@ function weekHTML(ws,V,mon){
   const it=V.filter(x=>key(x.sb)>=k0&&key(x.sa)<=k6).map(x=>({x,s:Math.max(0,Math.round((x.sa-days[0])/864e5)),t:Math.min(6,Math.round((x.sb-days[0])/864e5))}));
   it.sort((p,q)=>q.x.bar-p.x.bar||p.s-q.s||(q.t-q.s)-(p.t-p.s)||p.x.a-q.x.a);
   const Ls=[],more=Array(7).fill(0);
-  let h='<div class=wk>'+days.map((d,i)=>`<div class="dc${d.getMonth()!==mon?' out':''}${key(d)===key(new Date())?' today':''}" style="grid-column:${i+1}" data-d="${key(d)}"><button class=dn data-d="${key(d)}" aria-label="${d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}">${d.getDate()}</button></div>`).join('');
+  let h='<div class=wk>'+days.map((d,i)=>`<div class="dc${d.getMonth()!==mon?' out':''}${key(d)===key(new Date())?' today':''}${d.getDay()===new Date().getDay()&&mon===new Date().getMonth()?' tcol':''}" style="grid-column:${i+1}" data-d="${key(d)}"><button class=dn data-d="${key(d)}" aria-label="${d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}">${d.getDate()}</button></div>`).join('');
   it.forEach(({x,s,t})=>{
     let l=0;while(Ls[l]&&Ls[l].slice(s,t+1).some(Boolean))l++;
     if(l>=4){for(let c=s;c<=t;c++)more[c]++;return}
@@ -1049,7 +1058,8 @@ function render(){
   $('title').textContent=cur.toLocaleDateString(undefined,{month:'long',year:'numeric'});
   const first=new Date(cur.getFullYear(),cur.getMonth(),1),n=Math.ceil((first.getDay()+new Date(cur.getFullYear(),cur.getMonth()+1,0).getDate())/7);
   const sea=SEASON(cur.getMonth());
-  let h='<div class=mg><div class=dows>'+DOW.map(x=>`<div>${x}</div>`).join('')+'</div>';
+  const tdy=new Date(),here=tdy.getMonth()===cur.getMonth()&&tdy.getFullYear()===cur.getFullYear();
+  let h='<div class=mg><div class=dows>'+DOW.map((x,i)=>`<div${here&&i===tdy.getDay()?' class=tdw':''}>${x}</div>`).join('')+'</div>';
   for(let w=0;w<n;w++)h+=weekHTML(new Date(cur.getFullYear(),cur.getMonth(),1-first.getDay()+7*w),V,cur.getMonth());
   $('main').innerHTML=`<div class="mgf ${sea}">${deco(sea)}${h}</div></div>`;fxKick();
 }
@@ -1303,106 +1313,6 @@ $('pso').onclick=e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=
 
 /* ---------- recipe box ---------- */
 let R={list:[],loaded:false,q:'',tag:'',t:0},E={},RC=null;
-const FWU=t=>'https:\x2f\x2fapi.familywall.com/DPl/recipeSharing?Tv='+t+'&Ns=true';
-/* shortcut: one-off import of five shared FamilyWall recipes, delete this block and the #rfw button once they are in */
-const FW=[
-['IStT53Lm','Beef Chili','20 min prep, 6 h cook','6',`2lbs / 900g of ground beef
-2 x 796mL cans of diced tomatoes
-2 x 540mL cans of black beans
-1x 156mL can of tomato paste
-1 tbsp minced garlic
-1 tbsp ground cumin
-3 tbsp chili powder
-1 tbsp paprika
-2 tsp garlic powder
-2 tsp onion powder
-2 tsp salt
-2 tsp black pepper`,`Brown ground beef over medium-high heat.
-Drain the fat and add beef to the crock pot.
-Drain + rinse 2 cans black beans and add them.
-Add, diced tomatoes, tomato paste, minced garlic, and seasonings.
-Stir everything well.
-Cook on HIGH for 2½–3 hours or LOW for 6 hours.
-Stir once around halfway.
-Stir well and divide into 6 containers.`],
-['8lz7wwFw','Classic Paprika Chicken and Rice','45 min prep, 25 min cook','6',`3lbs / 1.36kg boneless, skinless chicken breast
-3 cups uncooked white rice
-1 1/2 tbsp olive oil
-3 tbsp lemon juice
-1 tbsp paprika
-2 tsp onion powder
-1 1/2 tsp salt
-1 tsp black pepper
-1 tsp thyme
-1 tsp parsley
-1/2 tsp rosemary`,`Cut chicken into 1-inch pieces.
-Mix all seasoning ingredients in a small bowl.
-Toss chicken with olive oil, lemon juice, and the entire seasoning blend.
-Marinate in the fridge for 15–30 minutes.
-Preheat oven to 400°F / 200°C. Line 2 baking trays with parchment paper.
-Cook white rice according to package instructions.
-Spread chicken across both trays in a single layer, leaving space between pieces.
-Bake for 15–20 minutes, turning halfway, until chicken reaches 74°C / 165°F.
-Fluff rice and divide evenly into 6 containers.
-Add chicken and spoon the cooked pan juices over the chicken and rice.`],
-['PNJ3iEoO','Honey Garlic Chicken Thighs and Rice','15 min prep, 45 min cook','6',`12 boneless, skinless chicken thighs
-3 tbsp cornstarch
-1 1/2 tsp salt
-1 1/2 tsp black pepper
-3 tbsp olive oil
-3 tbsp butter
-4 tbsp minced garlic
-1/2 cup + 1 tbsp honey
-1 cup chicken broth
-3 tbsp soy sauce
-3 cups uncooked white rice`,`Preheat oven to 425°F / 220°C. Line a baking sheet with parchment paper.
-Cook white rice according to package instructions.
-Mix cornstarch, salt, and pepper. Coat chicken, then toss with vegetable oil.
-Spread chicken across both trays, leaving space between pieces.
-Bake for 20–25 minutes, until the thickest part reaches 74°C / 165°F.
-Meanwhile, melt butter in a large skillet over medium-low heat. Add minced garlic and stir for 30 seconds.
-Add honey, chicken broth, and soy sauce. Stir well.
-Simmer uncovered for 5–10 minutes, stirring occasionally, until sauce slightly thickens.
-Add cooked chicken and turn to coat in the sauce.
-Divide rice and chicken into 6 containers. Spoon remaining sauce over chicken and sprinkle with green onion.`],
-['VoAi6wR1','Lemon Pepper Chicken and Rice','45 min prep, 25 min cook','6',`3lbs / 1.36kg boneless, skinless chicken breast
-3 cups uncooked white rice
-1 1/2 tbsp olive oil
-3 tbsp lemon pepper seasoning
-1 1/2 garlic powder
-3 tbsp lemon juice`,`Cut chicken into 1-inch pieces.
-Toss chicken with olive oil, lemon pepper seasoning, garlic powder, and lemon juice.
-Marinate in the fridge for 15–30 minutes.
-Preheat oven to 400°F / 200°C. Line 2 baking trays with parchment paper.
-Cook white rice according to package instructions.
-Spread chicken across both trays in a single layer, leaving space between pieces.
-Bake for 15–20 minutes, turning halfway, until chicken reaches 74°C / 165°F.
-Fluff rice and divide evenly into 6 containers.
-Add chicken and spoon any pan juices over it. Finish with extra lemon juice.`],
-['5b3p1ivv','Peri Peri Chicken Thighs and Rice','15 min prep, 45 min cook','6',`12 boneless, skinless chicken thighs
-3 cups uncooked white rice
-3 tbsp olive oil
-3 tbsp lemon juice
-2 tbsp white vinegar
-2 tbsp minced garlic
-2 tbsp paprika
-2 tsp oregano
-2 tsp onion powder
-1 1/2 tsp salt
-1 tsp black pepper
-1 tsp cayenne pepper
-1 tbsp honey`,`Mix all marinade ingredients in a large bowl.
-Add chicken thighs and toss until thoroughly coated.
-Cover and marinate in the fridge for at least 30 minutes, preferably 2–4 hours.
-Preheat oven to 425°F / 220°C. Line 2 baking trays with parchment paper.
-Cook white rice according to package instructions.
-Spread chicken across both trays in a single layer, leaving space between pieces.
-Bake for 25–30 minutes, turning halfway, until the thickest part reaches at least 74°C / 165°F.
-Rest chicken for 5 minutes.
-Fluff rice and divide evenly into 6 containers.
-Add 2 thighs per container and spoon the cooked pan juices over the chicken and rice.`]];
-let fwTried=0;
-const fwLeft=()=>FW.filter(f=>!R.list.some(r=>r.source===FWU(f[0])));
 const tagsOf=r=>r.tags.split(',').map(t=>t.trim()).filter(Boolean);
 const meta=r=>[r.time,r.servings&&(/\D/.test(r.servings)?r.servings:r.servings+' servings')].filter(Boolean).map(esc).join(' · ');
 const lead=r=>/^(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)\s*/u.exec(r.title||'');  /* a recipe titled "🍝 Pasta" shows its own emoji where a photo would be */
@@ -1431,7 +1341,6 @@ function drawRecipes(){
   $('rgrid').innerHTML=L.length?keys.map(k=>{const open=filt||!rfold.has(k);
     return `<section class=rsec><button class=rsh data-g="${esc(k)}" aria-expanded="${open}"><span>${esc(k===''?'Other':CATS.includes(k)?k[0].toUpperCase()+k.slice(1):lab[k])}</span><b>${grp[k].length}</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>${open?`<div class=rg>${grp[k].map(card).join('')}</div>`:''}</section>`}).join(''):
     `<p class=empty>${R.list.length?'No recipes match.':'Your recipe box is empty. Add a recipe or import one from a link.'}</p>`;
-  const n=fwLeft().length;$('rfw').hidden=!R.loaded||!(n===FW.length||(fwTried&&n));
 }
 const CXS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>';
 let RT='ing';
@@ -1494,12 +1403,6 @@ function shrink(file,cb){const fr=new FileReader();fr.onload=()=>{const im=new I
   c.getContext('2d').drawImage(im,0,0,c.width,c.height);let q=.7,d=c.toDataURL('image/jpeg',q);
   while(d.length>44000&&q>.3){q-=.1;d=c.toDataURL('image/jpeg',q)}cb(d)};im.src=fr.result};fr.readAsDataURL(file)}
 $('radd').onclick=()=>openEditor();
-$('rfw').onclick=async()=>{fwTried=1;const b=$('rfw'),todo=fwLeft();b.disabled=true;let n=0;
-  try{for(const f of todo){b.textContent=`Importing ${++n} of ${todo.length}…`;
-      await saveR({title:f[1],source:FWU(f[0]),time:f[2],servings:f[3],tags:'Meal prep',ingredients:f[4],steps:f[5]})}
-    toast(`Added ${todo.length} recipes`)}
-  catch(e){toast('Could not finish: '+(e.message||e))}
-  b.disabled=false;b.textContent='Import FamilyWall recipes';drawRecipes()};
 $('rimp').onclick=async()=>{const u=$('rurl').value.trim();if(!u)return;$('rms').textContent='Importing…';
   try{const d=await run('importRecipe',u);
     $('rti').value=d.title;$('rtm').value=d.time;$('rsv').value=d.servings;$('rtg').value=d.tags;$('rig').value=d.ingredients;$('rst').value=d.steps;
@@ -1556,7 +1459,7 @@ function drawLists(){
   const sg=suggest(l);
   $('lbody').innerHTML=`<div class="card lcard" style="--lc:${lcol(l)}"><div class=lhero><div class=lhd><span class=lbig>${em?em[1]:CART}</span><div class=lti><h2>${esc(em?l.name.slice(em[0].length)||l.name:l.name)}</h2><p class=lsub>${sub}</p></div><button class=lpen data-le aria-label="Change the store or date, or delete this list">${PEN}</button></div>`+
     `<div class=lrow><button class="ltrip${w?w.n<0?' past':w.n<2?' soon':'':' none'}" data-le>${CAL}<span>${w?esc(w.long):'Plan the trip date'}</span></button>${its.length?`<div class=ltot title="Estimated total for this trip"><small>Est. total</small><b>~${money(its.reduce((a,i)=>a+priceOf(i.text,l.name)*qn(i),0))}</b></div>`:''}</div>`+
-    (its.length?`<div class=lprog><div class=prog aria-hidden="true"><i style="width:${pct}%"></i></div><small>${dn.length} of ${its.length}</small></div>`:'')+`</div><div class=lin>`+
+    (its.length?`<div class=lprog><div class=prog aria-hidden="true"><i style="width:${pct}%"></i></div></div>`:'')+`</div><div class=lin>`+
     `<form id=ladd><input type=text id=lin placeholder="Add an item" autocapitalize=sentences autocomplete=off enterkeyhint=done aria-label="New item">${emoBtn('lin')}<button class="btn p">Add</button></form>`+
     (sg.length?`<div class=lsg aria-label="Often bought"><span>Often</span>${sg.map(t=>`<button class=chip data-s="${esc(t)}">+ ${esc(t)}</button>`).join('')}</div>`:'')+
     (op.length?`<div class=lsec><h3>To get<b>${op.length}</b></h3>${op.map(row).join('')}</div>`:its.length?`<div class=lall><span>✓</span>Everything is in the cart</div>`:`<p class="empty lem">Nothing here yet. Add your first item above.</p>`)+
@@ -1601,6 +1504,9 @@ function setQty(it,q){ // the count changes at once; the save waits a moment so 
   clearTimeout(qT[it.id]);qT[it.id]=setTimeout(()=>lop('setItem',{id:it.id,qty:qn(it)}).catch(()=>{toast('Could not save that change');L.t=0;loadLists()}),600);
 }
 async function setItem(it,patch){
+  const row=document.querySelector(`#lbody .li [data-t="${CSS.escape(String(it.id))}"]`),li=row&&row.closest('.li');
+  if(li&&(li.classList.contains('going')||li.classList.contains('back')))return; // a second tap while it slides away
+  if(li&&!FXSTILL.matches){li.classList.add(patch.done?'going':'back');await new Promise(r=>setTimeout(r,230))}
   it.done=patch.done?'Y':'N';drawLists();cacheSave();
   if(String(it.id).startsWith('tmp'))return;
   try{await lop('setItem',{id:it.id,...patch})}catch(e){toast('Could not save that change');L.t=0;loadLists()}
@@ -1700,7 +1606,8 @@ function drawBoard(){
     return `<div class="wbt${i.done==='Y'?' done':''}${a?' pc':''}" style="${a?`--pc:${esc(a.color)};`:''}--r:${((h>>3)%5-2)*.35}deg"><button class=wbck data-wc="${esc(i.id)}" aria-label="${i.done==='Y'?'Mark as not done':'Mark as done'}"><svg viewBox="0 0 32 32"><path d="M16 3.5c7.2-.4 12.7 5.1 12.3 12.2-.4 7.3-6 12.6-12.8 12.3C8.300 27.700 3.200 22.600 3.600 15.800 4 9.200 9.200 3.800 16 3.500z"/><path class=cm d="M8.500 16.500l5.500 6L27 6"/></svg></button>`+
       `<button class=wbtx data-we="${esc(i.id)}"><span class=wbw>${esc(i.text)}</span>${m.length?`<span class=wbm>${m.join(' · ')}</span>`:''}</button></div>`};
   const note=i=>{const h=hsh(i.id),by=prof(i.by),dt=i.created?new Date(i.created):null;
-    return `<button class=note data-nn="${esc(i.id)}" style="--nc:${NOTEC[i.color]||NOTEC.yellow};--pin:${PINS[h%PINS.length]};--r:${((h>>4)%7-3)*.9}deg"><span class=nt>${esc(i.text)}</span><span class=nby>— ${esc(by.name.split(' ')[0])}${dt&&!isNaN(dt)?' · '+dt.toLocaleDateString(undefined,{month:'short',day:'numeric'}):''}</span></button>`};
+    const ln=i.text.length+(i.text.match(/\n/g)||[]).length*18;
+    return `<button class="note${ln<=22?' sm':ln>=110?' lg':''}" data-nn="${esc(i.id)}" style="--nc:${NOTEC[i.color]||NOTEC.yellow};--pin:${PINS[h%PINS.length]};--r:${((h>>4)%7-3)*.9}deg"><span class=nt>${esc(i.text)}</span><span class=nby>— ${esc(by.name.split(' ')[0])}${dt&&!isNaN(dt)?' · '+dt.toLocaleDateString(undefined,{month:'short',day:'numeric'}):''}</span></button>`};
   $('wb').innerHTML=`<div class=wbd><div class=wbs><h2 class=wbh>To do${UL}<span class=wbc>${open.length?open.length+' left':''}</span><button type=button class="wbwipe${dn.length?'':' off'}" data-wclr aria-label="Wipe the ticked to-dos off the board"><svg viewBox="0 0 24 24"><path d="M4 16l8-9 7 6-5 6H8z"/><path d="M8 19h12"/></svg>Wipe${dn.length?`<b>${dn.length}</b>`:''}</button></h2>`+
     open.concat(dn).map(row).join('')+
     `<form class=wbadd id=wbadd><input type=text id=wbin placeholder="Write a to-do…" maxlength=140 autocomplete=off autocapitalize=sentences enterkeyhint=done aria-label="New to-do"><button aria-label="Add to-do">+</button></form>`+
@@ -1859,6 +1766,9 @@ const iceSVG=(k,t,id)=>{
 };
 /* snowflake badge, top right: plain while frozen, with a ring that fills as it thaws */
 const badge=(k,t)=>k<=0?'':`<g transform="translate(111 6)"><circle r="10.5" fill="#0e2237" stroke="#8fd0ff" stroke-width="1.2"/>`+(t&&!t.done?`<circle r="8.2" fill="none" stroke="rgba(143,208,255,.25)" stroke-width="2"/>`+(t.p>.02?`<circle r="8.2" fill="none" stroke="#8fd0ff" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="${(51.5*t.p).toFixed(1)} 52" transform="rotate(-90)"/>`:''):'')+`<use href="#snow" x="-6.5" y="-6.5" width="13" height="13" style="color:#cfeaff"/></g>`;
+const FOODE=[[/chicken|wing|thigh|turkey/i,'🍗'],[/beef|steak|burger|meatball|chili/i,'🥩'],[/pork|ham|bacon|sausage/i,'🥓'],[/fish|salmon|tuna|shrimp|cod/i,'🐟'],
+  [/pasta|spaghetti|lasagn|mac/i,'🍝'],[/soup|stew|broth/i,'🍲'],[/curry/i,'🍛'],[/pizza/i,'🍕'],[/taco|burrito|fajita/i,'🌮'],[/egg|breakfast/i,'🍳'],[/rice/i,'🍚']];
+const foodE=n=>(FOODE.find(([r])=>r.test(n))||[0,'🍱'])[1];
 function cSVG(m,s,ice,th){
   const id='cw'+cnum(m.container);
   return `<svg viewBox="0 0 120 92" aria-hidden="true"><path class="gl" d="${BODY}"/>`+
@@ -1868,13 +1778,13 @@ function cSVG(m,s,ice,th){
     `<rect x="6" y="8" width="108" height="17" rx="5" fill="#4a5663"/><rect x="6" y="8" width="108" height="6" rx="3" fill="rgba(255,255,255,.13)"/><rect x="2" y="12" width="9" height="14" rx="3" fill="#2d3640"/><rect x="109" y="12" width="9" height="14" rx="3" fill="#2d3640"/>`+
 
     iceSVG(ice,th,id)+
-    `<rect x="38" y="42" width="44" height="27" rx="9" fill="#111a22" opacity=".93"/><text x="60" y="62" text-anchor="middle" class="n${s.cls}" font-size="19" font-weight="700">${cnum(m.container)}</text>`+badge(ice,th)+`</svg>`;
+    `<text x="22" y="24" font-size="19" text-anchor="middle">${foodE(m.name)}</text><rect x="38" y="42" width="44" height="27" rx="9" fill="#111a22" opacity=".93"/><text x="60" y="62" text-anchor="middle" class="n${s.cls}" font-size="19" font-weight="700">${cnum(m.container)}</text>`+badge(ice,th)+`</svg>`;
 }
 const contHTML=m=>{const s=status(m),t=thawOf(m),th=t&&!t.done,ice=m.loc==='freezer'?1:th?1-t.p:0,tt=th?'thawing, about '+fmtH(t.left)+' left':'';
   return `<button class="cont ${s.cls}${th?' melt':''}${M.cur===m.id?' sel':''}${M.flash===m.id?' land':''}" data-m="${esc(m.id)}" aria-label="${esc(m.container+', '+m.name+'. '+s.txt+(tt?'. '+tt:''))}" title="${esc(m.name+' · '+s.txt+(tt?' · '+tt:''))}">${cSVG(m,s,ice,t)}<small>${esc(m.name)}</small></button>`};
 function unitHTML(loc){
   const n=per(),L2=M.meals.filter(m=>m.loc===loc).sort(byExp),rows=Math.max(2,Math.ceil(L2.length/n));let sh='';
-  for(let r=0;r<rows;r++)sh+=`<div class=shelf style="--per:${n}">${L2.slice(r*n,(r+1)*n).map(contHTML).join('')||(r===0&&!L2.length?`<span class=none>Nothing in the ${loc} yet</span>`:'')}</div>`;
+  for(let r=0;r<rows;r++)sh+=`<div class=shelf style="--per:${n}">${L2.slice(r*n,(r+1)*n).map(contHTML).join('')||(r===0&&!L2.length?`<span class=none><svg viewBox="0 0 120 92" aria-hidden="true"><path d="${BODY}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5"/><rect x="6" y="8" width="108" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5"/></svg>Nothing in the ${loc} yet</span>`:'')}</div>`;
   const nm=loc==='fridge'?'Fridge':'Freezer';
   return `<section class="unit ${loc}" data-loc="${loc}"><canvas class=fx data-fx="${loc}" aria-hidden=true></canvas><h2>${nm}<span class=tag>${tfmt(loc==='fridge'?FT():ZT())}</span><span class=cnt>${L2.length} meal${L2.length===1?'':'s'}</span></h2>${sh}${loc==='freezer'?'<div class=drawer aria-hidden=true></div>':''}<div class=dropmsg aria-hidden=true>Drop to move to the ${nm.toLowerCase()}</div></section>`;
 }
