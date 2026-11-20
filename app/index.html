@@ -120,6 +120,10 @@ dialog.sheet>.rvw{display:flex;flex-direction:column;min-height:0;flex:1 1 auto}
 dialog h2{margin:0 0 4px;font-size:20px}
 dialog input,dialog select,dialog textarea{min-width:0;max-width:100%}
 dialog h3{font-size:13px;margin:16px 0 4px;color:var(--mut);font-weight:600}
+.pgrp{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:4px 14px 14px;margin-top:12px}
+.pgrp>h3{margin:10px 0 8px;font-size:12px;letter-spacing:.6px;text-transform:uppercase}
+.pgrp h4{font-size:13px;margin:14px 0 6px;color:var(--mut);font-weight:600}
+.pgrp .plr{background:var(--card)}.pgrp .f:first-child{margin-top:0}
 dialog label.l{display:flex;align-items:center;gap:10px;padding:5px 0;cursor:pointer}
 #toast{inset:auto;margin:0;border:0;overflow:visible;position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:22px;z-index:99;box-shadow:var(--sh);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
@@ -694,26 +698,28 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 <dialog id="edlg"><div id="edc"></div></dialog>
 
 <dialog id="pdlg">
-  <h2>My profile</h2>
-  <div class="prow" style="margin-top:10px"><span id="pav"></span><div class="grp"><label class="btn" for="pf">Upload photo</label><input type="file" id="pf" accept="image/*" hidden><button class="btn" id="pg">Use Google photo</button></div></div>
+  <h2>Settings</h2>
+  <section class="pgrp"><h3>Me</h3>
+  <div class="prow"><span id="pav"></span><div class="grp"><label class="btn" for="pf">Upload photo</label><input type="file" id="pf" accept="image/*" hidden><button class="btn" id="pg">Use Google photo</button></div></div>
   <label class="f ew">Display name<input type="text" id="pn" maxlength="40"><button type="button" class="emo" data-for="pn" aria-label="Add an emoji" title="Add an emoji"></button></label>
-  <h3>Event colour</h3><div id="sw"></div>
-  <h3>Appearance</h3>
-  <div class="seg w" id="thm"><button data-t="dark">Dark</button><button data-t="light">Light</button><button data-t="system">System</button></div>
-  <h3>Menu order <small class="hint">(Profile stays last)</small></h3>
-  <div id="navord" class="navord"></div>
-  <h3>Calendars</h3>
+  <h4>My event colour</h4><div id="sw"></div></section>
+  <section class="pgrp"><h3>Calendars &amp; household</h3>
   <button class="btn big prow2" id="cals" type="button"><span>📅 Calendars, sync &amp; household</span><span aria-hidden="true">›</span></button>
-  <h3>Where we are</h3>
+  <p class="hint" style="margin:6px 2px 0">Pick your calendars, add people, the shared colour and the weather town.</p></section>
+  <section class="pgrp"><h3>Where we are</h3>
   <label class="tgl"><input type="checkbox" id="wshare"> Share where I am from this phone</label>
-  <p class="hint" style="margin:4px 0 8px">Your calendar comes first: during an event it shows that event. Otherwise this phone checks its location while Scout is open and shares only a name — Home, one of your places, or Out. Your exact location is never saved.</p>
-  <label class="f">Calendar words that mean “At Work”<input type="text" id="wwords" maxlength="300" placeholder="shift, CPO, PChAD, work"></label>
+  <p class="hint" style="margin:2px 2px 8px">A calendar event happening now shows first. Otherwise this phone shares only a place name — Home, one of the places below, or Out — never your exact location.</p>
+  <h4>Places</h4>
   <div id="plist" class="plist"></div>
   <div class="padd"><input type="text" id="plab" maxlength="40" placeholder="Name, e.g. Home or Dane’s Parents"><input type="text" id="paddr" maxlength="120" placeholder="Address (optional)">
     <div class="grp"><button class="btn" id="pfind" type="button">Find address</button><button class="btn" id="phere" type="button">Use where I am now</button></div></div>
-  <p class="hint" id="pmsg"></p>
-  <h3>Account</h3>
-  <div class="prow"><span class="hint" id="pacct" style="margin:0;flex:1;min-width:0;overflow-wrap:anywhere"></span><button class="btn d" id="pso" type="button">Sign out</button></div>
+  <p class="hint" id="pmsg"></p></section>
+  <section class="pgrp"><h3>Look &amp; menu</h3>
+  <div class="seg w" id="thm"><button data-t="dark">Dark</button><button data-t="light">Light</button><button data-t="system">System</button></div>
+  <h4>Menu order <small class="hint">(Profile stays last)</small></h4>
+  <div id="navord" class="navord"></div></section>
+  <section class="pgrp"><h3>Account</h3>
+  <div class="prow"><span class="hint" id="pacct" style="margin:0;flex:1;min-width:0;overflow-wrap:anywhere"></span><button class="btn d" id="pso" type="button">Sign out</button></div></section>
   <p id="pm" class="hint"></p>
   <p class="acts"><button class="btn p" id="ps">Save</button><button class="btn" id="pc">Close</button></p>
 </dialog>
@@ -1378,7 +1384,6 @@ const PLACE_R=250; // metres
 const distM=(a,b,c,d)=>{const R=6371e3,t=x=>x*Math.PI/180,dl=t(c-a),dn=t(d-b),h=Math.sin(dl/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
 const placesOf=()=>(F.places||[]).filter(p=>isFinite(p.lat)&&isFinite(p.lon));
 function drawPlaces(){
-  $('wwords').value=F.workWords||WORKDEF;
   let on=false;try{on=localStorage.getItem('fw-where')==='1'}catch(e){}$('wshare').checked=on;
   const ps=F.places||[];
   $('plist').innerHTML=ps.length?ps.map((p,i)=>`<div class=plr><span class=pli>${p.label==='Home'?'🏠':'📍'}</span><span class=pll><b>${esc(p.label)}</b>${p.addr?`<small>${esc(p.addr)}</small>`:''}</span><button type=button class="pdel" data-pdel="${i}" aria-label="Remove ${esc(p.label)}">✕</button></div>`).join('')
@@ -1392,7 +1397,6 @@ function addPlace(lat,lon,addr){
   const list=(F.places||[]).filter(p=>p.label.toLowerCase()!==l.toLowerCase()).concat({label:l,addr:addr||'',lat,lon});
   $('plab').value='';$('paddr').value='';putPlaces(list,`Saved “${l}”.`);
 }
-$('wwords').onchange=()=>{const v=$('wwords').value.trim()||WORKDEF;F.workWords=v;render();cacheSave();run('saveWorkWords',v).catch(e=>$('pmsg').textContent='Could not save: '+(e.message||e))};
 $('plist').onclick=e=>{const b=e.target.closest('[data-pdel]');if(!b)return;const list=(F.places||[]).slice();list.splice(+b.dataset.pdel,1);putPlaces(list,'Removed.')};
 $('phere').onclick=()=>{if(!navigator.geolocation){$('pmsg').textContent='This phone can’t share its location.';return}
   $('pmsg').textContent='Finding where you are…';
