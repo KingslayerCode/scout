@@ -424,11 +424,19 @@ body{font-family:"Twemoji Country Flags",system-ui,-apple-system,"Segoe UI",Robo
   display:flex;align-items:flex-end;gap:2px;--tan:color-mix(in srgb,var(--acc) 78%,#fff8ea);--sad:color-mix(in srgb,var(--acc) 18%,#0e1115);
   filter:drop-shadow(0 3px 5px rgba(0,0,0,.45)) drop-shadow(0 0 1px rgba(0,0,0,.3));opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s}
 #dog.on{opacity:1;transform:none}
-#pull{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 6px);z-index:60;width:38px;height:38px;border-radius:50%;background:var(--card);box-shadow:var(--sh);border:1px solid var(--line);opacity:0;pointer-events:none;transform:translate(-50%,-50px);display:grid;place-items:center}
+#pull{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 6px);z-index:60;width:80px;height:60px;opacity:0;pointer-events:none;transform:translate(-50%,-50px);
+  --tan:color-mix(in srgb,var(--acc) 78%,#fff8ea);--sad:color-mix(in srgb,var(--acc) 18%,#0e1115);
+  filter:drop-shadow(0 0 .6px color-mix(in srgb,var(--ink) 85%,transparent)) drop-shadow(0 0 4px color-mix(in srgb,var(--acc) 35%,transparent)) drop-shadow(0 3px 5px rgba(0,0,0,.4))}
 #pull.back{transition:transform .25s,opacity .25s}
-#pull svg{width:26px;height:26px;fill:none;stroke-linecap:round;stroke-linejoin:round}
-#pull circle{stroke:var(--acc);stroke-width:2.2;stroke-dasharray:var(--k,0) 1;transform:rotate(-90deg);transform-origin:center;opacity:.9}
-#pull path{stroke:var(--mut);stroke-width:2.2}#pull.go path{stroke:var(--acc)}#pull.go{border-color:var(--acc)}
+#pull svg{display:block;width:80px;height:60px;overflow:visible}
+#pull .tn{fill:var(--tan)}#pull .sd{fill:var(--sad)}#pull .hl{fill:#fff}#pull .ml{fill:none;stroke:var(--sad);stroke-width:1.1;stroke-linecap:round}
+#pull .pl{stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;opacity:.75}
+/* the dog rises with the pull: ears first, then the face, then the paws land on the line when it's ready */
+#pull .ph{transform:translateY(calc((1 - var(--k,0)) * 50px));transition:transform .08s linear}
+#pull .pp{transform:translateY(calc((1 - var(--p,0)) * 9px));transition:transform .12s ease-out}
+#pull.go .ph{animation:pnod .5s ease-in-out}@keyframes pnod{40%{transform:translateY(-1.5px) rotate(-4deg)}}
+#pull .ph{transform-box:view-box;transform-origin:40px 50px}
+@media(prefers-reduced-motion:reduce){#pull .ph,#pull .pp{transition:none;animation:none}}
 @media(max-width:720px){#dog{bottom:calc(90px + env(safe-area-inset-bottom))}}
 #dog .dgt{font-size:13px;font-weight:700;letter-spacing:.2px;color:var(--acc);margin-bottom:9px;white-space:nowrap}
 #dog .dgi{position:relative;width:101px;height:50px;filter:drop-shadow(0 0 .6px color-mix(in srgb,var(--ink) 85%,transparent)) drop-shadow(0 0 4px color-mix(in srgb,var(--acc) 35%,transparent))} /* a faint rim in the text colour so it stands off any background */
@@ -825,7 +833,18 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="emf"><span class="hint" style="flex:1;margin:0">Tap to add it</span><button class="btn p" id="emx" type="button" autofocus>Done</button></div>
 </dialog>
 <div id="toast" role="status" aria-live="polite" popover="manual"></div>
-<div id="pull" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" pathLength="1"/><path d="M12 7v8m-3.5-3.5L12 15l3.5-3.5"/></svg></div>
+<div id="pull" aria-hidden="true"><svg viewBox="0 0 80 60"><defs><clipPath id="pullc"><rect x="0" y="-20" width="80" height="72"/></clipPath><clipPath id="pullp"><rect x="0" y="40" width="80" height="14.5"/></clipPath></defs>
+  <g clip-path="url(#pullc)"><g class="ph">
+    <path class="sd" d="M21 30L23 4L38 19Z"/><path class="tn" d="M25 22L26 10.5L33 19Z"/><path class="sd" d="M59 30L57 4L42 19Z"/><path class="tn" d="M55 22L54 10.5L47 19Z"/>
+    <ellipse class="sd" cx="40" cy="35" rx="19" ry="17"/>
+    <path class="tn" d="M22.5 38C24 30 29 28 33 30C36 31.5 38 34 40 34C42 34 44 31.5 47 30C51 28 56 30 57.5 38C58 46 51 52 40 52C29 52 22 46 22.5 38Z"/>
+    <circle class="tn" cx="32" cy="27" r="2.3"/><circle class="tn" cx="48" cy="27" r="2.3"/>
+    <circle class="sd" cx="32.5" cy="36" r="2.8"/><circle class="sd" cx="47.5" cy="36" r="2.8"/><circle class="hl" cx="33.4" cy="35.1" r=".9"/><circle class="hl" cx="48.4" cy="35.1" r=".9"/>
+    <ellipse class="sd" cx="40" cy="42.5" rx="3.8" ry="2.7"/><path class="ml" d="M40 45v2.2M36.6 47.6q3.4 2 6.8 0"/>
+  </g></g>
+  <line class="pl" x1="10" y1="52.5" x2="70" y2="52.5"/>
+  <g clip-path="url(#pullp)"><g class="pp"><ellipse class="tn" cx="29" cy="52" rx="6.5" ry="4.2"/><ellipse class="tn" cx="51" cy="52" rx="6.5" ry="4.2"/><path class="ml" d="M27 49.5v3M31 49.5v3M49 49.5v3M53 49.5v3"/></g></g>
+</svg></div>
 <div id="dog" popover="manual" aria-hidden="true"><span class="dgt">…Fetching Calendars</span><span class="dgi"><i></i><i></i></span></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -1240,7 +1259,7 @@ setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4); // quiet top
 /* Pull down from the top of the calendar to read Google Calendar now. It takes a long, deliberate pull: past PULL_GO, then let go. */
 const PULL_GO=150;
 (()=>{const cal=$('sec-cal'),ind=$('pull');let y0=null,x0=0,d=0;
-  const set=v=>{d=v;const k=Math.min(1,v/PULL_GO);ind.style.transform=`translate(-50%,${Math.min(v*.45,78)-50}px)`;ind.style.opacity=Math.min(1,v/50);ind.classList.toggle('go',v>=PULL_GO);ind.style.setProperty('--k',k)};
+  const set=v=>{d=v;const k=Math.min(1,v/PULL_GO);ind.style.transform=`translate(-50%,${Math.min(v*.45,78)-50}px)`;ind.style.opacity=Math.min(1,v/50);ind.classList.toggle('go',v>=PULL_GO);ind.style.setProperty('--k',Math.min(1,k/.9));ind.style.setProperty('--p',v>=PULL_GO?1:0)};
   const end=()=>{if(y0==null)return;y0=null;ind.classList.add('back');if(d>=PULL_GO&&F.me){let n=0,ok=0;const w=()=>{ok=scrollY>=0?ok+1:0;if(ok>=3||++n>90)autoSync({force:true,show:true});else requestAnimationFrame(w)};setTimeout(w,120)}/* wait out the bounce, or iPhone pins the dog where the page was mid-bounce */set(0)};
   cal.addEventListener('touchstart',e=>{if(e.touches.length!==1||scrollY>0||document.querySelector('dialog[open]')||e.target.closest('dialog'))return;
     y0=e.touches[0].clientY;x0=e.touches[0].clientX;ind.classList.remove('back')},{passive:true});
