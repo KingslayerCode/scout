@@ -388,7 +388,9 @@ async function getFamily() {
   const have = new Set(prof.map(r => r.email.toLowerCase()));
   const invited = conf.filter(r => r.key.indexOf('invite:') === 0 && !have.has(r.key.slice(7))).map(r => ({ email: r.key.slice(7), at: r.value }));
   let writable = null; try { writable = JSON.parse(ls_.get(mk('writable')) || 'null'); } catch (e) {}
-  return { me, profiles: prof, invited, weather: placeOf_(cv(WX_KEY)), prefs: { theme: themePick_(cv('theme:' + me)), nav: cv('nav:' + me) }, hasSaved: src.some(r => r.owner === me), writable,
+  return { me, profiles: prof, invited, weather: placeOf_(cv(WX_KEY)), prefs: { theme: themePick_(cv('theme:' + me)), nav: cv('nav:' + me) },
+    places: (() => { try { return JSON.parse(cv('places') || '[]'); } catch (e) { return []; } })(),
+    where: Object.fromEntries(conf.filter(r => r.key.indexOf('where:') === 0 && r.value).map(r => { try { return [r.key.slice(6), JSON.parse(r.value)]; } catch (e) { return [r.key.slice(6), null]; } })), hasSaved: src.some(r => r.owner === me), writable,
     sharing, sync, sharedColor: sharedColor_(conf), sharedStale: !!rev && rev !== mirrored,
     events: evs.filter(e => sel.has(e.sourceKey)).map(e => Object.assign(e, { cal: names[e.sourceKey] || '' })).concat(shr.map(sharedOut_)) };
 }
@@ -779,6 +781,7 @@ function importMeals(p) { // p.items = [{container, loc}] so every container can
 // Every save stamps its part of the household in Rev row 2. Open phones read that one row every few seconds and re-read only what changed.
 const AREA = { saveSources: 'family', savePrefs: 'family', saveNav: 'family', saveProfile: 'family', syncMe: 'family', saveEvent: 'family', deleteEvent: 'family', setSharedColor: 'family',
   saveSharedEvent: 'family', deleteSharedEvent: 'family', syncShared: 'family', setWeatherPlace: 'family', inviteMember: 'family',
+  setWhere: 'family', savePlaces: 'family',
   listOp: 'lists', boardOp: 'board', saveConfig: 'meals', saveMeal: 'meals', removeMeal: 'meals', importMeals: 'meals', saveRecipe: 'rec', deleteRecipe: 'rec' };
 const REV = { seen: null, mine: {} };
 function bump_(area) {
@@ -800,10 +803,23 @@ async function saveNav(order) {
   await cfgSet_('nav:' + me_(), o.join(',')); return true;
 }
 
+// ---------- where everyone is ----------
+// Only a label ever leaves the phone ("Home", "Dane's Parents", "Out"); coordinates of named places are stored, a person's position never is.
+async function setWhere(label) {
+  const l = String(label || '').trim().slice(0, 40);
+  await cfgSet_('where:' + me_(), l ? JSON.stringify({ label: l, at: new Date().toISOString() }) : '');
+  return true;
+}
+async function savePlaces(list) {
+  const out = (Array.isArray(list) ? list : []).slice(0, 30).map(p => ({ label: String(p.label || '').trim().slice(0, 40), addr: String(p.addr || '').trim().slice(0, 120), lat: +p.lat, lon: +p.lon }))
+    .filter(p => p.label && isFinite(p.lat) && isFinite(p.lon) && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180);
+  await cfgSet_('places', JSON.stringify(out)); return out;
+}
+
 // ---------- the list of everything the page may ask for ----------
 const API = { getSources, saveSources, getFamily, getHousehold, savePrefs, saveProfile, googleProfile, syncMe, getRecipes, saveRecipe, deleteRecipe,
   saveEvent, deleteEvent, setSharedColor, saveSharedEvent, deleteSharedEvent, syncShared, searchPlaces, setWeatherPlace, getForecast, getInvite, inviteMember,
-  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, revChanges, saveNav };
+  getLists, listOp, getBoard, boardOp, getMeals, saveConfig, saveMeal, removeMeal, importMeals, revChanges, saveNav, setWhere, savePlaces };
 window.AUTH = AUTH;
 window.SRV = { call(fn, args) {
   const f = API[fn];

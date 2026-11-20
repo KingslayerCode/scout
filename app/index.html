@@ -57,6 +57,11 @@ h1.t{font-size:26px;font-weight:650;margin:0 auto 0 0;letter-spacing:-.2px}
 #ppl{display:inline-flex;gap:4px;padding:4px;border-radius:24px;background:var(--card);border:1px solid var(--line);max-width:100%;overflow-x:auto;scrollbar-width:none}#ppl::-webkit-scrollbar{display:none}.bar2 .grp{margin-left:auto}
 #ppl .pp{flex:none;display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px 0 4px;border:0;border-radius:18px;background:none;color:var(--mut);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,opacity .15s}
 #ppl .pp .pic,#ppl .pp img{flex:none;box-shadow:0 0 0 2px var(--card),0 0 0 3.5px transparent;transition:box-shadow .15s,filter .15s}
+#ppl .pp .pw{display:flex;flex-direction:column;line-height:1.1;min-width:0;text-align:left}#ppl .pp .nm{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ppl .pp .st{font-size:11px;font-weight:600;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut);text-decoration:none!important}
+#ppl .pp .st::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:1px;background:var(--mut)}
+#ppl .pp .st.home::before{background:#4cc9a0}#ppl .pp .st.cal::before{background:var(--c)}#ppl .pp .st.place::before{background:#ffb347}#ppl .pp .st.out::before{background:#9aa7b4}
+#ppl .pp:has(.st){height:40px}
 #ppl .pp.on{background:color-mix(in srgb,var(--c) 20%,var(--card));color:var(--ink)}#ppl .pp.on .pic,#ppl .pp.on img{box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--c)}
 #ppl .pp:not(.on){opacity:.6}#ppl .pp:not(.on) .pic,#ppl .pp:not(.on) img{filter:grayscale(1)}#ppl .pp:not(.on) .nm{text-decoration:line-through}
 
@@ -346,7 +351,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
   h1.t{font-size:22px}
   .top{margin-bottom:8px}#sec-cal .top{flex-wrap:nowrap}
   #sec-cal .top .btn{min-height:38px;height:38px;padding:0 12px;border-radius:12px}#sec-cal .top .btn.sq{width:38px;padding:0}
-  #sec-cal .bar2{margin-bottom:8px}#sec-cal .bar2 .btn.sq{width:38px;height:38px;min-height:38px}#ppl .pp{height:32px}
+  #sec-cal .bar2{margin-bottom:8px}#ppl .pp{height:34px}
   #ppl{order:-1;flex:0 1 auto;min-width:0}.bar2{flex-wrap:nowrap}
   .bar2 .grp .seg{margin-right:auto}
   .btn{min-height:44px}.btn.sq{width:44px}
@@ -405,7 +410,7 @@ body.dragging,body.dragging .cont{cursor:grabbing;user-select:none;-webkit-user-
 
 .f i{font-style:normal;opacity:.7}
 @media(max-width:380px){.nb{font-size:11px}}
-@media(max-width:430px){#ppl .pp .nm{display:none}#ppl .pp{padding:0 3px}#ppl{gap:6px}}
+@media(max-width:430px){#ppl .pp .nm{font-size:12.5px}#ppl{gap:4px}}
 
 .btn:disabled{opacity:.5;cursor:default}
 
@@ -549,6 +554,12 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
 /* ---------- whiteboard: to-dos written on the board, notices as sticky notes ---------- */
 @font-face{font-family:Caveat;font-weight:700;font-display:swap;src:url(fonts/caveat-700.woff2) format("woff2")}
 #sec-board{--hand:Caveat,"Bradley Hand","Marker Felt","Segoe Print",cursive}
+.prow2{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;font-size:16px}
+.pli{font-size:20px;flex:none}.pdel{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--card);color:var(--mut);cursor:pointer;font-size:15px}
+.tgl{display:flex;align-items:center;gap:10px;font-weight:600;min-height:40px}.tgl input{width:22px;height:22px}
+.plist{display:flex;flex-direction:column;gap:6px;margin:6px 0}.plr{display:flex;align-items:center;gap:8px;background:var(--soft);border-radius:12px;padding:6px 6px 6px 12px;min-height:46px}
+.pll{flex:1;min-width:0;display:flex;flex-direction:column}.pll small{color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.padd{display:flex;flex-direction:column;gap:8px;margin-top:6px}.padd input{margin:0}.padd .grp{display:flex;gap:8px;flex-wrap:wrap}.padd .grp .btn{flex:1}
 .navord{display:flex;flex-direction:column;gap:6px}.nvr{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:12px;padding:4px 6px 4px 12px;min-height:48px}
 .nvi svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}.nvn{flex:1;font-weight:600}
 .nvb{width:44px;height:40px;border:0;border-radius:10px;background:var(--card);color:var(--ink);font-size:14px;cursor:pointer}.nvb:disabled{opacity:.3;cursor:default}.nvreset{align-self:flex-start;margin-top:4px}
@@ -629,7 +640,7 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="top"><h1 class="t" id="title"></h1><span class="syn" id="syn" role="status"></span>
     <div class="grp"><button class="btn sq" id="prev" aria-label="Previous month">‹</button><button class="btn" id="today">Today</button><button class="btn sq" id="next" aria-label="Next month">›</button></div></div>
   <div class="bar2"><div id="ppl" role="group" aria-label="Whose calendars to show"></div>
-    <div class="grp"><button class="btn sq" id="cals" aria-label="Choose calendars">⚙</button></div></div>
+</div>
   <div id="wx"></div>
   <div id="nudge"></div>
   <div id="main"><div class="skel skcal"></div></div>
@@ -674,6 +685,15 @@ html:has(dialog[open]) .cont .bd,html:has(dialog[open]) .cont .wvz,html:has(dial
   <div class="seg w" id="thm"><button data-t="dark">Dark</button><button data-t="light">Light</button><button data-t="system">System</button></div>
   <h3>Menu order <small class="hint">(Profile stays last)</small></h3>
   <div id="navord" class="navord"></div>
+  <h3>Calendars</h3>
+  <button class="btn big prow2" id="cals" type="button"><span>📅 Calendars, sync &amp; household</span><span aria-hidden="true">›</span></button>
+  <h3>Where we are</h3>
+  <label class="tgl"><input type="checkbox" id="wshare"> Share where I am from this phone</label>
+  <p class="hint" style="margin:4px 0 8px">Your calendar comes first: during an event it shows that event. Otherwise this phone checks its location while Scout is open and shares only a name — Home, one of your places, or Out. Your exact location is never saved.</p>
+  <div id="plist" class="plist"></div>
+  <div class="padd"><input type="text" id="plab" maxlength="40" placeholder="Name, e.g. Home or Dane’s Parents"><input type="text" id="paddr" maxlength="120" placeholder="Address (optional)">
+    <div class="grp"><button class="btn" id="pfind" type="button">Find address</button><button class="btn" id="phere" type="button">Use where I am now</button></div></div>
+  <p class="hint" id="pmsg"></p>
   <h3>Account</h3>
   <div class="prow"><span class="hint" id="pacct" style="margin:0;flex:1;min-width:0;overflow-wrap:anywhere"></span><button class="btn d" id="pso" type="button">Sign out</button></div>
   <p id="pm" class="hint"></p>
@@ -1043,7 +1063,7 @@ function deco(s){
   return h+'</div>';
 }
 function render(){
-  $('ppl').innerHTML=F.profiles.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<button class="chip pp${hide.has(p.email)?'':' on'}" style="--c:${esc(p.color)}" data-o="${esc(p.email)}" aria-pressed="${!hide.has(p.email)}" title="${esc(statusOf(p).t)}">${avp(p,26)}<span class=nm>${esc(p.name.split(/\s+/).find(w=>/\p{L}/u.test(w))||p.name)}</span></button>`).join('')
+  $('ppl').innerHTML=F.profiles.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<button class="chip pp${hide.has(p.email)?'':' on'}" style="--c:${esc(p.color)}" data-o="${esc(p.email)}" aria-pressed="${!hide.has(p.email)}" title="${esc(statusOf(p).t)}">${avp(p,28)}<span class=pw><span class=nm>${esc(p.name.split(/\s+/).find(w=>/\p{L}/u.test(w))||p.name)}</span>${(w=>w?`<span class="st ${w.k}">${esc(w.t)}</span>`:'')(whereOf(p.email))}</span></button>`).join('')
     +`<button class="chip pp${hide.has('*shared')?'':' on'}" style="--c:${esc(SC())}" data-o="*shared" aria-pressed="${!hide.has('*shared')}" title="Events shared with everyone"><span class=pic style="width:26px;height:26px;background:${esc(SC())};color:${ink(SC())}">${PPL}</span><span class=nm>Shared</span></button>`;
   drawNudge();drawWx();
   $('meav').innerHTML=av(F.me||'',24);
@@ -1193,6 +1213,14 @@ function autoSync(){
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&F.me&&!pend)(Date.now()-lastGet>6e4?reloadF():Promise.resolve()).then(autoSync).catch(()=>{})});
 setInterval(()=>{if(F.me&&!document.hidden&&!pend)autoSync()},6e4);
 const agoIso=iso=>{const m=Math.round((Date.now()-new Date(iso))/6e4);return m<1?'just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' days ago'};
+/* where someone is: a calendar event happening now wins; otherwise the label their phone last shared (if recent) */
+function whereOf(email){
+  const now=Date.now(),ev=(F.events||[]).filter(e=>e.owner===email&&e.allDay!=='Y'&&new Date(e.start)<=now&&new Date(e.end)>now).sort((a,b)=>new Date(a.end)-new Date(b.end))[0];
+  if(ev)return{k:'cal',t:ev.title.replace(/^\p{Extended_Pictographic}\s*/u,''),until:ev.end};
+  const w=(F.where||{})[email];
+  if(w&&w.label&&now-new Date(w.at)<45*6e4)return{k:w.label==='Home'?'home':w.label==='Out'?'out':'place',t:w.label};
+  return null;
+}
 function statusOf(p){
   const n=(F.sharing||{})[p.email]||0,t=(F.sync||{})[p.email];
   if(!n)return{t:t?'Not sharing any calendars':'Hasn’t chosen calendars yet',warn:true};
@@ -1283,14 +1311,14 @@ $('add').onclick=()=>{const n=$('an').value.trim(),u=$('au').value.trim().replac
   if(!n||!/^https:\x2f\x2f/.test(u)){$('msg').textContent='Enter a name and a calendar link.';return}
   S.sources.push({key:'new|ics|'+u,kind:'ics',sourceId:u,name:n,color:'#8e8e93',selected:true});
   renderSources();$('an').value=$('au').value='';$('msg').textContent='Press Save & sync to import it.'};
-$('save').onclick=save;$('cals').onclick=()=>openCals();$('close').onclick=()=>$('dlg').close();$('hclose').onclick=()=>$('dlg').close();
+$('save').onclick=save;$('cals').onclick=()=>{$('pdlg').close();openCals()};$('close').onclick=()=>$('dlg').close();$('hclose').onclick=()=>$('dlg').close();
 
 /* ---------- profile and appearance ---------- */
 function drawProfile(){
   $('pav').innerHTML=avp(P,64);
   $('sw').innerHTML=PAL.map(c=>`<button class=sw style="background:${c}" data-c="${c}" aria-pressed="${P.color===c}" aria-label="${c}"></button>`).join('')+`<label class="sw swc" aria-pressed="${!PAL.includes(P.color)}" title="Custom colour" style="${PAL.includes(P.color)?'':'background:'+esc(P.color)}"><input type=color id=pcol value="${esc(P.color)}" aria-label="Custom colour"></label>`;
 }
-$('meb').onclick=()=>{P={...prof(F.me)};drawNavOrd();$('pn').value=P.name;$('pm').textContent='';$('pacct').textContent='Signed in as '+F.me;$('pso').textContent='Sign out';delete $('pso').dataset.sure;drawProfile();applyTheme(document.documentElement.dataset.theme);openD($('pdlg'))};
+$('meb').onclick=()=>{P={...prof(F.me)};drawNavOrd();drawPlaces();$('pmsg').textContent='';$('pn').value=P.name;$('pm').textContent='';$('pacct').textContent='Signed in as '+F.me;$('pso').textContent='Sign out';delete $('pso').dataset.sure;drawProfile();applyTheme(document.documentElement.dataset.theme);openD($('pdlg'))};
 $('sw').onclick=e=>{if(e.target.dataset.c){P.color=e.target.dataset.c;drawProfile()}};
 $('sw').oninput=e=>{if(e.target.id==='pcol'){P.color=e.target.value;$('pav').innerHTML=avp(P,64)}};
 const NAVNM={cal:'Calendar',board:'Board',meals:'Meals',lists:'Shopping',rec:'Recipes'};
@@ -1300,6 +1328,50 @@ function drawNavOrd(){const o=navOrder(localStorage.getItem('fw-nav'));
 $('navord').onclick=e=>{const b=e.target.closest('button');if(!b)return;let o=navOrder(localStorage.getItem('fw-nav'));
   if(b.dataset.rs!==undefined)o=NAVDEF.slice();else{const i=+(b.dataset.up??b.dataset.dn),j=b.dataset.up!==undefined?i-1:i+1;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]]}
   applyNav(o.join(','));if(F.prefs)F.prefs.nav=o.join(',');drawNavOrd();cacheSave();run('saveNav',o).catch(x=>$('pm').textContent='Could not save the menu order: '+(x.message||x))};
+/* Places: named spots (Home, Dane's Parents…) the whole household shares. A phone that shares its whereabouts only says which one it is near. */
+const PLACE_R=250; // metres
+const distM=(a,b,c,d)=>{const R=6371e3,t=x=>x*Math.PI/180,dl=t(c-a),dn=t(d-b),h=Math.sin(dl/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+const placesOf=()=>(F.places||[]).filter(p=>isFinite(p.lat)&&isFinite(p.lon));
+function drawPlaces(){
+  let on=false;try{on=localStorage.getItem('fw-where')==='1'}catch(e){}$('wshare').checked=on;
+  const ps=F.places||[];
+  $('plist').innerHTML=ps.length?ps.map((p,i)=>`<div class=plr><span class=pli>${p.label==='Home'?'🏠':'📍'}</span><span class=pll><b>${esc(p.label)}</b>${p.addr?`<small>${esc(p.addr)}</small>`:''}</span><button type=button class="pdel" data-pdel="${i}" aria-label="Remove ${esc(p.label)}">✕</button></div>`).join('')
+    :`<p class=hint style="margin:0">No places yet. Start with <b>Home</b>.</p>`;
+}
+async function putPlaces(list,msg){
+  try{F.places=await run('savePlaces',list);drawPlaces();cacheSave();render();$('pmsg').textContent=msg||'';whereTick(true)}catch(e){$('pmsg').textContent='Could not save: '+(e.message||e)}
+}
+function addPlace(lat,lon,addr){
+  const l=$('plab').value.trim();if(!l){$('pmsg').textContent='Give the place a name first.';$('plab').focus();return}
+  const list=(F.places||[]).filter(p=>p.label.toLowerCase()!==l.toLowerCase()).concat({label:l,addr:addr||'',lat,lon});
+  $('plab').value='';$('paddr').value='';putPlaces(list,`Saved “${l}”.`);
+}
+$('plist').onclick=e=>{const b=e.target.closest('[data-pdel]');if(!b)return;const list=(F.places||[]).slice();list.splice(+b.dataset.pdel,1);putPlaces(list,'Removed.')};
+$('phere').onclick=()=>{if(!navigator.geolocation){$('pmsg').textContent='This phone can’t share its location.';return}
+  $('pmsg').textContent='Finding where you are…';
+  navigator.geolocation.getCurrentPosition(p=>addPlace(+p.coords.latitude.toFixed(5),+p.coords.longitude.toFixed(5),$('paddr').value.trim()),
+    e=>$('pmsg').textContent=e.code===1?'Location is blocked for Scout. Allow it in Settings › Safari › Location (or your browser’s site settings).':'Could not find your location. Try again outside or with Wi-Fi on.',{enableHighAccuracy:true,timeout:20e3,maximumAge:0})};
+$('pfind').onclick=async()=>{const q=$('paddr').value.trim();if(!q){$('pmsg').textContent='Type an address first.';return}
+  $('pmsg').textContent='Looking it up…';
+  try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+encodeURIComponent(q),{headers:{'Accept':'application/json'}}).then(r=>r.json());
+    if(!r[0])throw 0;addPlace(+(+r[0].lat).toFixed(5),+(+r[0].lon).toFixed(5),q)}
+  catch(e){$('pmsg').textContent='Couldn’t find that address on the map (rural addresses often aren’t). Next time you’re there, tap “Use where I am now”.'}};
+$('wshare').onchange=()=>{const on=$('wshare').checked;try{localStorage.setItem('fw-where',on?'1':'0')}catch(e){}
+  if(on)whereTick(true);else{whereSent={l:'',t:0};run('setWhere','').then(()=>reloadF()).catch(()=>{})}};
+let whereSent={l:'',t:0},whereBusy=false;
+function whereTick(force){ // runs on this phone only, while Scout is open
+  let on=false;try{on=localStorage.getItem('fw-where')==='1'}catch(e){}
+  if(!on||!F.me||document.hidden||whereBusy||!navigator.geolocation)return;
+  const mine=whereOf(F.me);if(mine&&mine.k==='cal'&&!force)return; // the calendar already says where I am
+  whereBusy=true;
+  navigator.geolocation.getCurrentPosition(p=>{whereBusy=false;
+    const{latitude:a,longitude:b,accuracy:acc}=p.coords,r=Math.max(PLACE_R,Math.min(acc||0,600));
+    const near=placesOf().map(x=>({x,d:distM(a,b,x.lat,x.lon)})).filter(o=>o.d<=r).sort((m,n)=>m.d-n.d)[0],l=near?near.x.label:'Out';
+    if(l!==whereSent.l||Date.now()-whereSent.t>20*6e4){whereSent={l,t:Date.now()};F.where=F.where||{};F.where[F.me]={label:l,at:new Date().toISOString()};render();run('setWhere',l).catch(()=>{})}
+  },()=>{whereBusy=false},{enableHighAccuracy:false,timeout:20e3,maximumAge:force?0:4*6e4});
+}
+setInterval(()=>whereTick(),5*6e4);document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(whereTick,1500)});
+setInterval(()=>{if(sec('cal')&&!document.hidden)render()},6e4); // a shift starting or ending changes someone's status
 $('thm').onclick=e=>{const t=e.target.dataset.t;if(!t)return;applyTheme(t);run('savePrefs',{theme:t}).catch(x=>$('pm').textContent='Could not save the theme: '+(x.message||x))};
 $('pf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
   const c=document.createElement('canvas'),z=128,m=Math.min(im.width,im.height);c.width=c.height=z;
@@ -1766,9 +1838,6 @@ const iceSVG=(k,t,id)=>{
 };
 /* snowflake badge, top right: plain while frozen, with a ring that fills as it thaws */
 const badge=(k,t)=>k<=0?'':`<g transform="translate(111 6)"><circle r="10.5" fill="#0e2237" stroke="#8fd0ff" stroke-width="1.2"/>`+(t&&!t.done?`<circle r="8.2" fill="none" stroke="rgba(143,208,255,.25)" stroke-width="2"/>`+(t.p>.02?`<circle r="8.2" fill="none" stroke="#8fd0ff" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="${(51.5*t.p).toFixed(1)} 52" transform="rotate(-90)"/>`:''):'')+`<use href="#snow" x="-6.5" y="-6.5" width="13" height="13" style="color:#cfeaff"/></g>`;
-const FOODE=[[/chicken|wing|thigh|turkey/i,'🍗'],[/beef|steak|burger|meatball|chili/i,'🥩'],[/pork|ham|bacon|sausage/i,'🥓'],[/fish|salmon|tuna|shrimp|cod/i,'🐟'],
-  [/pasta|spaghetti|lasagn|mac/i,'🍝'],[/soup|stew|broth/i,'🍲'],[/curry/i,'🍛'],[/pizza/i,'🍕'],[/taco|burrito|fajita/i,'🌮'],[/egg|breakfast/i,'🍳'],[/rice/i,'🍚']];
-const foodE=n=>(FOODE.find(([r])=>r.test(n))||[0,'🍱'])[1];
 function cSVG(m,s,ice,th){
   const id='cw'+cnum(m.container);
   return `<svg viewBox="0 0 120 92" aria-hidden="true"><path class="gl" d="${BODY}"/>`+
@@ -1778,7 +1847,7 @@ function cSVG(m,s,ice,th){
     `<rect x="6" y="8" width="108" height="17" rx="5" fill="#4a5663"/><rect x="6" y="8" width="108" height="6" rx="3" fill="rgba(255,255,255,.13)"/><rect x="2" y="12" width="9" height="14" rx="3" fill="#2d3640"/><rect x="109" y="12" width="9" height="14" rx="3" fill="#2d3640"/>`+
 
     iceSVG(ice,th,id)+
-    `<text x="22" y="24" font-size="19" text-anchor="middle">${foodE(m.name)}</text><rect x="38" y="42" width="44" height="27" rx="9" fill="#111a22" opacity=".93"/><text x="60" y="62" text-anchor="middle" class="n${s.cls}" font-size="19" font-weight="700">${cnum(m.container)}</text>`+badge(ice,th)+`</svg>`;
+    `<rect x="38" y="42" width="44" height="27" rx="9" fill="#111a22" opacity=".93"/><text x="60" y="62" text-anchor="middle" class="n${s.cls}" font-size="19" font-weight="700">${cnum(m.container)}</text>`+badge(ice,th)+`</svg>`;
 }
 const contHTML=m=>{const s=status(m),t=thawOf(m),th=t&&!t.done,ice=m.loc==='freezer'?1:th?1-t.p:0,tt=th?'thawing, about '+fmtH(t.left)+' left':'';
   return `<button class="cont ${s.cls}${th?' melt':''}${M.cur===m.id?' sel':''}${M.flash===m.id?' land':''}" data-m="${esc(m.id)}" aria-label="${esc(m.container+', '+m.name+'. '+s.txt+(tt?'. '+tt:''))}" title="${esc(m.name+' · '+s.txt+(tt?' · '+tt:''))}">${cSVG(m,s,ice,t)}<small>${esc(m.name)}</small></button>`};
