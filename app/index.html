@@ -1229,8 +1229,8 @@ async function refresh(){
 /* keep everyone's view fresh: re-read when the person comes back to the app, and top up their own calendars when they are old */
 let lastGet=Date.now(),auto=false;
 const setSyn=t=>{$('syn').textContent=t||'';const d=$('dog');clearTimeout(setSyn.h);
-  if(t){try{if(d.showPopover&&!d.matches(':popover-open'))d.showPopover()}catch(e){}requestAnimationFrame(()=>d.classList.add('on'))}
-  else{d.classList.remove('on');setSyn.h=setTimeout(()=>{try{if(d.hidePopover&&d.matches(':popover-open'))d.hidePopover()}catch(e){}},300)}};
+  if(t){try{if(d.showPopover&&!d.matches(':popover-open'))d.showPopover()}catch(e){}void d.offsetWidth;d.classList.add('on')} // reflow, then fade in (no frame callback that could land late)
+  else{d.classList.remove('on');setSyn.h=setTimeout(()=>{if($('syn').textContent)return;try{if(d.hidePopover&&d.matches(':popover-open'))d.hidePopover()}catch(e){}},300)}};
 async function reloadF(){const f=await run('getFamily');if(pend)return;F=f;lastGet=Date.now();if(F.prefs){applyTheme(F.prefs.theme);if(F.prefs.nav)applyNav(F.prefs.nav)}syncWx();render();cacheSave();if($('dlg').open&&!$('pane-hh').hidden)drawHousehold()}
 function autoSync(){
   if(auto)return;
